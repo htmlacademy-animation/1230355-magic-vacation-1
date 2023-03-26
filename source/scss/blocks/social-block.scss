@@ -1,10 +1,22 @@
 .social-block {
   position: relative;
 
-  &:hover {
+  &:hover,
+  &.social-block--active {
     .social-block__list {
       opacity: 1;
       pointer-events: auto;
+    }
+    li{
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .3s ease, transform .3s linear;
+      &:nth-child(2){
+        transition-delay: .2s;
+      }
+      &:nth-child(3){
+        transition-delay: .4s;
+      }
     }
   }
 }
@@ -17,6 +29,7 @@
   height: 4rem;
   color: $c-dark;
   border-radius: 50%;
+  transition: all .3s;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     display: none;
@@ -35,6 +48,7 @@
     background-color: $c-light;
     border: 2px solid $c-light;
     z-index: -1;
+    transition: all .3s;
   }
 
   svg {
@@ -127,11 +141,6 @@
     }
   }
 
-  &:hover {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
   &:focus-within {
     opacity: 1;
     pointer-events: auto;
@@ -145,7 +154,8 @@
   li {
     flex: none;
     margin-bottom: 0.5rem;
-
+    opacity: 0;
+    transform: translateY(10px);
     @media (min-width: $stop-scaling) {
       margin-bottom: 5px;
     }
