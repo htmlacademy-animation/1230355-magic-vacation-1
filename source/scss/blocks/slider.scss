@@ -96,6 +96,8 @@
   max-width: 34rem;
   font-size: 1.8rem;
   line-height: 2rem;
+  opacity: 0;
+  transform: translateX(40px);
 
   @media (min-width: $stop-scaling) {
     margin-top: 36px;
@@ -112,6 +114,8 @@
     min-height: 11.6rem;
     font-size: 1.4rem;
     line-height: 1.5rem;
+    opacity: 0;
+    transform: translateX(40px);
   }
 
   @media (max-width: $mobile) and (orientation: landscape) {
@@ -122,6 +126,20 @@
     min-height: 14rem;
     font-size: 1.4rem;
     line-height: 1.5rem;
+  }
+}
+.swiper-slide-active .slider__item-text{
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity .3s ease, transform .3s linear;
+  transition-delay: .3s;
+}
+@media (min-width: $tablet) and (orientation: landscape){
+  .swiper-slide-next .slider__item-text{
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity .3s ease, transform .3s linear;
+    transition-delay: .8s;
   }
 }
 
