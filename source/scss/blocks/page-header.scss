@@ -287,11 +287,13 @@
         display: block;
         transform: scaleX(0);
         transform-origin: left;
-        transition: .6s;
+        transition: transform .6s;
         transition-delay: 0.8s;
       }
       &:hover::after{
         background-color: $c-purple;
+        transition-delay: initial;
+        transition: color .4s;
       }
     }
 
