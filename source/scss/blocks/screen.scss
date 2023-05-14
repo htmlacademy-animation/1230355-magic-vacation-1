@@ -361,3 +361,34 @@
 .screen--rules {
   background-color: $c-dark;
 }
+
+.transition-block{
+  position: fixed;
+  z-index: 50;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: $c-dark;
+
+  transform-origin: bottom;
+  transition: transform .4s;
+}
+
+.screen.screen--story~.transition-block{
+  transform: scale(1, 1);
+}
+.screen.screen--hidden~.transition-block{
+  transform: scale(1, 0);
+}
+
+// .screen.screen--story.screen--hidden{
+//   display: block!important;
+//   visibility: hidden;
+// }
+// .screen.screen--story.active{
+//   visibility: visible;
+// }
+// .screen.screen--story.screen--hidden+.screen--prizes.active{
+//   // visibility: hidden;
+// }
