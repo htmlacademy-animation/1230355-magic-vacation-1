@@ -47,7 +47,7 @@
   background-color: $c-light;
   z-index: 1;
   transform: translateY(100%);
-  transition: transform .5s;
+  transition: transform 0.5s;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     width: 3.5rem;
@@ -71,10 +71,10 @@
     }
   }
 }
-.body-loaded{
-  .screen__footer{
+.body-loaded {
+  .screen__footer {
     transform: translateY(0rem);
-    transition-timing-function: cubic-bezier(.54,0,.4,.95);
+    transition-timing-function: cubic-bezier(0.54, 0, 0.4, 0.95);
   }
 }
 .screen__footer-wrapper {
@@ -297,7 +297,8 @@
 
 .screen--story {
   background-color: $c-dark;
-  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"), url("../img/slide4.jpg");
+  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"),
+    url("../img/slide4.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -362,33 +363,36 @@
   background-color: $c-dark;
 }
 
-.transition-block{
+.transition-block {
   position: fixed;
-  z-index: 50;
+  z-index: 2;
   width: 100%;
   height: 100%;
   left: 0;
   bottom: 0;
   background-color: $c-dark;
-
-  transform-origin: bottom;
-  transition: transform .4s;
-}
-
-.screen.screen--story~.transition-block{
-  transform: scale(1, 1);
-}
-.screen.screen--hidden~.transition-block{
   transform: scale(1, 0);
+  transform-origin: bottom;
 }
 
-// .screen.screen--story.screen--hidden{
-//   display: block!important;
-//   visibility: hidden;
-// }
-// .screen.screen--story.active{
-//   visibility: visible;
-// }
-// .screen.screen--story.screen--hidden+.screen--prizes.active{
-//   // visibility: hidden;
-// }
+.screen.screen--prizes {
+  z-index: 0;
+}
+
+.animate-forwards {
+  animation: tb 0.3s ease 0s;
+  animation-fill-mode: forwards;
+}
+.screen.screen--prizes.active ~ .animate-forwards {
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+}
+@keyframes tb {
+  0% {
+    transform: scale(1, 0);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
