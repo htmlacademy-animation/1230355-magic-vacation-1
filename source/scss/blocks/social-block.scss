@@ -107,11 +107,8 @@
   }
 }
 .body-loaded .social-block__toggler::before{
-  // transform: translate(-50%, -50%);
   animation: elastic .4s ease .5s;
   animation-fill-mode:forwards;
-  // animation-name: elastic;
-  // animation-duration: .6s;
 }
 .social-block__list {
   @include list-reset;

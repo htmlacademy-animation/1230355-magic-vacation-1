@@ -1,0 +1,23 @@
+.screen--rules.active{
+
+  .rules__item::before{
+    color: #ffffff;
+    opacity: 1;
+  }
+  .rules__item::after{
+    transform: scale(1);
+  }
+  .rules__item p{
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .rules__link{
+    color: $c-dark;
+    opacity: 1;
+  }
+  .rules__link::before{
+    width: 100%;
+    right: -50%;
+    opacity: 1;
+  }
+}
