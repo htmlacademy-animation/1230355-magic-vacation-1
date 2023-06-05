@@ -21,3 +21,19 @@
     opacity: 1;
   }
 }
+/* popup-text */
+.text__word {
+  display: inline-block;
+  margin: 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.text__word > span {
+    transform: translate3d(0, 150%, 0);
+    display: inline-block;
+}
+
+.popup-text.active .text__word > span {
+    transform: translate3d(0, 0, 0);
+}
