@@ -37,3 +37,32 @@
 .popup-text.active .text__word > span {
     transform: translate3d(0, 0, 0);
 }
+
+/* screen result */
+.screen--result.active{
+  .result__images{
+    .leaf-green,
+    .leaf-blue-1,
+    .leaf-blue-2{
+      opacity: 1;
+    }
+    .flamingo{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) rotate(0deg);
+      animation: levitate-flamingo 2.5s ease .5s infinite;
+      // animation-fill-mode:forwards;
+    }
+    .suitcase{
+      transform: translate3d(-50%, 0, 0) scale(1);
+    }
+  }
+}
+
+@keyframes levitate-flamingo {
+  0% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(30px) rotate(-5deg);
+  }
+}
