@@ -276,16 +276,17 @@
    img{
     position: absolute;
     transition: all .5s;
+    height: auto;
    }
    .flamingo{
-    height: 60%;
+    max-height: 60%;
     left: 45%;
     bottom: 2%;
     opacity: 0;
     transform: translateX(-50%) translateY(100%) rotate(-45deg);
    }
    .suitcase{
-    height: 95%;
+    max-height: 88%;
     left: 52%;
     transform: translate3d(-50%, 100%, 0) scale(.1);
    }
@@ -296,15 +297,26 @@
     transition-delay: .3s;
    }
    .leaf-green{
-    left: 56%;
-    top: 40%;
+    left: 55%;
+    width: 27%;
+    top: 43%;
+    transform: rotate(-18deg);
+    -webkit-transform-origin: 0 100%;
+    -moz-transform-origin: 0 100%;
+    -o-transform-origin: 0 100%;
+    -ms-transform-origin: 0 100%;
+    transform-origin: 0 100%;
    }
    .leaf-blue-2{
-    right: 53%;
-    top: 39%;
+    right: 50%;
+    top: 25%;
+    min-width: 28%;
+    transform-origin: 100% 100%;
    }
    .leaf-blue-1{
     left: 57%;
-    top: 3%;
+    top: 0%;
+    min-width: 28%;
+    transform-origin: 0 100%;
    }
 }

@@ -49,20 +49,78 @@
     .flamingo{
       opacity: 1;
       transform: translateX(-50%) translateY(0) rotate(0deg);
-      animation: levitate-flamingo 2.5s ease .5s infinite;
+      animation: levitateFlamingo 2.5s ease .5s infinite;
       // animation-fill-mode:forwards;
     }
     .suitcase{
       transform: translate3d(-50%, 0, 0) scale(1);
     }
+    .leaf-green{
+      animation: leafGreen 2.5s ease .5s forwards;
+    }
+    .leaf-blue-1{
+      animation: leafGreen 2s ease .4s forwards;
+    }
+    .leaf-blue-2{
+      animation: leafBlue2 2.5s ease .5s forwards;
+    }
   }
 }
 
-@keyframes levitate-flamingo {
+@keyframes levitateFlamingo {
   0% {
     transform: translateX(-50%) translateY(0) rotate(0deg);
   }
   50% {
     transform: translateX(-50%) translateY(30px) rotate(-5deg);
+  }
+  90% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+}
+@keyframes leafGreen {
+  from {
+    transform: rotate(-18deg);
+  }
+
+  20% {
+    transform: rotate(15deg);
+  }
+
+  40% {
+    transform: rotate(-10deg);
+  }
+  60% {
+    transform: rotate(5deg);
+  }
+
+  80% {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+@keyframes leafBlue2 {
+  from {
+    transform: rotate(0);
+  }
+
+  20% {
+    transform: rotate(-15deg);
+  }
+
+  40% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+
+  80% {
+    transform: rotate(3deg);
+  }
+  to {
+    transform: rotate(0deg);
   }
 }

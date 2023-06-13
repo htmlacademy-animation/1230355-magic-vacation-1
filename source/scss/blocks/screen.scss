@@ -380,7 +380,7 @@
 }
 
 .animate-forwards {
-  animation: to-top 0.3s ease 0s;
+  animation: toTop 0.3s ease 0s;
   animation-fill-mode: forwards;
 }
 .screen.screen--prizes.active ~ .animate-forwards {
@@ -388,7 +388,7 @@
   opacity: 0;
   z-index: -1;
 }
-@keyframes to-top {
+@keyframes toTop {
   0% {
     transform: scale(1, 0);
   }
