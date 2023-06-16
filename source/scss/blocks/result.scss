@@ -288,7 +288,7 @@
    .suitcase{
     max-height: 88%;
     left: 52%;
-    transform: translate3d(-50%, 100%, 0) scale(.1);
+    transform: translate3d(-50%, 200%, 0) scale(.1);
    }
    .leaf-green,
    .leaf-blue-1,
@@ -297,14 +297,10 @@
     transition-delay: .3s;
    }
    .leaf-green{
-    left: 55%;
-    width: 27%;
-    top: 43%;
+    left: 56%;
+    width: 35%;
+    top: 36%;
     transform: rotate(-18deg);
-    -webkit-transform-origin: 0 100%;
-    -moz-transform-origin: 0 100%;
-    -o-transform-origin: 0 100%;
-    -ms-transform-origin: 0 100%;
     transform-origin: 0 100%;
    }
    .leaf-blue-2{

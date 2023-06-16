@@ -28,16 +28,26 @@
   overflow: hidden;
   white-space: nowrap;
 }
-
+.popup-text {
+  overflow: hidden;
+}
 .text__word > span {
-    transform: translate3d(0, 150%, 0);
+    transform: translate3d(0, 300%, 0);
     display: inline-block;
+    transition-delay: 1s;
 }
 
 .popup-text.active .text__word > span {
     transform: translate3d(0, 0, 0);
 }
 
+.text__word {
+  transform: translate3d(0, 300%, 0);
+}
+
+.popup-text.active .text__word {
+  transform: translate3d(0, 0, 0);
+}
 /* screen result */
 .screen--result.active{
   .result__images{
@@ -122,5 +132,98 @@
   }
   to {
     transform: rotate(0deg);
+  }
+}
+
+/* module2-task3 */
+.slider__pagination{
+  opacity: 0;
+  animation-duration: 0.5s;
+  transition: opacity 1s;
+}
+
+.slider__control{
+  transition: all .3s;
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  animation-fill-mode: forwards;
+}
+.slider__control--prev{
+  animation-name: roll-in-right;
+}
+.slider__control--next{
+  animation-name: roll-in-left;
+}
+
+.result__button{
+  opacity: 0;
+  transition: all .3s;
+}
+
+
+.active {
+  .slider__pagination{
+    opacity: 1;
+  }
+  .result__button{
+    opacity: 1;
+  }
+  .result__button span{
+    animation-duration: .5s;
+    animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    animation-fill-mode: forwards;
+    animation-name: roll-in-left;
+  }
+}
+
+
+@keyframes roll-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(5rem) rotate(45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+@keyframes roll-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-5rem) rotate(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+.screen__footer{
+  @media (max-width: $tablet) and (orientation: portrait){
+    // background-color: transparent;
+    transition: all .3s;
+    .screen__footer-wrapper{
+      opacity: 0;
+      transition: opacity .3s;
+      transition-delay: .5s;
+    }
+    // &::after{
+    //   content: ' ';
+    //   display: block;
+    //   background-color: #ffffff;
+    //   position: absolute;
+    //   left: 0;
+    //   bottom: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   z-index: -1;
+    //   border-radius: 0 3.6rem 0 0;
+    //   transition: all .3s;
+    // }
+    &.screen__footer--full{
+      .screen__footer-wrapper{
+        opacity: 1;
+      }
+    }
   }
 }

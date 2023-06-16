@@ -18,16 +18,17 @@ class AccentTypographyBuild {
     this._classForActivate = classForActivate;
     this._property = property;
     this._element = document.querySelector(this._elementSelector);
-    this._timeOffset = 0;
+    this._timeOffset = 60;
 
     this.prePareText();
   }
 
   createElement(letter) {
+    const n = 60;
     const span = document.createElement(`span`);
     span.textContent = letter;
     span.style.transition = `${this._property} ${this._timer}ms ease ${this._timeOffset}ms`;
-    this._timeOffset += 20;
+    this._timeOffset += 100;
     return span;
   }
 

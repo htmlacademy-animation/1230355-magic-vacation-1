@@ -36,6 +36,9 @@
   left: 0;
   right: 0;
   z-index: 1;
+  transform: translateY(100%);
+  transition: transform 0.5s;
+  transition-duration: .3s;
 }
 
 .screen__footer {
@@ -48,6 +51,7 @@
   z-index: 1;
   transform: translateY(100%);
   transition: transform 0.5s;
+  transition-duration: .3s;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     width: 3.5rem;
@@ -71,8 +75,9 @@
     }
   }
 }
-.body-loaded {
-  .screen__footer {
+.active {
+  .screen__footer,
+  .screen__disclaimer {
     transform: translateY(0rem);
     transition-timing-function: cubic-bezier(0.54, 0, 0.4, 0.95);
   }
