@@ -29,8 +29,10 @@
   font-family: $font-alt;
   font-weight: 400;
   font-size: 4.8rem;
-  line-height: 0.906;
-  letter-spacing: -0.04em;
+  line-height: 1.25;
+  letter-spacing: -0.05em;
+  display: flex;
+  flex-direction: column;
 
   @media (min-width: $stop-scaling) {
     margin-bottom: 50px;
