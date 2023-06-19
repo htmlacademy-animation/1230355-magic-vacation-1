@@ -41,16 +41,8 @@
 /* screen result */
 .screen--result.screen--show{
   .result__images{
-    .leaf-green,
-    .leaf-blue-1,
-    .leaf-blue-2{
-      // opacity: 1;
-    }
     .flamingo{
-      // opacity: 1;
-      // transform: translateX(-50%) translateY(0) rotate(0deg);
       animation: fadeInToTop .5s ease 0s forwards, levitateFlamingo 2.5s ease .5s infinite;
-      // animation-fill-mode:forwards;
     }
     .suitcase{
       animation: toTop 1.2s ease 0s forwards;
