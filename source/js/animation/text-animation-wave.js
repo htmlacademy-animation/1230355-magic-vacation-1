@@ -4,10 +4,10 @@ const WORD_TIME_OFFSET = TIME_STEP * (WAVE_LENGTH / 2) + 50;
 
 class TextAnimationWave {
   constructor(
-      elementSelector,
-      wordDelimiter = ` `,
-      duration = 500,
-      property = `transform`
+    elementSelector,
+    wordDelimiter = ` `,
+    duration = 500,
+    property = `transform`
   ) {
     this._element = document.querySelector(elementSelector);
     this.wordDelimiter = wordDelimiter;
@@ -15,19 +15,19 @@ class TextAnimationWave {
     this._property = property;
     this._timeOffset = WORD_TIME_OFFSET;
 
-    this.prePareText();
+    this.prepareText();
   }
 
-  prePareText() {
+  prepareText() {
     if (!this._element) {
       return;
     }
-    const words = this._element.textContent.trim().split(this.wordDelimiter).filter((latter) => latter !== ``);
+    const words = this._element.textContent.trim().split(this.wordDelimiter).filter((letter) => letter !== ``);
 
     const content = words.reduce((fragmentParent, word, wordIndex) => {
       this._timeOffset = (wordIndex + 1) * WORD_TIME_OFFSET;
-      const wordElement = Array.from(word).reduce((fragment, latter, letterIndex) => {
-        fragment.appendChild(this.createLetterEl(latter, letterIndex));
+      const wordElement = Array.from(word).reduce((fragment, letter, letterIndex) => {
+        fragment.appendChild(this.createLetterEl(letter, letterIndex));
         return fragment;
       }, document.createDocumentFragment());
       const wordContainer = document.createElement(`span`);

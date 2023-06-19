@@ -39,31 +39,44 @@
 }
 
 /* screen result */
-.screen--result.active{
+.screen--result.screen--show{
   .result__images{
     .leaf-green,
     .leaf-blue-1,
     .leaf-blue-2{
-      opacity: 1;
+      // opacity: 1;
     }
     .flamingo{
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) rotate(0deg);
-      animation: levitateFlamingo 2.5s ease .5s infinite;
+      // opacity: 1;
+      // transform: translateX(-50%) translateY(0) rotate(0deg);
+      animation: fadeInToTop .5s ease 0s forwards, levitateFlamingo 2.5s ease .5s infinite;
       // animation-fill-mode:forwards;
     }
     .suitcase{
-      transform: translate3d(-50%, 0, 0) scale(1);
+      animation: toTop 1.2s ease 0s forwards;
     }
     .leaf-green{
-      animation: leafGreen 2.5s ease .5s forwards;
+      animation: leafGreen 2.5s ease .3s forwards;
     }
     .leaf-blue-1{
-      animation: leafGreen 2s ease .4s forwards;
+      animation: leafGreen 2.2s ease .4s forwards;
     }
     .leaf-blue-2{
-      animation: leafBlue2 2.5s ease .5s forwards;
+      animation: leafBlue2 2.5s ease .4s forwards;
     }
+  }
+  .form__field{
+    animation: fadeIn 1s ease 1s forwards;
+    width: 100%;
+  }
+  .form__field2::after{
+    animation: increaseInRight .5s ease .5s forwards;
+  }
+  .form__button span{
+    animation: fadeIn 1.5s ease .5s forwards;
+  }
+  .form__button{
+    animation: fadeIn .2s ease .5s forwards;
   }
 }
 
@@ -80,10 +93,12 @@
 }
 @keyframes leafGreen {
   from {
+    opacity: 0;
     transform: rotate(-18deg);
   }
 
   20% {
+    opacity: 1;
     transform: rotate(15deg);
   }
 
@@ -98,15 +113,18 @@
     transform: rotate(-3deg);
   }
   to {
+    opacity: 1;
     transform: rotate(0deg);
   }
 }
 @keyframes leafBlue2 {
   from {
+    opacity: 0;
     transform: rotate(0);
   }
 
   20% {
+    opacity: 1;
     transform: rotate(-15deg);
   }
 
@@ -121,6 +139,49 @@
     transform: rotate(3deg);
   }
   to {
+    opacity: 1;
     transform: rotate(0deg);
+  }
+}
+@keyframes toTop {
+  from {
+    transform: translate3d(-50%, 200%, 0) scale(.1);
+  }
+  50%{
+    transform: translate3d(-50%, -10%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+}
+@keyframes fadeInToTop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100%) rotate(-45deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes increaseInRight {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  30%{
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    width: 100%;
   }
 }
