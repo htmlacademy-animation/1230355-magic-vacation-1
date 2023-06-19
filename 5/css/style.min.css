@@ -1584,6 +1584,7 @@ img {
 
 .form--result .form__field {
   width: calc(100% - 31rem);
+  transform-origin: right;
 }
 @media (min-width: 2000px) {
   .form--result .form__field {
@@ -1604,6 +1605,18 @@ img {
   .form--result .form__field {
     width: calc(100% - 5rem);
   }
+}
+.form--result .form__button {
+  width: 20rem;
+}
+@media (orientation: portrait) {
+  .form--result .form__button {
+    width: 4rem;
+  }
+}
+.form--result .form__button span {
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .game {
@@ -1738,7 +1751,7 @@ img {
   left: 0;
   z-index: 100;
   opacity: 0.5;
-  display: none;
+  margin: 70px 0 0 0;
 }
 
 .game__button {
@@ -2995,7 +3008,6 @@ img {
 }
 .result__images img {
   position: absolute;
-  transition: all 0.5s;
   height: auto;
 }
 .result__images .flamingo {
@@ -3017,8 +3029,9 @@ img {
   transition-delay: 0.3s;
 }
 .result__images .leaf-green {
-  left: 56%;
+  left: 55%;
   width: 35%;
+  max-width: 485px;
   top: 36%;
   transform: rotate(-18deg);
   transform-origin: 0 100%;
@@ -3026,14 +3039,47 @@ img {
 .result__images .leaf-blue-2 {
   right: 50%;
   top: 25%;
-  min-width: 28%;
+  width: 28%;
+  max-width: 500px;
   transform-origin: 100% 100%;
 }
 .result__images .leaf-blue-1 {
   left: 57%;
   top: 0%;
-  min-width: 28%;
+  width: 28%;
+  max-width: 500px;
   transform-origin: 0 100%;
+}
+
+.screen--result .form__button {
+  opacity: 0;
+}
+.screen--result .form__button span {
+  opacity: 0;
+}
+.screen--result .form__field {
+  flex: initial;
+  opacity: 0;
+  margin: 0;
+}
+.screen--result .form__field2 {
+  width: 100%;
+  margin: 0 3rem 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+.screen--result .form__field2::after {
+  content: " ";
+  display: block;
+  height: 100%;
+  width: 0;
+  background-color: #ffffff;
+  border-radius: 3rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
 }
 
 .rules {
@@ -4443,27 +4489,33 @@ img {
 }
 
 /* screen result */
-.screen--result.active .result__images .leaf-green,
-.screen--result.active .result__images .leaf-blue-1,
-.screen--result.active .result__images .leaf-blue-2 {
-  opacity: 1;
+.screen--result.screen--show .result__images .flamingo {
+  animation: fadeInToTop 0.5s ease 0s forwards, levitateFlamingo 2.5s ease 0.5s infinite;
 }
-.screen--result.active .result__images .flamingo {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0) rotate(0deg);
-  animation: levitateFlamingo 2.5s ease 0.5s infinite;
+.screen--result.screen--show .result__images .suitcase {
+  animation: toTop 1.2s ease 0s forwards;
 }
-.screen--result.active .result__images .suitcase {
-  transform: translate3d(-50%, 0, 0) scale(1);
+.screen--result.screen--show .result__images .leaf-green {
+  animation: leafGreen 2.5s ease 0.3s forwards;
 }
-.screen--result.active .result__images .leaf-green {
-  animation: leafGreen 2.5s ease 0.5s forwards;
+.screen--result.screen--show .result__images .leaf-blue-1 {
+  animation: leafGreen 2.2s ease 0.4s forwards;
 }
-.screen--result.active .result__images .leaf-blue-1 {
-  animation: leafGreen 2s ease 0.4s forwards;
+.screen--result.screen--show .result__images .leaf-blue-2 {
+  animation: leafBlue2 2.5s ease 0.4s forwards;
 }
-.screen--result.active .result__images .leaf-blue-2 {
-  animation: leafBlue2 2.5s ease 0.5s forwards;
+.screen--result.screen--show .form__field {
+  animation: fadeIn 1s ease 1s forwards;
+  width: 100%;
+}
+.screen--result.screen--show .form__field2::after {
+  animation: increaseInRight 0.5s ease 0.5s forwards;
+}
+.screen--result.screen--show .form__button span {
+  animation: fadeIn 1.5s ease 0.5s forwards;
+}
+.screen--result.screen--show .form__button {
+  animation: fadeIn 0.2s ease 0.5s forwards;
 }
 
 @keyframes levitateFlamingo {
@@ -4479,9 +4531,11 @@ img {
 }
 @keyframes leafGreen {
   from {
+    opacity: 0;
     transform: rotate(-18deg);
   }
   20% {
+    opacity: 1;
     transform: rotate(15deg);
   }
   40% {
@@ -4494,14 +4548,17 @@ img {
     transform: rotate(-3deg);
   }
   to {
+    opacity: 1;
     transform: rotate(0deg);
   }
 }
 @keyframes leafBlue2 {
   from {
+    opacity: 0;
     transform: rotate(0);
   }
   20% {
+    opacity: 1;
     transform: rotate(-15deg);
   }
   40% {
@@ -4514,7 +4571,50 @@ img {
     transform: rotate(3deg);
   }
   to {
+    opacity: 1;
     transform: rotate(0deg);
+  }
+}
+@keyframes toTop {
+  from {
+    transform: translate3d(-50%, 200%, 0) scale(0.1);
+  }
+  50% {
+    transform: translate3d(-50%, -10%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+}
+@keyframes fadeInToTop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100%) rotate(-45deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes increaseInRight {
+  from {
+    opacity: 0;
+    width: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    width: 100%;
   }
 }
 
