@@ -145,6 +145,7 @@
 .form--result {
   .form__field {
     width: calc(100% - 31rem);
+    transform-origin: right;
 
     @media (min-width: $stop-scaling) {
       width: calc(100% - 310px);
@@ -160,6 +161,16 @@
 
     @media (max-width: $mobile) and (orientation: landscape) {
       width: calc(100% - 5rem);
+    }
+  }
+  .form__button{
+    width: 20rem;
+    @media (orientation: portrait){
+      width: 4rem;
+    }
+    span{
+      opacity: 0;
+      transition: opacity .3s;
     }
   }
 }
