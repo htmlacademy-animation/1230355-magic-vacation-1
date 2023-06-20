@@ -146,8 +146,6 @@
   .form__field {
     width: calc(100% - 31rem);
     transform-origin: right;
-    // width: 0;
-    // transition: width 0.4s linear;
 
     @media (min-width: $stop-scaling) {
       width: calc(100% - 310px);
