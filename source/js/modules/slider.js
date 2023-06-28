@@ -4,6 +4,7 @@ export default () => {
   let storySlider;
   let sliderContainer = document.getElementById(`story`);
   sliderContainer.style.backgroundImage = `url("img/slide1.jpg"), linear-gradient(180deg, rgba(83, 65, 118, 0) 0%, #523E75 16.85%)`;
+  document.body.setAttribute('data-slide', 1);
 
   const setSlider = function () {
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
@@ -53,12 +54,16 @@ export default () => {
           slideChange: () => {
             if (storySlider.activeIndex === 0) {
               sliderContainer.style.backgroundImage = `url("img/slide1.jpg")`;
+              document.body.setAttribute('data-slide', 1);
             } else if (storySlider.activeIndex === 2) {
               sliderContainer.style.backgroundImage = `url("img/slide2.jpg")`;
+              document.body.setAttribute('data-slide', 2);
             } else if (storySlider.activeIndex === 4) {
               sliderContainer.style.backgroundImage = `url("img/slide3.jpg")`;
+              document.body.setAttribute('data-slide', 3);
             } else if (storySlider.activeIndex === 6) {
               sliderContainer.style.backgroundImage = `url("img/slide4.jpg")`;
+              document.body.setAttribute('data-slide', 4);
             }
           },
           resize: () => {
