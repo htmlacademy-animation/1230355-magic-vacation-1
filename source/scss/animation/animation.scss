@@ -210,3 +210,97 @@
     opacity: 1;
   }
 }
+/* module2-task3 */
+.slider__pagination{
+  opacity: 0;
+  animation-duration: 0.5s;
+  transition: opacity 1s;
+}
+
+.slider__control{
+  transition: all .3s;
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  animation-fill-mode: forwards;
+}
+
+.slider__control--prev{
+  animation-name: roll-in-right;
+}
+
+.slider__control--next{
+  animation-name: roll-in-left;
+}
+
+.active{
+  .slider__pagination{
+    opacity: 1;
+  }
+}
+/**/
+.result__button{
+  opacity: 0;
+  transition: all .3s;
+}
+
+.screen--result.screen--show {
+  .result__button{
+    animation: fadeIn .3s ease .1s forwards;
+  }
+  .result__button span{
+    animation-duration: .5s;
+    animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    animation-fill-mode: forwards;
+    animation-name: roll-in-left;
+  }
+}
+
+@keyframes roll-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(5rem) rotate(45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+@keyframes roll-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-5rem) rotate(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+/**/
+.screen__footer{
+  @media (max-width: $tablet) and (orientation: portrait){
+    max-width: 100vw;
+    transition: all .2s;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0 3.6rem 0 0;
+    transform: translateY(3.5rem);
+    transition: transform 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), opacity 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), width 0.2s ease 0.2s, height 0.2s ease 0.2s;
+    .screen__footer-wrapper{
+      opacity: 1;
+      color: rgba(255, 255, 255, 0);
+      transition: color 0.2s;
+    }
+    &.screen__footer--full{
+      width: 100%;
+      height: 18rem;
+      transition: width 0.2s ease, height 0.2s ease;
+      .screen__footer-wrapper{
+        opacity: 1;
+        color: #5f458c;
+        transition: color 0.2s ease 0.2s;
+      }
+    }
+  }
+}
+
+
