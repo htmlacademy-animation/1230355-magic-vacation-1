@@ -275,25 +275,25 @@
     transform: translateX(0) rotate(0);
   }
 }
-  /**/
+/**/
 .screen__footer{
   @media (max-width: $tablet) and (orientation: portrait){
-  max-width: 100vw;
-  transition: all .2s;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 0 3.6rem 0 0;
-  transform: translateY(3.5rem);
-  transition: transform 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), opacity 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), width 0.2s ease 0.2s, height 0.2s ease 0.2s;
-  .screen__footer-wrapper{
-    opacity: 1;
-    color: rgba(255, 255, 255, 0);
-    transition: color 0.2s;
-  }
-  &.screen__footer--full{
-    width: 100%;
-    height: 18rem;
-    transition: width 0.2s ease, height 0.2s ease;
+    max-width: 100vw;
+    transition: all .2s;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0 3.6rem 0 0;
+    transform: translateY(3.5rem);
+    transition: transform 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), opacity 0.2s cubic-bezier(0.29, 0.48, 0.31, 0.98), width 0.2s ease 0.2s, height 0.2s ease 0.2s;
+    .screen__footer-wrapper{
+      opacity: 1;
+      color: rgba(255, 255, 255, 0);
+      transition: color 0.2s;
+    }
+    &.screen__footer--full{
+      width: 100%;
+      height: 18rem;
+      transition: width 0.2s ease, height 0.2s ease;
       .screen__footer-wrapper{
         opacity: 1;
         color: #5f458c;
