@@ -9,7 +9,6 @@ import form from './modules/form.js';
 import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
 import animation from './modules/animation';
-// import svgAnimateStart from './animation/svg-animation';
 
 // init modules
 mobileHeight();

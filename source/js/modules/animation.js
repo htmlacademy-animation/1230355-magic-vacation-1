@@ -4,6 +4,10 @@ export default () => {
   window.onload = function () {
     document.querySelector(`body`).classList.add(`body-loaded`);
   };
+  // document.querySelector('a[data-href="prizes"]').addEventListener('click', () => {
+  //   svgAnimateStart();
+  // });
+
 };
 
 const introTitleAnimation = new TextAnimationWave(`.intro__title`);
@@ -38,5 +42,16 @@ document.body.addEventListener(`screenChanged`, (e) => {
     case `game`:
       setTimeout(() => gameTitleAnimation.runAnimation(), 500);
       break;
+  }
+});
+
+var svgAnimate = document.getElementById('primaryAwardAppear');
+
+function svgAnimateStart() {
+  svgAnimate.beginElement();
+}
+document.body.addEventListener(`screenChanged`, (e) => {
+  if (e.detail.screenName === `prizes`) {
+    svgAnimateStart();
   }
 });
