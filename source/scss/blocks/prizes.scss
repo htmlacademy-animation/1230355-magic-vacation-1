@@ -178,7 +178,7 @@
     .prizes__icon {
       // width: 18.8rem;
       position: relative;
-      left: -5.9rem;
+      left: -11rem;
       width: 26.8rem;
       @media (min-width: $stop-scaling) {
         width: 188px;
@@ -206,7 +206,8 @@
 
     .prizes__icon {
       width: 26rem;
-
+      position: relative;
+      left: -3rem;
       @media (min-width: $stop-scaling) {
         width: 260px;
       }
@@ -351,7 +352,7 @@
   // .prizes__item{
   //   opacity: 1;
   // }
- 
+
   // .prizes__item:nth-child(1) {
   //   transition-delay: 0.5s;
   // }

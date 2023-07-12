@@ -4,10 +4,6 @@ export default () => {
   window.onload = function () {
     document.querySelector(`body`).classList.add(`body-loaded`);
   };
-  // document.querySelector('a[data-href="prizes"]').addEventListener('click', () => {
-  //   svgAnimateStart();
-  // });
-
 };
 
 const introTitleAnimation = new TextAnimationWave(`.intro__title`);
@@ -34,7 +30,10 @@ document.body.addEventListener(`screenChanged`, (e) => {
       setTimeout(() => sliderTitleAnimation.runAnimation(), 500);
       break;
     case `prizes`:
-      setTimeout(() => prizesTitleAnimation.runAnimation(), 500);
+      setTimeout(() => {
+        prizesTitleAnimation.runAnimation();
+        svgAnimateStart();
+      }, 500);
       break;
     case `rules`:
       setTimeout(() => rulesTitleAnimation.runAnimation(), 500);
@@ -45,13 +44,10 @@ document.body.addEventListener(`screenChanged`, (e) => {
   }
 });
 
-var svgAnimate = document.getElementById('primaryAwardAppear');
-
+const svgAnimate = document.getElementById(`primaryAwardAppear`);
 function svgAnimateStart() {
-  svgAnimate.beginElement();
-}
-document.body.addEventListener(`screenChanged`, (e) => {
-  if (e.detail.screenName === `prizes`) {
-    svgAnimateStart();
+  if (!svgAnimate.hasAttribute(`shown`)) {
+    svgAnimate.setAttribute(`shown`, ``);
+    svgAnimate.beginElement();
   }
-});
+}
