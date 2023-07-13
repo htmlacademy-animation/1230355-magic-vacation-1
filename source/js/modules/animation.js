@@ -30,7 +30,10 @@ document.body.addEventListener(`screenChanged`, (e) => {
       setTimeout(() => sliderTitleAnimation.runAnimation(), 500);
       break;
     case `prizes`:
-      setTimeout(() => prizesTitleAnimation.runAnimation(), 500);
+      setTimeout(() => {
+        prizesTitleAnimation.runAnimation();
+        svgAnimateStart();
+      }, 500);
       break;
     case `rules`:
       setTimeout(() => rulesTitleAnimation.runAnimation(), 500);
@@ -40,3 +43,11 @@ document.body.addEventListener(`screenChanged`, (e) => {
       break;
   }
 });
+
+const svgAnimate = document.getElementById(`primaryAwardAppear`);
+function svgAnimateStart() {
+  if (!svgAnimate.hasAttribute(`shown`)) {
+    svgAnimate.setAttribute(`shown`, ``);
+    svgAnimate.beginElement();
+  }
+}

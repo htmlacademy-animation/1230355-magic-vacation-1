@@ -17,7 +17,7 @@ export default class FullPageScroll {
   }
 
   init() {
-    document.addEventListener(`wheel`, throttle(this.onScrollHandler, this.THROTTLE_TIMEOUT, { trailing: true }));
+    document.addEventListener(`wheel`, throttle(this.onScrollHandler, this.THROTTLE_TIMEOUT, {trailing: true}));
     window.addEventListener(`popstate`, this.onUrlHashChengedHandler);
 
     this.onUrlHashChanged();
@@ -63,6 +63,7 @@ export default class FullPageScroll {
         });
         this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
         this.screenElements[this.activeScreen].classList.add(`active`);
+        document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
       }, 400);
     } else {
       transitionBlock.classList.remove(`animate-forwards`);
@@ -73,7 +74,7 @@ export default class FullPageScroll {
       this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
       setTimeout(() => {
         this.screenElements[this.activeScreen].classList.add(`active`);
-        document.body.setAttribute('data-screen', this.screenElements[this.activeScreen].id);
+        document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
       }, 100);
     }
   }
