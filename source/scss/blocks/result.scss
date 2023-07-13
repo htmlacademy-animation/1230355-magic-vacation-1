@@ -57,6 +57,7 @@
 .result__title {
   margin: 0 auto 2rem;
   color: $c-light;
+  animation: zoom-out 500ms ease-out both;
 
   @media (min-width: $stop-scaling) {
     margin: 0 auto 20px;
@@ -74,7 +75,15 @@
     stroke-linejoin: round;
   }
 }
+@keyframes zoom-out {
+  from {
+    transform: scale(1.2);
+  }
 
+  to {
+    transform: scale(1);
+  }
+}
 .result__text {
   margin-bottom: 2rem;
   text-align: center;
@@ -242,9 +251,9 @@
 
 .result--negative {
   .result__title {
-    margin-top: 9.5rem;
-    width: 66.5rem;
-    height: 11.3rem;
+    margin-top: -3.5rem;
+    width: 80.5rem;
+    height: 28.3rem;
 
     @media (min-width: $stop-scaling) {
       margin-top: 95px;
