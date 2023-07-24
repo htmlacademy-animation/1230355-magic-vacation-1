@@ -1,4 +1,5 @@
 import TextAnimationWave from '../animation/text-animation-wave';
+import timerStart from '../animation/game-timer';
 
 export default () => {
   window.onload = function () {
@@ -40,7 +41,7 @@ document.body.addEventListener(`screenChanged`, (e) => {
       break;
     case `game`:
       setTimeout(() => gameTitleAnimation.runAnimation(), 500);
-      requestAnimationFrame(tick);
+      timerStart();
       break;
   }
 });
@@ -51,34 +52,5 @@ function svgAnimateStart() {
   if (!svgAnimate.hasAttribute(`shown`)) {
     svgAnimate.setAttribute(`shown`, ``);
     svgAnimate.beginElement();
-  }
-}
-
-// Таймер игры
-let fpsInterval = 1000;
-let endTime = 300;
-let now;
-let then = Date.now();
-let elapsed;
-
-const counterMinutes = document.querySelector(`.min`);
-const counterSeconds = document.querySelector(`.sec`);
-
-function draw() {
-  const minutes = new Date(endTime * 1000).getMinutes();
-  const seconds = new Date(endTime * 1000).getSeconds();
-  counterMinutes.textContent = String(minutes).padStart(2, 0);
-  counterSeconds.textContent = String(seconds).padStart(2, 0);
-  endTime -= 1;
-}
-
-function tick() {
-  requestAnimationFrame(tick);
-  now = Date.now();
-  elapsed = now - then;
-
-  if (elapsed > fpsInterval) {
-    then = now - (elapsed % fpsInterval);
-    draw();
   }
 }
