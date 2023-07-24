@@ -1,5 +1,7 @@
 import TextAnimationWave from '../animation/text-animation-wave';
 
+const TIMER_DURATION_SEC = 300;
+
 export default () => {
   window.onload = function () {
     document.querySelector(`body`).classList.add(`body-loaded`);
@@ -40,7 +42,10 @@ document.body.addEventListener(`screenChanged`, (e) => {
       break;
     case `game`:
       setTimeout(() => gameTitleAnimation.runAnimation(), 500);
-      requestAnimationFrame(tick);
+      if (timeLeft === undefined) {
+        timeLeft = TIMER_DURATION_SEC;
+        requestAnimationFrame(tick);
+      }
       break;
   }
 });
@@ -55,30 +60,34 @@ function svgAnimateStart() {
 }
 
 // Таймер игры
-let fpsInterval = 1000;
-let endTime = 300;
+let timeLeft;
+let drawMinIntervalMs = 1000;
 let now;
-let then = Date.now();
+let drawLastTime = Date.now();
 let elapsed;
 
 const counterMinutes = document.querySelector(`.min`);
 const counterSeconds = document.querySelector(`.sec`);
 
 function draw() {
-  const minutes = new Date(endTime * 1000).getMinutes();
-  const seconds = new Date(endTime * 1000).getSeconds();
-  counterMinutes.textContent = String(minutes).padStart(2, 0);
-  counterSeconds.textContent = String(seconds).padStart(2, 0);
-  endTime -= 1;
+  if (timeLeft > 0) {
+    timeLeft -= 1;
+    const minutes = new Date(timeLeft * 1000).getMinutes();
+    const seconds = new Date(timeLeft * 1000).getSeconds();
+    counterMinutes.textContent = String(minutes).padStart(2, 0);
+    counterSeconds.textContent = String(seconds).padStart(2, 0);
+  }
 }
 
 function tick() {
-  requestAnimationFrame(tick);
   now = Date.now();
-  elapsed = now - then;
+  elapsed = now - drawLastTime;
 
-  if (elapsed > fpsInterval) {
-    then = now - (elapsed % fpsInterval);
+  if (elapsed > drawMinIntervalMs) {
+    drawLastTime = now - (elapsed % drawMinIntervalMs);
     draw();
+  }
+  if (timeLeft > 0) {
+    requestAnimationFrame(tick);
   }
 }
