@@ -41,9 +41,9 @@ document.body.addEventListener(`screenChanged`, (e) => {
         prizesTitleAnimation.runAnimation();
         svgAnimateStart();
         journeysAnimation.animate();
-        casesAnimation.animate();
-        codesAnimation.animate();
       }, 500);
+      setTimeout(() => casesAnimation.animate(), 3000);
+      setTimeout(() => codesAnimation.animate(), 5500);
       break;
     case `rules`:
       setTimeout(() => rulesTitleAnimation.runAnimation(), 500);
