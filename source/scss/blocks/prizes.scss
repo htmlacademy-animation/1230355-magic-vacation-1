@@ -108,11 +108,7 @@
 
 .prizes__item {
   margin-left: 7.5rem;
-
-  // opacity: 0;
-  //   transition-property: opacity;
-  //   transition-timing-function: ease-out;
-  //   transition-duration: 0.4s;
+  opacity: 0;
 
   @media (min-width: $stop-scaling) {
     margin-left: 75px;
@@ -137,7 +133,6 @@
     .prizes__icon {
       position: relative;
       left: -5.9rem;
-      // bottom: -1.4rem;
       width: 26.8rem;
 
       @media (min-width: $stop-scaling) {
@@ -146,21 +141,22 @@
         width: 268px;
       }
 
+      @media (max-width: $tablet) and (orientation: landscape) {
+        left: -2.5rem;
+        width: 13rem;
+      }
+
       @media (max-width: $tablet) and (orientation: portrait) {
         left: 0;
         bottom: 0;
         width: 9.4rem;
       }
 
-      @media (max-width: $tablet) and (orientation: landscape) {
-        left: -2rem;
-        width: 13rem;
-      }
-
       @media (max-width: $mobile) and (orientation: landscape) {
         width: 10rem;
       }
     }
+    transform: translateX(100%);
   }
 
   &--cases {
@@ -176,21 +172,24 @@
     }
 
     .prizes__icon {
-      // width: 18.8rem;
       position: relative;
+      @media (min-width: $stop-scaling) {
+        width: 230px;
+        left: -6rem;
+        bottom: -1rem;
+      }
       left: -11rem;
       width: 26.8rem;
-      @media (min-width: $stop-scaling) {
-        width: 188px;
+
+      @media (max-width: $tablet) and (orientation: landscape) {
+        width: 14.5rem;
+        left: -6rem;
       }
 
       @media (max-width: $tablet) and (orientation: portrait) {
         margin-right: 1.3rem;
         width: 10.211rem;
-      }
-
-      @media (max-width: $tablet) and (orientation: landscape) {
-        width: 9.5rem;
+        left: 0;
       }
 
       @media (max-width: $mobile) and (orientation: landscape) {
@@ -212,12 +211,14 @@
         width: 260px;
       }
 
-      @media (max-width: $tablet) and (orientation: portrait) {
-        width: 8.66rem;
+      @media (max-width: $tablet) and (orientation: landscape) {
+        width: 14.5rem;
+        left: -1.5rem;
       }
 
-      @media (max-width: $tablet) and (orientation: landscape) {
-        width: 13rem;
+      @media (max-width: $tablet) and (orientation: portrait) {
+        width: 8.66rem;
+        left: 0;
       }
 
       @media (max-width: $mobile) and (orientation: landscape) {
@@ -283,9 +284,11 @@
     font-weight: 400;
     font-size: 12rem;
     line-height: 0.55;
+    min-width: 7.5rem;
 
     @media (min-width: $stop-scaling) {
       font-size: 120px;
+      min-width: 5rem;
     }
 
     @media (max-width: $tablet) and (orientation: portrait) {
@@ -295,10 +298,20 @@
 
     @media (max-width: $tablet) and (orientation: landscape) {
       font-size: 6rem;
+      min-width: 4rem;
     }
 
     @media (max-width: $mobile) and (orientation: landscape) {
       font-size: 3.5rem;
+    }
+    &.prizes-count-codes{
+      min-width: 19rem;
+      @media (min-width: $stop-scaling){
+        min-width: 14rem;
+      }
+      @media (max-width: $tablet) and (orientation: landscape) {
+        min-width: 10rem;
+      }
     }
   }
 
@@ -349,17 +362,30 @@
   }
 }
 .screen--prizes.active{
-  // .prizes__item{
-  //   opacity: 1;
-  // }
+  .prizes__item{
+    animation: fadeIn .3s ease .1s forwards;
+  }
 
-  // .prizes__item:nth-child(1) {
-  //   transition-delay: 0.5s;
-  // }
-  // .prizes__item:nth-child(2) {
-  //   transition-delay: 4.5s;
-  // }
-  // .prizes__item:nth-child(3) {
-  //   transition-delay: 6.5s;
-  // }
+  .prizes__item--journeys {
+    animation-delay: .3s;
+    animation: fadeIn .3s ease .1s forwards, translateInRight .5s ease 2s forwards;
+    @media (max-width: $tablet) and (orientation: portrait){
+      animation: fadeIn .3s ease .1s forwards;
+      transform: translateX(0%);
+    }
+  }
+  .prizes__item--cases {
+    animation-delay: 2.4s;
+  }
+  .prizes__item--codes {
+    animation-delay: 5s;
+  }
+}
+@keyframes translateInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
 }

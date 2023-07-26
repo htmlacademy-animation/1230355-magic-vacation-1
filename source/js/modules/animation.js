@@ -1,4 +1,6 @@
 import TextAnimationWave from '../animation/text-animation-wave';
+import timerStart from '../animation/game-timer';
+import NumberUpAnimation from '../animation/number-up-animation';
 
 export default () => {
   window.onload = function () {
@@ -12,6 +14,11 @@ const sliderTitleAnimation = new TextAnimationWave(`.slider__item-title`);
 const prizesTitleAnimation = new TextAnimationWave(`.prizes__title`);
 const rulesTitleAnimation = new TextAnimationWave(`.rules__title`);
 const gameTitleAnimation = new TextAnimationWave(`.game__title`);
+
+const journeysAnimation = new NumberUpAnimation(document.querySelector(`.prizes-count-journeys`), 3, 1);
+const casesAnimation = new NumberUpAnimation(document.querySelector(`.prizes-count-cases`), 7, 1);
+const codesAnimation = new NumberUpAnimation(document.querySelector(`.prizes-count-codes`), 900, 180);
+codesAnimation.setCountCurrent(11);
 
 document.body.addEventListener(`screenChanged`, (e) => {
   introTitleAnimation.destroyAnimation();
@@ -33,14 +40,17 @@ document.body.addEventListener(`screenChanged`, (e) => {
       setTimeout(() => {
         prizesTitleAnimation.runAnimation();
         svgAnimateStart();
+        journeysAnimation.animate();
       }, 500);
+      setTimeout(() => casesAnimation.animate(), 3000);
+      setTimeout(() => codesAnimation.animate(), 5500);
       break;
     case `rules`:
       setTimeout(() => rulesTitleAnimation.runAnimation(), 500);
       break;
     case `game`:
       setTimeout(() => gameTitleAnimation.runAnimation(), 500);
-      requestAnimationFrame(tick);
+      timerStart();
       break;
   }
 });
@@ -54,31 +64,4 @@ function svgAnimateStart() {
   }
 }
 
-// Таймер игры
-let fpsInterval = 1000;
-let endTime = 300;
-let now;
-let then = Date.now();
-let elapsed;
 
-const counterMinutes = document.querySelector(`.min`);
-const counterSeconds = document.querySelector(`.sec`);
-
-function draw() {
-  const minutes = new Date(endTime * 1000).getMinutes();
-  const seconds = new Date(endTime * 1000).getSeconds();
-  counterMinutes.textContent = String(minutes).padStart(2, 0);
-  counterSeconds.textContent = String(seconds).padStart(2, 0);
-  endTime -= 1;
-}
-
-function tick() {
-  requestAnimationFrame(tick);
-  now = Date.now();
-  elapsed = now - then;
-
-  if (elapsed > fpsInterval) {
-    then = now - (elapsed % fpsInterval);
-    draw();
-  }
-}
