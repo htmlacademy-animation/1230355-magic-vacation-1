@@ -1,4 +1,4 @@
-import SeaCalfScene from './../animation/seacalf-canvas-animation.js';
+import SeaCalfScene from '../animation/2d-animation/seacalf-canvas-animation.js';
 
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);

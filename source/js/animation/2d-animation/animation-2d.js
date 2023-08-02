@@ -1,4 +1,4 @@
-import easing from '../helpers/easing';
+import easing from '../../helpers/easing';
 
 export default class Animation {
     constructor(options) {
