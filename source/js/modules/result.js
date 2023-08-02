@@ -1,3 +1,5 @@
+import SeaCalfScene from './../animation/seacalf-canvas-animation.js';
+
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
   let results = document.querySelectorAll(`.screen--result`);
@@ -17,6 +19,13 @@ export default () => {
           targetEl[0].querySelector(`svg animate`).beginElement();
         }, 100);
         targetEl[0].classList.remove(`screen--hidden`);
+
+        if (target === `result`) {
+          let SeaCalfCanvasAnimate = new SeaCalfScene({
+            canvas: document.querySelector(`#sea-calf-canvas`)
+          });
+          SeaCalfCanvasAnimate.startAnimation();
+        } else if (target === `result3`) { }
       });
     }
 

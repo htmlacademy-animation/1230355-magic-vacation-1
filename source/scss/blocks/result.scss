@@ -358,6 +358,10 @@
     flex: initial;
     opacity: 0;
     margin: 0;
+    margin-right: 3rem;
+    @media (orientation: portrait) {
+      margin-right: 1rem;
+    }
   }
   .form__field2{
     width: 100%;
