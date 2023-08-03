@@ -39,7 +39,7 @@ export default class canvasScene {
     });
 
     if (this.afterInit && typeof this.afterInit === `function`) {
-        this.afterInit();
+      this.afterInit();
     }
   }
 
