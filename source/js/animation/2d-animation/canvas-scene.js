@@ -12,6 +12,7 @@ export default class canvasScene {
     this.loadingCounter = 0;
 
     this.animations = [];
+    this.animationsDrop = [];
     this.afterInit = () => { };
 
     this.initObjects();
