@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import СustomMateriall from './custom-material';
 
 export default class sceneStory {
   constructor() {
@@ -48,9 +49,7 @@ export default class sceneStory {
 
     loadManager.onLoad = () => {
       loadedTextures.forEach((texture, i) => {
-        const material = new THREE.MeshBasicMaterial({
-          map: texture
-        });
+        const material = new СustomMateriall(texture);
         const image = new THREE.Mesh(geometry, material);
         image.scale.x = this.textureWidth;
         image.scale.y = this.textureHeight;
