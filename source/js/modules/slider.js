@@ -1,10 +1,10 @@
 import Swiper from 'swiper';
-import sceneStory from '../animation/3d-animation/3d-scene-story';
+import SceneStory from '../animation/3d-animation/3d-scene-story';
+import bodyTheme from '../helpers/theme';
 
 export default () => {
   let storySlider;
-  const story = new sceneStory();
-  document.body.setAttribute(`data-slide`, 1);
+  const story = new SceneStory();
 
   const setSlider = function () {
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
@@ -52,13 +52,17 @@ export default () => {
         },
         on: {
           slideChange: () => {
-            if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
+            if (storySlider.activeIndex === 0) {
+              bodyTheme.setAndApplyBodyTheme(`purple`);
               story.setScene(0);
-            } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
+            } else if (storySlider.activeIndex === 2) {
+              bodyTheme.setAndApplyBodyTheme(`blue`);
               story.setScene(1);
-            } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
+            } else if (storySlider.activeIndex === 4) {
               story.setScene(2);
-            } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
+              bodyTheme.setAndApplyBodyTheme(`light-blue`);
+            } else if (storySlider.activeIndex === 6) {
+              bodyTheme.setAndApplyBodyTheme(`dark`);
               story.setScene(3);
             }
           },
