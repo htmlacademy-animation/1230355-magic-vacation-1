@@ -1,20 +1,15 @@
-import * as THREE from 'three';
+import vertexShader from '../3d-animation/shaders/custom-vertex-shader.glsl';
+import fragmentShader from '../3d-animation/shaders/custom-fragment-shader.glsl';
 
-// eslint-disable-next-line no-undef
-const vertexShader = require(`./shaders/custom-vertex-shader.glsl`);
-// eslint-disable-next-line no-undef
-const fragmentShader = require(`./shaders/custom-fragment-shader.glsl`);
-
-export default class CustomMaterial extends THREE.RawShaderMaterial {
-  constructor(map) {
-    super({
-      uniforms: {
-        map: {
-          value: map
-        }
-      },
-      vertexShader,
-      fragmentShader
-    });
-  }
-}
+export default (texture, arg) => ({
+  uniforms: {
+    map: {
+      value: texture
+    },
+    options: {
+      value: arg
+    }
+  },
+  vertexShader,
+  fragmentShader
+});
