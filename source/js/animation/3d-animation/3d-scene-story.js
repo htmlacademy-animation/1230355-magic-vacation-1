@@ -1,17 +1,17 @@
 import * as THREE from 'three';
-import СustomMateriall from './custom-material';
+import rawShaderMaterial from './custom-material';
 
-export default class sceneStory {
+export default class SceneStory {
   constructor() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.aspectRation = this.width / this.height;
 
     this.textures = [
-      `./img/module-5/scenes-textures/scene-1.png`,
-      `./img/module-5/scenes-textures/scene-2.png`,
-      `./img/module-5/scenes-textures/scene-3.png`,
-      `./img/module-5/scenes-textures/scene-4.png`,
+      {src: `./img/module-5/scenes-textures/scene-1.png`, options: {hue: 0.0}},
+      {src: `./img/module-5/scenes-textures/scene-2.png`, options: {hue: -0.25}},
+      {src: `./img/module-5/scenes-textures/scene-3.png`, options: {hue: 0.0}},
+      {src: `./img/module-5/scenes-textures/scene-4.png`, options: {hue: 0.0}},
     ];
     this.textureWidth = 2048;
     this.textureHeight = 1024;
@@ -44,12 +44,12 @@ export default class sceneStory {
 
     const loadManager = new THREE.LoadingManager();
     const textureLoader = new THREE.TextureLoader(loadManager);
-    const loadedTextures = this.textures.map((texture) => textureLoader.load(texture));
+    const loadedTextures = this.textures.map((texture) => ({src: textureLoader.load(texture.src), options: texture.options}));
     const geometry = new THREE.PlaneGeometry(1, 1);
 
     loadManager.onLoad = () => {
       loadedTextures.forEach((texture, i) => {
-        const material = new СustomMateriall(texture);
+        const material = new THREE.RawShaderMaterial(rawShaderMaterial(texture.src, texture.options));
         const image = new THREE.Mesh(geometry, material);
         image.scale.x = this.textureWidth;
         image.scale.y = this.textureHeight;

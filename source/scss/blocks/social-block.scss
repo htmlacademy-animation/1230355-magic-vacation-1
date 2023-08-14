@@ -268,125 +268,136 @@
   }
 }
 @media (min-width: ($mobile + 1)) and (orientation: landscape) {
-  [data-screen="story"][data-slide="1"] .social-block__toggler {
-    color: $c-purple;
-
-    &:hover,
-    .social-block--active & {
-      color: $c-dark;
-    }
-
-    &:focus {
-      color: $c-dark;
-
-      &::before {
-        border-color: $c-dark;
-      }
-
-    }
-
-    &:active,
-    &:active:focus {
-      color: $c-light;
-
-      &::before {
-        background-color: $c-dark;
-        border-color: $c-dark;
-      }
-    }
-  }
-
-  [data-screen="story"][data-slide="2"] .social-block__toggler {
-    color: $c-royal-blue;
-
-    &:hover,
-    .social-block--active & {
-      color: $c-cornflower;
-    }
-
-    &:focus {
-      color: $c-cornflower;
-
-      &::before {
-        border-color: $c-cornflower;
-      }
-
-    }
-
-    &:active,
-    &:active:focus {
-      color: $c-light;
-
-      &::before {
-        background-color: $c-cornflower;
-        border-color: $c-cornflower;
-      }
-    }
-  }
-
-  [data-screen="story"][data-slide="3"] .social-block__toggler {
-    color: $c-cornflower;
-
-    &:hover,
-    .social-block--active & {
-      color: $c-royal-blue;
-    }
-
-    &:focus {
-      color: $c-royal-blue;
-
-      &::before {
-        border-color: $c-royal-blue;
-      }
-
-    }
-
-    &:active,
-    &:active:focus {
-      color: $c-light;
-
-      &::before {
-        background-color: $c-royal-blue;
-        border-color: $c-royal-blue;
-      }
-    }
-  }
-
-  [data-screen="story"][data-slide="4"] .social-block__toggler {
-    color: $c-dark;
-
-    &:hover,
-    .social-block--active & {
-      color: $c-purple;
-    }
-
-    &:focus {
+  [data-screen="story"] {
+    .social-block__toggler {
       color: $c-purple;
 
-      &::before {
-        border-color: $c-purple;
+      &:hover,
+      .social-block--active & {
+        color: $c-dark;
       }
 
+      &:focus {
+        color: $c-dark;
+
+        &::before {
+          border-color: $c-dark;
+        }
+
+      }
+
+      &:active,
+      &:active:focus {
+        color: $c-light;
+
+        &::before {
+          background-color: $c-dark;
+          border-color: $c-dark;
+        }
+      }
     }
-
-    &:active,
-    &:active:focus {
-      color: $c-light;
-
-      &::before {
-        background-color: $c-purple;
-        border-color: $c-purple;
-      }
+    .social-block__link:hover{
+      color: $c-dark;
     }
   }
+
+  .blue[data-screen="story"] {
+     .social-block__toggler {
+      color: $c-royal-blue;
+
+      &:hover,
+      .social-block--active & {
+        color: $c-cornflower;
+      }
+
+      &:focus {
+        color: $c-cornflower;
+
+        &::before {
+          border-color: $c-cornflower;
+        }
+
+      }
+
+      &:active,
+      &:active:focus {
+        color: $c-light;
+
+        &::before {
+          background-color: $c-cornflower;
+          border-color: $c-cornflower;
+        }
+      }
+    }
+    .social-block__link:hover{
+      color: $c-cornflower;
+    }
+  }
+
+  .light-blue[data-screen="story"]{
+     .social-block__toggler {
+      color: $c-cornflower;
+
+      &:hover,
+      .social-block--active & {
+        color: $c-royal-blue;
+      }
+
+      &:focus {
+        color: $c-royal-blue;
+
+        &::before {
+          border-color: $c-royal-blue;
+        }
+
+      }
+
+      &:active,
+      &:active:focus {
+        color: $c-light;
+
+        &::before {
+          background-color: $c-royal-blue;
+          border-color: $c-royal-blue;
+        }
+      }
+    }
+    .social-block__link:hover{
+      color: $c-royal-blue;
+    }
+  }
+
+  .dark[data-screen="story"] {
+    .social-block__toggler {
+      color: $c-dark;
+
+      &:hover,
+      .social-block--active & {
+        color: $c-purple;
+      }
+
+      &:focus {
+        color: $c-purple;
+
+        &::before {
+          border-color: $c-purple;
+        }
+
+      }
+
+      &:active,
+      &:active:focus {
+        color: $c-light;
+
+        &::before {
+          background-color: $c-purple;
+          border-color: $c-purple;
+        }
+      }
+    }
+    .social-block__link:hover{
+      color: $c-purple;
+    }
+  }
+
 }
-
-// .loaded {
-//   .social-block__toggler {
-//     &::before {
-//       width: 100%;
-//       height: 100%;
-//       transition: width 0.3s cubic-bezier(.37,.29,.17,1.52) 0.4s, height 0.3s cubic-bezier(.37,.29,.17,1.52) 0.4s;
-//     }
-//   }
-// }
