@@ -1,12 +1,13 @@
 import Swiper from 'swiper';
-import SceneStory from '../animation/3d-animation/3d-scene-story';
 import bodyTheme from '../helpers/theme';
+import {plainMeshController} from '../../js/animation/3d-animation/plainMeshController';
 
 export default () => {
   let storySlider;
-  const story = new SceneStory();
 
   const setSlider = function () {
+    bodyTheme.setAndApplyBodyTheme(`dark`);
+    plainMeshController.setStoryActiveMesh();
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
       storySlider = new Swiper(`.js-slider`, {
         pagination: {
@@ -19,13 +20,13 @@ export default () => {
         on: {
           slideChange: () => {
             if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
-              story.setScene(0);
+              plainMeshController.setStoryActiveMesh(0);
             } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
-              story.setScene(1);
+              plainMeshController.setStoryActiveMesh(1);
             } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
-              story.setScene(2);
+              plainMeshController.setStoryActiveMesh(2);
             } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
-              story.setScene(3);
+              plainMeshController.setStoryActiveMesh(3);
             }
           },
           resize: () => {
@@ -54,16 +55,16 @@ export default () => {
           slideChange: () => {
             if (storySlider.activeIndex === 0) {
               bodyTheme.setAndApplyBodyTheme(`purple`);
-              story.setScene(0);
+              plainMeshController.setStoryActiveMesh(0);
             } else if (storySlider.activeIndex === 2) {
               bodyTheme.setAndApplyBodyTheme(`blue`);
-              story.setScene(1);
+              plainMeshController.setStoryActiveMesh(1);
             } else if (storySlider.activeIndex === 4) {
-              story.setScene(2);
               bodyTheme.setAndApplyBodyTheme(`light-blue`);
+              plainMeshController.setStoryActiveMesh(2);
             } else if (storySlider.activeIndex === 6) {
               bodyTheme.setAndApplyBodyTheme(`dark`);
-              story.setScene(3);
+              plainMeshController.setStoryActiveMesh(3);
             }
           },
           resize: () => {
@@ -81,19 +82,8 @@ export default () => {
       storySlider.destroy();
     }
     setSlider();
-    document.body.addEventListener(`screenChanged`, (e) => {
-      if (e.detail.screenName === `story`) {
-        story.init();
-        story.setScene(0);
-      }
-    });
   });
 
   setSlider();
-  document.body.addEventListener(`screenChanged`, (e) => {
-    if (e.detail.screenName === `story`) {
-      story.init();
-      story.setScene(0);
-    }
-  });
+
 };

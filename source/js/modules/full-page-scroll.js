@@ -1,4 +1,7 @@
 import throttle from 'lodash/throttle';
+import bodyTheme from '../helpers/theme';
+import {plainMeshController} from '../../js/animation/3d-animation/plainMeshController';
+
 const prizes = document.querySelector(`.screen--prizes`);
 const transitionBlock = document.querySelector(`.transition-block`);
 
@@ -77,6 +80,39 @@ export default class FullPageScroll {
         document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
       }, 100);
     }
+
+    const prevActiveScreen = document.querySelector(`.screen.active`);
+    const nextActiveScreen = this.screenElements[this.activeScreen];
+
+    plainMeshController.clearScene();
+
+    if (nextActiveScreen.classList.contains(`screen--intro`)) {
+      plainMeshController.addScreenMesh(`intro`);
+    } else if (nextActiveScreen.classList.contains(`screen--story`)) {
+      plainMeshController.addScreenMesh(`story`).then(() => {
+        plainMeshController.setStoryActiveMesh();
+      });
+    }
+
+    if (
+      prevActiveScreen &&
+      prevActiveScreen.classList.contains(`screen--story`)
+    ) {
+      bodyTheme.clearBodyTheme();
+    }
+
+    if (nextActiveScreen.classList.contains(`screen--story`)) {
+      bodyTheme.applyTheme();
+    }
+
+    this.screenElements.forEach((screen) => {
+      screen.classList.add(`screen--hidden`);
+      screen.classList.remove(`active`);
+    });
+    nextActiveScreen.classList.remove(`screen--hidden`);
+    setTimeout(() => {
+      nextActiveScreen.classList.add(`active`);
+    }, 100);
   }
 
   changeActiveMenuItem() {
