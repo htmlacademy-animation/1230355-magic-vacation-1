@@ -24,10 +24,14 @@ vec3 applyHue(vec3 aColor, float aHue) {
     return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.0 - cosAngle);
 }
 
+vec4 getBorderColor() {
+    return texture2D(map, vUv) * vec4(1.0, 1.0, 1.0, 0.15);
+}
+
 void drawBubble(inout vec4 outputColor, in Bubble bubble) {
     vec2 currentPosition = vec2(vUv.x * float(IMAGE_ASPECT_RATIO), vUv.y);
     vec2 currentBubblePosition = vec2(bubble.bubblePosition.x * float(IMAGE_ASPECT_RATIO), bubble.bubblePosition.y);
-
+    vec2 fromCurrentPixelToBubblePosition = currentPosition - currentBubblePosition;
     float distanceFromCurrentPixelToBubblePosition = length(currentPosition - currentBubblePosition);
 
     vec2 shift = vec2(0, 0);
@@ -37,15 +41,31 @@ void drawBubble(inout vec4 outputColor, in Bubble bubble) {
     }
 
     if (distanceFromCurrentPixelToBubblePosition >= bubble.bubbleRadius - BUBBLE_LINE_WIDTH) {
-        float gray = 0.8;
-        outputColor.rgb = vec3(gray, gray, gray);
+        outputColor = getBorderColor();
         return;
+    }
+
+    float highlightRadius = bubble.bubbleRadius * 4.0 / 5.0;
+
+    bool isColorHighlight = distanceFromCurrentPixelToBubblePosition < highlightRadius && distanceFromCurrentPixelToBubblePosition >= highlightRadius - BUBBLE_LINE_WIDTH;
+
+    if (isColorHighlight) {
+      vec2 normalizedVectorFromCenterBubbleToLeft = normalize(fromCurrentPixelToBubblePosition);
+      vec2 normalizedCurrentBubblePosition = normalize(vec2(0.0, 1.0) - vec2(1.0, 0.0));
+
+      float degree = acos(dot(normalizedVectorFromCenterBubbleToLeft, normalizedCurrentBubblePosition)) * 180.0 / 3.1415;
+      if (degree < 15.0) {
+        outputColor = getBorderColor();
+        return;
+      }
     }
 
     shift = (bubble.bubblePosition - vUv) * (1.0 - sqrt(distanceFromCurrentPixelToBubblePosition / bubble.bubbleRadius));
 
     outputColor = texture2D(map, vUv + shift);
 }
+
+
 
 void main() {
     vec4 outputColor = texture2D(map, vUv);
