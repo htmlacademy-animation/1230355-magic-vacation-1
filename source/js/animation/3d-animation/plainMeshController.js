@@ -76,16 +76,31 @@ export const plainMeshController = {
         map: new THREE.Uniform(texture),
         timestamp: new THREE.Uniform(0),
         bubble1: new THREE.Uniform({
-          bubblePosition: new THREE.Vector2(0, 0),
-          bubbleRadius: 0.07,
+          bubblePosition: new THREE.Vector2(0, -2 * 0.07),
+          bubbleRadius: 0.05,
+          startTime: 0,
+          delay: 600,
+          getPositionX: (time) =>
+            0.3 + 0.02 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2.5),
+          getPositionY: (y) => y + 0.007,
         }),
         bubble2: new THREE.Uniform({
-          bubblePosition: new THREE.Vector2(0, -0.2),
-          bubbleRadius: 0.06,
+          bubblePosition: new THREE.Vector2(0, -2 * 0.06),
+          bubbleRadius: 0.065,
+          startTime: 0,
+          delay: 0,
+          getPositionX: (time) =>
+            0.4 + 0.03 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2.5),
+          getPositionY: (y) => y + 0.007,
         }),
         bubble3: new THREE.Uniform({
-          bubblePosition: new THREE.Vector2(0, -0.7),
-          bubbleRadius: 0.04,
+          bubblePosition: new THREE.Vector2(0, -2 * 0.04),
+          bubbleRadius: 0.03,
+          startTime: 0,
+          delay: 1000,
+          getPositionX: (time) =>
+            0.5 + 0.01 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2),
+          getPositionY: (y) => y + 0.008,
         }),
         hasBubbles: new THREE.Uniform(false),
       },
@@ -97,46 +112,44 @@ export const plainMeshController = {
       fragmentShader,
     });
   },
-
   setMeshTransformations(mesh, index) {
     const transformations = [];
-
     scene.clearTransformationsLoop();
 
     if (index === 1) {
+      const bubble1 = mesh.material.uniforms.bubble1.value;
+      const bubble2 = mesh.material.uniforms.bubble2.value;
+      const bubble3 = mesh.material.uniforms.bubble3.value;
+
       const transformationCallback = (timestamp) => {
         mesh.material.uniforms.timestamp.value = timestamp;
         mesh.material.uniforms.hasBubbles.value = true;
 
-        const bubble1position =
-          mesh.material.uniforms.bubble1.value.bubblePosition;
-        const bubble2position =
-          mesh.material.uniforms.bubble2.value.bubblePosition;
-        const bubble3position =
-          mesh.material.uniforms.bubble3.value.bubblePosition;
+        [bubble1, bubble2, bubble3].forEach((bubble) => {
+          if (!bubble.startTime) {
+            bubble.startTime = timestamp;
+          }
 
-        if (bubble1position.y > 1.5) {
-          bubble1position.y = -0.5;
-        }
-        if (bubble2position.y > 1.5) {
-          bubble2position.y = -0.5;
-        }
-        if (bubble3position.y > 1.5) {
-          bubble3position.y = -0.5;
-        }
+          if (timestamp < bubble.startTime + bubble.delay) {
+            return;
+          }
 
-        bubble1position.x = Math.sin(timestamp / 300) * 0.05 + 0.4;
-        bubble2position.x = Math.sin(timestamp / 350) * 0.06 + 0.5;
-        bubble3position.x = Math.sin(timestamp / 400) * 0.07 + 0.6;
+          if (bubble.bubblePosition.y > 1.0 + 2 * bubble.bubbleRadius) {
+            bubble.bubblePosition.y = -2 * bubble.bubbleRadius;
+            bubble.startTime = timestamp;
+          }
 
-        bubble1position.y += 0.003;
-        bubble2position.y += 0.002;
-        bubble3position.y += 0.0025;
+          const deltaTime = (timestamp - bubble.startTime) / 1000;
+
+          bubble.bubblePosition.x = bubble.getPositionX(deltaTime);
+          bubble.bubblePosition.y = bubble.getPositionY(
+              bubble.bubblePosition.y
+          );
+        });
       };
 
       transformations.push(transformationCallback);
     }
-
     scene.addTransformationsToLoop(transformations);
   },
 };
