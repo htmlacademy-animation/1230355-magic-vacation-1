@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {scene} from './initAnimationScreen';
+import { scene } from './initAnimationScreen';
 import vertexShader from './shaders/custom-vertex-shader.glsl';
 import fragmentShader from './shaders/custom-fragment-shader.glsl';
 
@@ -47,24 +47,24 @@ export const plainMeshController = {
     const images = this.textureScreenImages[name];
 
     await Promise.all(
-        images.map(
-            (img) =>
-              new Promise((resolve) => {
-                scene.textureLoader.load(
-                    `./img/module-5/scenes-textures/${img}.png`,
-                    (texture) => {
-                      const material = this.getEffectMaterial(texture);
+      images.map(
+        (img) =>
+          new Promise((resolve) => {
+            scene.textureLoader.load(
+              `./img/module-5/scenes-textures/${img}.png`,
+              (texture) => {
+                const material = this.getEffectMaterial(texture);
 
-                      const planeMesh = new THREE.Mesh(planeGeometry, material);
-                      planeMesh.name = img;
+                const planeMesh = new THREE.Mesh(planeGeometry, material);
+                planeMesh.name = img;
 
-                      scene.addSceneObject(planeMesh);
+                scene.addSceneObject(planeMesh);
 
-                      resolve();
-                    }
-                );
-              })
-        )
+                resolve();
+              }
+            );
+          })
+      )
     );
 
     return Promise.resolve();
@@ -74,7 +74,7 @@ export const plainMeshController = {
     return new THREE.RawShaderMaterial({
       uniforms: {
         map: new THREE.Uniform(texture),
-        delta: new THREE.Uniform(0),
+        timestamp: new THREE.Uniform(0),
         bubble1: new THREE.Uniform({
           bubblePosition: new THREE.Vector2(0, 0),
           bubbleRadius: 0.07,
@@ -105,7 +105,7 @@ export const plainMeshController = {
 
     if (index === 1) {
       const transformationCallback = (timestamp) => {
-        mesh.material.uniforms.delta.value = Math.cos(timestamp / 1000) * 20;
+        mesh.material.uniforms.timestamp.value = timestamp;
         mesh.material.uniforms.hasBubbles.value = true;
 
         const bubble1position =
