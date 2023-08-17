@@ -17,6 +17,7 @@ uniform float bubbleRadius;
 varying vec2 vUv;
 
 vec3 applyHue(vec3 aColor) {
+
     float duration = 3.0;
 
     float currentTimePosition = mod(timestamp / 3000.0, duration);
