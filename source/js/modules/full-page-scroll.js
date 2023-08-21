@@ -1,6 +1,8 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import {plainMeshController} from '../../js/animation/3d-animation/plainMeshController';
+import {scene} from "../animation/3d-animation/initAnimationScreen";
+import {sphere} from "../animation/3d-animation/sphere";
 
 const prizes = document.querySelector(`.screen--prizes`);
 const transitionBlock = document.querySelector(`.transition-block`);
@@ -84,10 +86,11 @@ export default class FullPageScroll {
     const prevActiveScreen = document.querySelector(`.screen.active`);
     const nextActiveScreen = this.screenElements[this.activeScreen];
 
-    plainMeshController.clearScene();
+    // plainMeshController.clearScene();
+    scene.clearScene();
 
     if (nextActiveScreen.classList.contains(`screen--intro`)) {
-      plainMeshController.addScreenMesh(`intro`);
+      sphere.addScreenMesh(`intro`);
     } else if (nextActiveScreen.classList.contains(`screen--story`)) {
       plainMeshController.addScreenMesh(`story`).then(() => {
         plainMeshController.setStoryActiveMesh();
