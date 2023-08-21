@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { scene } from './initAnimationScreen';
+import {scene} from './initAnimationScreen';
 import vertexShader from './shaders/custom-vertex-shader.glsl';
 import fragmentShader from './shaders/custom-fragment-shader.glsl';
 
 const IMAGE_ASPECT_RATIO = 2;
-const imageHeight = window.innerHeight / 100;
+const imageHeight = window.innerHeight / 1.5;
 const imageWidth = imageHeight * IMAGE_ASPECT_RATIO;
 
 const planeGeometry = new THREE.PlaneGeometry(imageWidth, imageHeight);
@@ -23,6 +23,9 @@ export const plainMeshController = {
     }
 
     scene.scene.children.forEach((mesh) => {
+      if (!mesh.isMesh) {
+        return;
+      }
       if (mesh.name === this.textureScreenImages.story[index]) {
         mesh.visible = true;
 
@@ -35,6 +38,7 @@ export const plainMeshController = {
     });
 
     this.prevStoryTheme = index;
+    scene.render();
   },
 
   clearScene() {
@@ -47,24 +51,24 @@ export const plainMeshController = {
     const images = this.textureScreenImages[name];
 
     await Promise.all(
-      images.map(
-        (img) =>
-          new Promise((resolve) => {
-            scene.textureLoader.load(
-              `./img/module-5/scenes-textures/${img}.png`,
-              (texture) => {
-                const material = this.getEffectMaterial(texture);
+        images.map(
+            (img) =>
+              new Promise((resolve) => {
+                scene.textureLoader.load(
+                    `./img/module-5/scenes-textures/${img}.png`,
+                    (texture) => {
+                      const material = this.getEffectMaterial(texture);
 
-                const planeMesh = new THREE.Mesh(planeGeometry, material);
-                planeMesh.name = img;
+                      const planeMesh = new THREE.Mesh(planeGeometry, material);
+                      planeMesh.name = img;
 
-                scene.addSceneObject(planeMesh);
+                      scene.addSceneObject(planeMesh);
 
-                resolve();
-              }
-            );
-          })
-      )
+                      resolve();
+                    }
+                );
+              })
+        )
     );
 
     return Promise.resolve();
