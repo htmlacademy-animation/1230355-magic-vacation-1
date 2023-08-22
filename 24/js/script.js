@@ -63611,7 +63611,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const scene = new _scene_3d__WEBPACK_IMPORTED_MODULE_0__["Scene3d"]({
   elementId: `animation-screen-3d`,
-  cameraConfig: { fov: 35, positionZ: 1750, near: 1, far: 5500 },
+  cameraConfig: { fov: 35, positionZ: 1250, near: 1, far: 5500 },
   enableAnimation: true,
 });
 
