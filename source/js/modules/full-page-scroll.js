@@ -2,8 +2,8 @@ import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import { plainMeshController } from '../../js/animation/3d-animation/plainMeshController';
 import { scene } from "../animation/3d-animation/initAnimationScreen";
-import { sphere } from "../animation/3d-animation/sphere";
-import { sceneController } from '../animation/3d-animation/sceneController'
+// import { sphere } from "../animation/3d-animation/sphere";
+import { sceneController } from '../animation/3d-animation/sceneController';
 
 const prizes = document.querySelector(`.screen--prizes`);
 const transitionBlock = document.querySelector(`.transition-block`);
@@ -91,12 +91,12 @@ export default class FullPageScroll {
     scene.clearScene();
 
     if (nextActiveScreen.classList.contains(`screen--intro`)) {
-      sphere.addScreenMesh(`intro`);
-      // sceneController.addScreenMesh();
+      // sphere.addScreenMesh(`intro`);
+      sceneController.addScreenMesh();
     } else if (nextActiveScreen.classList.contains(`screen--story`)) {
       plainMeshController.addScreenMesh(`story`).then(() => {
-        // plainMeshController.setStoryActiveMesh();
-        sceneController.addScreenMesh();
+        plainMeshController.setStoryActiveMesh();
+        // sceneController.addScreenMesh();
       });
     }
 
