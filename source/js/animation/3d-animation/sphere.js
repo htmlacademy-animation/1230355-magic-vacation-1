@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import {scene} from "./initAnimationScreen";
+import * as THREE from 'three';
+import { scene } from './initAnimationScreen';
 
 export const sphere = {
   clearScene() {
