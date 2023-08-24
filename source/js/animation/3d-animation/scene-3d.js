@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 export class Scene3d {
   constructor(config = {}) {
@@ -7,18 +8,20 @@ export class Scene3d {
     this.canvasElement = document.getElementById(config.elementId);
 
     this.initScene();
-    this.initCamera();
-    this.initRenderer();
     this.initCamera(config.cameraConfig);
+    this.initRenderer();
     this.initLight();
     this.initTextureLoader();
 
     window.addEventListener(`resize`, this.onWindowResize.bind(this));
     this.animate = this.animate.bind(this);
     this.render();
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     if (config.enableAnimation) {
       this.animate();
+      const axesHelper = new THREE.AxesHelper(1000);
+      this.scene.add(axesHelper);
     }
   }
 
