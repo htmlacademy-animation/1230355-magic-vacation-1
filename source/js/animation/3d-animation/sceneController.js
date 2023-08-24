@@ -1,14 +1,16 @@
 import { scene } from './initAnimationScreen';
-import { SvgLoader } from './svg-obgects/svg-insert';
+import { SvgLoader } from './svg-objects/svg-insert';
 import { EXTRUDE_SETTINGS, SVG_FORMS } from '../../helpers/constants';
-import { ExtrudeSvgObjects } from './svg-obgects/extrude-svg';
+import { ExtrudeSvgObjects } from './svg-objects/extrude-svg';
+import { LatheGeometryCreator } from './3d-objects/LatheGeometryCreator';
+import { Saturn } from './3d-objects/saturn';
 
 export const sceneController = {
     clearScene() {
         scene.clearScene();
     },
 
-    async addScreenMesh() {
+    async addSvgImages() {
         const svgShapeLoader = new SvgLoader(SVG_FORMS);
         const extrudeSvgObjects = new ExtrudeSvgObjects(
             svgShapeLoader,
@@ -62,6 +64,16 @@ export const sceneController = {
         scene.addSceneObject(leafMesh);
         scene.addSceneObject(flowerMesh);
         scene.addSceneObject(keyholeMesh);
-    }
+    },
 
+    async addScreenMesh() {
+      const saturn = new Saturn();
+      saturn.position.set(0, 200, 0);
+      scene.addSceneObject(saturn);
+
+      const road = new LatheGeometryCreator().createRoad();
+      road.position.set(0, 100, 0);
+      scene.addSceneObject(road);
+      scene.addSceneObject(new LatheGeometryCreator().createCarpet());
+    },
 };
