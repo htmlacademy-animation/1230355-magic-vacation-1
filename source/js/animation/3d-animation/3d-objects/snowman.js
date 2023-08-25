@@ -22,7 +22,8 @@ export class Snowman extends THREE.Group {
     const material = new THREE.MeshStandardMaterial({
       color: new THREE.Color(this.colorSphere),
       metalness: this.metalnessSphere,
-      roughness: this.roughnessSphere
+      roughness: this.roughnessSphere,
+      emissive: 0x243452,
     });
     const geometry = new THREE.SphereGeometry(44, 30, 30);
     const mesh = new THREE.Mesh(geometry, material);
@@ -33,7 +34,8 @@ export class Snowman extends THREE.Group {
     const material = new THREE.MeshStandardMaterial({
       color: new THREE.Color(this.colorSphere),
       metalness: this.metalnessSphere,
-      roughness: this.roughnessSphere
+      roughness: this.roughnessSphere,
+      emissive: 0x243452,
     });
     const geometry = new THREE.SphereGeometry(78, 30, 30);
     const mesh = new THREE.Mesh(geometry, material);

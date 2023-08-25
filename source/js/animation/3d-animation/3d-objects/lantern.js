@@ -1,8 +1,12 @@
 import * as THREE from 'three';
 
 export class Lantern extends THREE.Group {
-    constructor() {
+    constructor(options) {
         super();
+        this.lanternColor = options.lanternColor,
+            this.lampColor = options.lampColor,
+            this.metalness = options.metalness,
+            this.roughness = options.roughness
         this.constructChildren();
     }
 
@@ -17,10 +21,9 @@ export class Lantern extends THREE.Group {
 
     addBottomCylinder() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0x3168ce,
-            metalness: 0.1,
-            emissive: 0x052052,
-            roughness: 0.3,
+            color: new THREE.Color(this.lanternColor),
+            metalness: this.metalness,
+            roughness: this.roughness
         });
         const geometry = new THREE.CylinderGeometry(16, 16, 120, 30);
         const mesh = new THREE.Mesh(geometry, material);
@@ -29,10 +32,9 @@ export class Lantern extends THREE.Group {
 
     addSphere() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0x3168ce,
-            metalness: 0.1,
-            emissive: 0x052052,
-            roughness: 0.3
+            color: new THREE.Color(this.lanternColor),
+            metalness: this.metalness,
+            roughness: this.roughness
         });
         const geometry = new THREE.SphereGeometry(16, 30, 30);
         const mesh = new THREE.Mesh(geometry, material);
@@ -42,10 +44,9 @@ export class Lantern extends THREE.Group {
 
     addCentralCylinder() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0x3168ce,
-            metalness: 0.1,
-            emissive: 0x052052,
-            roughness: 0.3
+            color: new THREE.Color(this.lanternColor),
+            metalness: this.metalness,
+            roughness: this.roughness
         });
         const geometry = new THREE.CylinderGeometry(7, 7, 230, 30);
         const mesh = new THREE.Mesh(geometry, material);
@@ -55,10 +56,9 @@ export class Lantern extends THREE.Group {
 
     addBottomLamp() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0x3168ce,
-            metalness: 0.1,
-            emissive: 0x052052,
-            roughness: 0.3
+            color: new THREE.Color(this.lanternColor),
+            metalness: this.metalness,
+            roughness: this.roughness
         });
         const geometry = new THREE.BoxGeometry(37, 4, 37);
         const mesh = new THREE.Mesh(geometry, material);
@@ -68,10 +68,10 @@ export class Lantern extends THREE.Group {
 
     addCentralLamp() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            metalness: 0.05,
+            color: new THREE.Color(this.lampColor),
+            metalness: this.metalness,
+            roughness: this.roughness,
             emissive: 0x052052,
-            roughness: 0.7
         });
         const geometry = new THREE.CylinderGeometry(Math.hypot(42, 42) / 2, Math.hypot(34, 34) / 2, 60, 4);
         const mesh = new THREE.Mesh(geometry, material);
@@ -82,10 +82,9 @@ export class Lantern extends THREE.Group {
 
     addTopLamp() {
         const material = new THREE.MeshStandardMaterial({
-            color: 0x3168ce,
-            metalness: 0.1,
-            emissive: 0x052052,
-            roughness: 0.3
+            color: new THREE.Color(this.lanternColor),
+            metalness: this.metalness,
+            roughness: this.roughness
         });
         const geometry = new THREE.CylinderGeometry(Math.hypot(45, 45) / 2, Math.hypot(57, 57) / 2, 6, 4);
         const mesh = new THREE.Mesh(geometry, material);
