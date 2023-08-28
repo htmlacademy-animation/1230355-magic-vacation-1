@@ -5,6 +5,8 @@ import {Pyramid} from './3d-objects/pyramid';
 import {Snowman} from './3d-objects/snowman';
 import {Lantern} from './3d-objects/lantern';
 import SvgLoader from './3d-objects/intro-screen';
+import {Carpet} from './3d-objects/carpet';
+import {Road} from './3d-objects/road';
 import {reflection3D} from '../../helpers/3d-data';
 import {color3D} from '../../helpers/3d-data';
 
@@ -126,6 +128,28 @@ export const sceneController = {
     flower.rotation.copy(new THREE.Euler(THREE.MathUtils.degToRad(-40.0), THREE.MathUtils.degToRad(15.0), THREE.MathUtils.degToRad(20.0)), `XYZ`);
     scene.addSceneObject(flower);
   },
+  addCarpet() {
+    const carpet = new Carpet({
+      mainColor: this.mainColor,
+      additionalColor: this.additionalColor,
+      metalness: reflection3D.soft.metalness,
+      roughness: reflection3D.soft.roughness,
+    });
+    const scale = 0.7;
+    carpet.scale.set(scale, scale, scale);
+    carpet.position.set(0, -115, 0);
+    carpet.rotation.copy(new THREE.Euler(THREE.MathUtils.degToRad(13.0), THREE.MathUtils.degToRad(-52.0), 0), `XYZ`);
+    scene.addSceneObject(carpet);
+  },
+  addRoad() {
+    const road = new Road();
+    road.name = `road`;
+    const scale = 1;
+    road.scale.set(scale, scale, scale);
+    road.position.set(15, 1, 15);
+    road.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(-46.0), 0), `XYZ`);
+    scene.addSceneObject(road);
+  },
 
   async addScreenMesh() {
     this.addSaturn();
@@ -139,5 +163,7 @@ export const sceneController = {
     this.addSnowFlake();
     this.addLeaf();
     this.addFlowers();
+    this.addCarpet();
+    this.addRoad();
   },
 };
