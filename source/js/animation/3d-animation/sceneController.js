@@ -1,14 +1,14 @@
 import * as THREE from 'three';
-import {scene} from './initAnimationScreen';
-import {Saturn} from './3d-objects/saturn';
-import {Pyramid} from './3d-objects/pyramid';
-import {Snowman} from './3d-objects/snowman';
-import {Lantern} from './3d-objects/lantern';
+import { scene } from './initAnimationScreen';
+import { Saturn } from './3d-objects/saturn';
+import { Pyramid } from './3d-objects/pyramid';
+import { Snowman } from './3d-objects/snowman';
+import { Lantern } from './3d-objects/lantern';
 import SvgLoader from './3d-objects/intro-screen';
-import {Carpet} from './3d-objects/carpet';
-import {Road} from './3d-objects/road';
-import {reflection3D} from '../../helpers/3d-data';
-import {color3D} from '../../helpers/3d-data';
+import { Carpet } from './3d-objects/carpet';
+import { Road } from './3d-objects/road';
+import { reflection3D } from '../../helpers/3d-data';
+import { color3D } from '../../helpers/3d-data';
 
 export const sceneController = {
   clearScene() {
@@ -130,23 +130,20 @@ export const sceneController = {
   },
   addCarpet() {
     const carpet = new Carpet({
-      mainColor: this.mainColor,
-      additionalColor: this.additionalColor,
-      metalness: reflection3D.soft.metalness,
-      roughness: reflection3D.soft.roughness,
+      mainColor: color3D.LightPurple,
+      additionalColor: color3D.AdditionalPurple,
     });
     const scale = 0.7;
     carpet.scale.set(scale, scale, scale);
-    carpet.position.set(0, -115, 0);
+    carpet.position.set(25, 215, 20);
     carpet.rotation.copy(new THREE.Euler(THREE.MathUtils.degToRad(13.0), THREE.MathUtils.degToRad(-52.0), 0), `XYZ`);
     scene.addSceneObject(carpet);
   },
   addRoad() {
-    const road = new Road();
-    road.name = `road`;
-    const scale = 1;
-    road.scale.set(scale, scale, scale);
-    road.position.set(15, 1, 15);
+    const road = new Road({
+      metalness: reflection3D.soft.metalness,
+      roughness: reflection3D.soft.roughness,
+    });
     road.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(-46.0), 0), `XYZ`);
     scene.addSceneObject(road);
   },
