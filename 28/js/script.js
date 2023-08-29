@@ -67956,46 +67956,42 @@ class SeaCalfScene extends _canvas_scene__WEBPACK_IMPORTED_MODULE_2__["default"]
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CarpetCustomMaterial", function() { return CarpetCustomMaterial; });
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../helpers/3d-data */ "./source/js/helpers/3d-data.js");
 
 
 class CarpetCustomMaterial extends three__WEBPACK_IMPORTED_MODULE_0__["MeshStandardMaterial"] {
-  constructor(colors) {
-    super();
-    this.mainColor = colors.mainColor;
-    this.additionalColor = colors.additionalColor;
-  }
   onBeforeCompile(shader) {
     shader.uniforms = {
       ...shader.uniforms,
       mainColor: new three__WEBPACK_IMPORTED_MODULE_0__["Uniform"](
-          new three__WEBPACK_IMPORTED_MODULE_0__["Color"](this.mainColor)
+        new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].LightPurple)
       ),
       additionalColor: new three__WEBPACK_IMPORTED_MODULE_0__["Uniform"](
-          new three__WEBPACK_IMPORTED_MODULE_0__["Color"](this.additionalColor)
+        new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].AdditionalPurple)
       ),
     };
 
     shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_pars_vertex>`,
-        `varying vec2 vUv;`
+      `#include <uv_pars_vertex>`,
+      `varying vec2 vUv;`
     );
 
     shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_vertex>`,
-        `vUv = uv;`
+      `#include <uv_vertex>`,
+      `vUv = uv;`
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
-        `varying vec3 vViewPosition;`,
-        `varying vec3 vViewPosition;
+      `varying vec3 vViewPosition;`,
+      `varying vec3 vViewPosition;
         varying vec2 vUv;
         uniform vec3 mainColor;
         uniform vec3 additionalColor;`
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
-        `#include <map_fragment>`,
-        `float strength = mod(vUv.x * 3.5, 1.0);
+      `#include <map_fragment>`,
+      `float strength = mod(vUv.x * 3.5, 1.0);
         strength = step(0.5, strength);
         vec3 color = strength < 0.5 ? mainColor : additionalColor;
         diffuseColor = vec4(color, vUv);`
@@ -68365,34 +68361,34 @@ class RoadCustomMaterial extends three__WEBPACK_IMPORTED_MODULE_0__["MeshStandar
     shader.uniforms = {
       ...shader.uniforms,
       roadColor: new three__WEBPACK_IMPORTED_MODULE_0__["Uniform"](
-          new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].Grey)
+        new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].Grey)
       ),
       stripesColor: new three__WEBPACK_IMPORTED_MODULE_0__["Uniform"](
-          new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].White)
+        new three__WEBPACK_IMPORTED_MODULE_0__["Color"](_helpers_3d_data__WEBPACK_IMPORTED_MODULE_1__["color3D"].White)
       ),
     };
 
     shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_pars_vertex>`,
-        `varying vec2 vUv;`
+      `#include <uv_pars_vertex>`,
+      `varying vec2 vUv;`
     );
 
     shader.vertexShader = shader.vertexShader.replace(
-        `#include <uv_vertex>`,
-        `vUv = uv;`
+      `#include <uv_vertex>`,
+      `vUv = uv;`
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
-        `varying vec3 vViewPosition;`,
-        `varying vec3 vViewPosition;
+      `varying vec3 vViewPosition;`,
+      `varying vec3 vViewPosition;
         varying vec2 vUv;
         uniform vec3 roadColor;
         uniform vec3 stripesColor;`
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
-        `#include <map_fragment>`,
-        `float strength = step(0.96, mod(vUv.y + 0.15, 1.0));
+      `#include <map_fragment>`,
+      `float strength = step(0.86, mod(vUv.y + 0.4, 1.0));
       strength *= step(0.6, mod(vUv.x * 4.0 + 0.4, 1.0));
       vec3 color = strength < 0.5 ? roadColor : stripesColor;
       diffuseColor = vec4(color, vUv);`
@@ -69137,23 +69133,20 @@ const sceneController = {
   },
   addCarpet() {
     const carpet = new _3d_objects_carpet__WEBPACK_IMPORTED_MODULE_7__["Carpet"]({
-      mainColor: this.mainColor,
-      additionalColor: this.additionalColor,
-      metalness: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["reflection3D"].soft.metalness,
-      roughness: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["reflection3D"].soft.roughness,
+      mainColor: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["color3D"].LightPurple,
+      additionalColor: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["color3D"].AdditionalPurple,
     });
     const scale = 0.7;
     carpet.scale.set(scale, scale, scale);
-    carpet.position.set(0, -115, 0);
+    carpet.position.set(25, 215, 20);
     carpet.rotation.copy(new three__WEBPACK_IMPORTED_MODULE_0__["Euler"](three__WEBPACK_IMPORTED_MODULE_0__["MathUtils"].degToRad(13.0), three__WEBPACK_IMPORTED_MODULE_0__["MathUtils"].degToRad(-52.0), 0), `XYZ`);
     _initAnimationScreen__WEBPACK_IMPORTED_MODULE_1__["scene"].addSceneObject(carpet);
   },
   addRoad() {
-    const road = new _3d_objects_road__WEBPACK_IMPORTED_MODULE_8__["Road"]();
-    road.name = `road`;
-    const scale = 1;
-    road.scale.set(scale, scale, scale);
-    road.position.set(15, 1, 15);
+    const road = new _3d_objects_road__WEBPACK_IMPORTED_MODULE_8__["Road"]({
+      metalness: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["reflection3D"].soft.metalness,
+      roughness: _helpers_3d_data__WEBPACK_IMPORTED_MODULE_9__["reflection3D"].soft.roughness,
+    });
     road.rotation.copy(new three__WEBPACK_IMPORTED_MODULE_0__["Euler"](0, three__WEBPACK_IMPORTED_MODULE_0__["MathUtils"].degToRad(-46.0), 0), `XYZ`);
     _initAnimationScreen__WEBPACK_IMPORTED_MODULE_1__["scene"].addSceneObject(road);
   },
