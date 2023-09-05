@@ -1,14 +1,15 @@
 import * as THREE from 'three';
-import { scene } from './initAnimationScreen';
-import { Saturn } from './3d-objects/saturn';
-import { Pyramid } from './3d-objects/pyramid';
-import { Snowman } from './3d-objects/snowman';
-import { Lantern } from './3d-objects/lantern';
+import {scene} from './initAnimationScreen';
+import {Saturn} from './3d-objects/saturn';
+import {Pyramid} from './3d-objects/pyramid';
+import {Snowman} from './3d-objects/snowman';
+import {Lantern} from './3d-objects/lantern';
 import SvgLoader from './3d-objects/intro-screen';
-import { Carpet } from './3d-objects/carpet';
-import { Road } from './3d-objects/road';
-import { reflection3D } from '../../helpers/3d-data';
-import { color3D } from '../../helpers/3d-data';
+import {Carpet} from './3d-objects/carpet';
+import {Road} from './3d-objects/road';
+import {reflection3D} from '../../helpers/3d-data';
+import {color3D} from '../../helpers/3d-data';
+import {loadModel} from '../../helpers/3d-object-creator';
 
 export const sceneController = {
   clearScene() {
@@ -147,20 +148,57 @@ export const sceneController = {
     road.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(-46.0), 0), `XYZ`);
     scene.addSceneObject(road);
   },
+  addAirplane() {
+    const name = `airplane`;
+    const material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(color3D.White),
+      metalness: reflection3D.basic.metalness,
+      roughness: reflection3D.basic.roughness
+    });
+    loadModel(name, material, (mesh) => {
+      mesh.name = name;
+      mesh.position.set(250, 150, 100);
+      mesh.scale.set(1.4, 1.4, 1.4);
+      scene.addSceneObject(mesh);
+    });
+  },
+  addSuitcase() {
+    const name = `suitcase`;
+    loadModel(name, null, (mesh) => {
+      mesh.name = name;
+      mesh.position.set(-120, 0, 120);
+      mesh.scale.set(0.8, 0.8, 0.8);
+      scene.addSceneObject(mesh);
+    });
+  },
+  addWatermelon() {
+    const name = `watermelon`;
+    loadModel(name, null, (mesh) => {
+      mesh.name = name;
+      mesh.position.set(100, 250, 60);
+      mesh.scale.set(2.2, 2.2, 2.2);
+      scene.addSceneObject(mesh);
+    });
+  },
 
   async addScreenMesh() {
-    this.addSaturn();
-    this.addDarkSaturn();
-    this.addPyramid();
-    this.addSnowman();
-    this.addLantern();
+    // this.addSaturn();
+    // this.addDarkSaturn();
+    // this.addPyramid();
+    // this.addSnowman();
+    // this.addLantern();
+
+    // this.addFlamingo();
+    // this.addQuestion();
+    // this.addSnowFlake();
+    // this.addLeaf();
+    // this.addFlowers();
+    // this.addCarpet();
+    // this.addRoad();
+
     this.addKeyHole();
-    this.addFlamingo();
-    this.addQuestion();
-    this.addSnowFlake();
-    this.addLeaf();
-    this.addFlowers();
-    this.addCarpet();
-    this.addRoad();
+    this.addAirplane();
+    this.addWatermelon();
+    this.addSuitcase();
   },
 };
