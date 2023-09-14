@@ -1,75 +1,87 @@
-import * as THREE from 'three';
-import {getLathePoints} from '../../../helpers/utils';
+import * as THREE from "three";
+import {degreesToRadians} from "../../../helpers/utils";
+import {MaterialCreator} from "../material-creator";
+import {MATERIAL_TYPE} from "../../../helpers/constants";
 
 export class Saturn extends THREE.Group {
-  constructor(options) {
+  constructor(materialCreator, options) {
     super();
-
-    this.colorSaturn = options.colorSaturn;
-    this.colorRing = options.colorRing;
-    this.colorRope = options.colorRope;
-    this.metalness = options.metalness;
-    this.roughness = options.roughness;
-    this.widthRing = 40;
-    this.thicknessRing = 2;
-    this.innerRadiusRing = 80;
-
+    this.materialCreator = materialCreator;
+    this.options = options;
     this.constructChildren();
   }
 
   constructChildren() {
-    this.addRope();
-    this.addSmallSphere();
-    this.addSphereBig();
+    this.addPlanet();
     this.addRing();
+
+    if (this.options.withRope) {
+      this.addRope();
+      this.addSmallSphere();
+    }
   }
 
   addRope() {
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(this.colorRope),
-      metalness: this.metalness,
-      roughness: this.roughness
-    });
-    const geometry = new THREE.CylinderGeometry(1, 1, 1000, 10);
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 500, 0);
-    this.add(mesh);
-  }
+    const geometry = new THREE.CylinderGeometry(1, 1, 1000, 20);
 
+    const cylinder = new THREE.Mesh(
+        geometry,
+        this.materialCreator.create(MATERIAL_TYPE.SoftMaterial, {
+          color: MaterialCreator.Colors.MetalGrey,
+        })
+    );
+    cylinder.position.set(0, 500, 0);
+    this.add(cylinder);
+  }
+  addPlanet() {
+    const geometry = new THREE.SphereGeometry(60, 32, 32);
+    this.add(
+        new THREE.Mesh(
+            geometry,
+            this.materialCreator.create(MATERIAL_TYPE.SoftMaterial, {
+              color: this.options.darkMode
+                ? MaterialCreator.Colors.ShadowedDominantRed
+                : MaterialCreator.Colors.DominantRed,
+            })
+        )
+    );
+  }
   addSmallSphere() {
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(this.colorRing),
-      metalness: this.metalness,
-      roughness: this.roughness
-    });
-    const geometry = new THREE.SphereGeometry(10, 30, 30);
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 120, 0);
-    this.add(mesh);
-  }
+    const geometry = new THREE.SphereGeometry(10, 16, 16);
 
-  addSphereBig() {
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(this.colorSaturn),
-      metalness: this.metalness,
-      roughness: this.roughness
-    });
-    const geometry = new THREE.SphereGeometry(60, 50, 50);
-    const mesh = new THREE.Mesh(geometry, material);
-    this.add(mesh);
+    const sphere = new THREE.Mesh(
+        geometry,
+        this.materialCreator.create(MATERIAL_TYPE.SoftMaterial, {
+          color: this.options.darkMode
+            ? MaterialCreator.Colors.ShadowedBrightPurple
+            : MaterialCreator.Colors.BrightPurple,
+        })
+    );
+    sphere.position.set(0, 120, 0);
+    this.add(sphere);
   }
-
   addRing() {
-    const points = getLathePoints(this.widthRing, this.thicknessRing, this.innerRadiusRing);
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(this.colorRing),
-      metalness: this.metalness,
-      roughness: this.roughness,
-      side: THREE.DoubleSide
-    });
-    const geometry = new THREE.LatheGeometry(points, 50);
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.copy(new THREE.Euler(THREE.MathUtils.degToRad(20.0), 0, THREE.MathUtils.degToRad(18.0)), `XYZ`);
-    this.add(mesh);
+    const geometry = this.createGeometry(80, 40, 2);
+
+    const ring = new THREE.Mesh(
+        geometry,
+        this.materialCreator.create(MATERIAL_TYPE.SoftMaterial, {
+          color: this.options.darkMode
+            ? MaterialCreator.Colors.ShadowedBrightPurple
+            : MaterialCreator.Colors.BrightPurple,
+        })
+    );
+    ring.rotateZ(degreesToRadians(-18));
+    this.add(ring);
+  }
+  createGeometry(innerRadius, width, height) {
+    const points = [];
+    points.push(new THREE.Vector2(innerRadius + width, 0));
+    points.push(new THREE.Vector2(innerRadius + width, height));
+    points.push(new THREE.Vector2(innerRadius, height));
+    points.push(new THREE.Vector2(innerRadius, 0));
+    points.push(new THREE.Vector2(innerRadius + width, 0));
+
+    return new THREE.LatheGeometry(points, 30);
   }
 }
