@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import {RoomScene} from "./room";
+import {RoomScene} from './room';
+import * as THREE from 'three';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS} from "../../../helpers/constants";
 import {MaterialCreator} from "../material-creator";
 import {Snowman} from "../3d-objects/snowman";

@@ -2,73 +2,99 @@ import {GUI} from "dat.gui";
 
 export class TransformationGuiHelper extends GUI {
   addNewFolder(name, object, transformParams) {
-    const newFolder = this.addFolder(name);
+    let folderName = name;
+    let index = 1;
+
+    while (this.__folders[folderName]) {
+      index++;
+      folderName = `${name} - ${index}`;
+    }
+
+    const newFolder = this.addFolder(folderName);
 
     const objectTransform = newFolder.addFolder(`transform`);
 
-    objectTransform
-      .add(transformParams, `transformX`, -1000, 1000, 10)
-      .onChange((data) => {
-        object.position.set(
-            data,
-            transformParams.transformY,
-            transformParams.transformZ
-        );
-      });
-    objectTransform
-      .add(transformParams, `transformY`, -1000, 1000, 10)
-      .onChange((data) => {
-        object.position.set(
-            transformParams.transformX,
-            data,
-            transformParams.transformZ
-        );
-      });
-    objectTransform
-      .add(transformParams, `transformZ`, 0, 300, 3)
-      .onChange((data) => {
-        object.position.set(
-            transformParams.transformX,
-            transformParams.transformY,
-            data
-        );
-      });
+    if (typeof transformParams.transformX === `number`) {
+      objectTransform
+        .add(transformParams, `transformX`, -1000, 1000, 10)
+        .onChange((data) => {
+          object.position.set(
+              data,
+              transformParams.transformY || 0,
+              transformParams.transformZ || 0
+          );
+        });
+    }
+
+    if (typeof transformParams.transformY === `number`) {
+      objectTransform
+        .add(transformParams, `transformY`, -1000, 1000, 10)
+        .onChange((data) => {
+          object.position.set(
+              transformParams.transformX || 0,
+              data,
+              transformParams.transformZ || 0
+          );
+        });
+    }
+
+    if (typeof transformParams.transformZ === `number`) {
+      objectTransform
+        .add(transformParams, `transformZ`, -1000, 1000, 10)
+        .onChange((data) => {
+          object.position.set(
+              transformParams.transformX || 0,
+              transformParams.transformY || 0,
+              data
+          );
+        });
+    }
     objectTransform.open();
 
     const objectRotation = newFolder.addFolder(`rotation`);
-    objectRotation
-      .add(transformParams, `rotateX`, 0, 2 * Math.PI, 0.1)
-      .onChange((data) => {
-        object.rotation.set(
-            data,
-            transformParams.rotateY,
-            transformParams.rotateZ
-        );
-      });
-    objectRotation
-      .add(transformParams, `rotateY`, 0, 2 * Math.PI, 0.1)
-      .onChange((data) => {
-        object.rotation.set(
-            transformParams.rotateX,
-            data,
-            transformParams.rotateZ
-        );
-      });
-    objectRotation
-      .add(transformParams, `rotateZ`, 0, 2 * Math.PI, 0.1)
-      .onChange((data) => {
-        object.rotation.set(
-            transformParams.rotateX,
-            transformParams.rotateY,
-            data
-        );
-      });
+    if (typeof transformParams.rotateX === `number`) {
+      objectRotation
+        .add(transformParams, `rotateX`, -Math.PI, Math.PI, 0.1)
+        .onChange((data) => {
+          object.rotation.set(
+              data,
+              transformParams.rotateY || 0,
+              transformParams.rotateZ || 0
+          );
+        });
+    }
+
+    if (typeof transformParams.rotateY === `number`) {
+      objectRotation
+        .add(transformParams, `rotateY`, -Math.PI, Math.PI, 0.1)
+        .onChange((data) => {
+          object.rotation.set(
+              transformParams.rotateX || 0,
+              data,
+              transformParams.rotateZ || 0
+          );
+        });
+    }
+
+    if (typeof transformParams.rotateZ === `number`) {
+      objectRotation
+        .add(transformParams, `rotateZ`, -Math.PI, Math.PI, 0.1)
+        .onChange((data) => {
+          object.rotation.set(
+              transformParams.rotateX || 0,
+              transformParams.rotateY || 0,
+              data
+          );
+        });
+    }
     objectRotation.open();
 
-    const objectScale = newFolder.addFolder(`scale`);
-    objectScale.add(transformParams, `scale`, 0, 5, 0.1).onChange((data) => {
-      object.scale.set(data, data, data);
-    });
-    objectScale.open();
+    if (typeof transformParams.scale === `number`) {
+      const objectScale = newFolder.addFolder(`scale`);
+      objectScale.add(transformParams, `scale`, 0, 5, 0.1).onChange((data) => {
+        object.scale.set(data, data, data);
+      });
+      objectScale.open();
+    }
   }
 }

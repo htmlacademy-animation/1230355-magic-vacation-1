@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 import {RoomOneScene} from './room-one';
 import {RoomTwoScene} from './room-two';
 import {RoomThreeScene} from './room-three';

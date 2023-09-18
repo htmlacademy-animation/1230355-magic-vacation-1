@@ -1,10 +1,6 @@
-import {RoomScene} from "../room";
-import * as THREE from "three";
-import {
-  MATERIAL_TYPE,
-  OBJECT_ELEMENTS,
-  SVG_ELEMENTS,
-} from "../../../helpers/constants";
+import {RoomScene} from './room';
+import * as THREE from 'three';
+import {MATERIAL_TYPE, OBJECT_ELEMENTS, SVG_ELEMENTS} from "../../../helpers/constants";
 import {MaterialCreator} from "../material-creator";
 import {Saturn} from "../3d-objects/saturn";
 import {Carpet} from "../3d-objects/carpet";

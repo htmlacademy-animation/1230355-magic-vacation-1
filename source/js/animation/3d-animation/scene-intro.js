@@ -8,9 +8,7 @@ import {Saturn} from "./3d-objects/saturn";
 export class MainPageComposition extends THREE.Group {
   constructor(pageSceneCreator) {
     super();
-
     this.pageSceneCreator = pageSceneCreator;
-
     this.meshExtrudedObjects = [
       {
         name: SVG_ELEMENTS.keyhole,

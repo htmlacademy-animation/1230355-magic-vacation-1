@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 export class RoomScene extends THREE.Group {
   constructor(pageSceneCreator) {
