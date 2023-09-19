@@ -5,7 +5,7 @@ import {EXTRUDE_SETTINGS, SVG_ELEMENTS} from '../../helpers/constants';
 import {MainPageComposition} from './scene-intro';
 import {MaterialCreator} from './material-creator';
 import {ExtrudeSvgCreator} from './svg-objects/extrude-svg';
-import {ObjectsCreator} from '../../helpers/object-creator';
+import {ObjectsCreator} from '../../helpers/3d-object-creator';
 import {TransformationGuiHelper} from '../../helpers/transformation-gui-helper';
 import {PageSceneCreator} from './page-scene-creator';
 import {degreesToRadians} from '../../helpers/utils';
