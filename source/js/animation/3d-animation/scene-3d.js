@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 export class Scene3d {
   constructor(config = {}) {
@@ -31,10 +31,10 @@ export class Scene3d {
 
   initCamera(cameraConfig = {}) {
     this.camera = new THREE.PerspectiveCamera(
-      cameraConfig.fov || 75,
-      cameraConfig.aspect || window.innerWidth / window.innerHeight,
-      cameraConfig.near || 0.1,
-      cameraConfig.far || 1000
+        cameraConfig.fov || 75,
+        cameraConfig.aspect || window.innerWidth / window.innerHeight,
+        cameraConfig.near || 10,
+        cameraConfig.far || 1000
     );
 
     this.camera.position.z = cameraConfig.positionZ || 5;
@@ -47,7 +47,7 @@ export class Scene3d {
     });
 
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setClearColor(0x5f458c, 0);
+    this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
   }
 
@@ -55,12 +55,15 @@ export class Scene3d {
     this.light = new THREE.Group();
 
     const light1 = new THREE.DirectionalLight(
-      new THREE.Color(`rgb(255,255,255)`),
-      0.84
+        new THREE.Color(`rgb(255,255,255)`),
+        1.84
     );
 
-    const targetObject = new THREE.Object3D().translateY(
-      this.camera.position.z * Math.tan((15 * Math.PI) / 180)
+    const targetObject = new THREE.Object3D();
+    targetObject.position.set(
+        0,
+        this.camera.position.z * Math.tan((15 * Math.PI) / 180),
+        0
     );
 
     this.scene.add(targetObject);
@@ -68,24 +71,26 @@ export class Scene3d {
     light1.target = targetObject;
 
     const light2 = new THREE.PointLight(
-      new THREE.Color(`rgb(246,242,255)`),
-      0.6,
-      2500,
-      2
+        new THREE.Color(`rgb(246,242,255)`),
+        0.6,
+        2500,
+        2
     );
 
     light2.position.set(-785, -350, -710);
 
     const light3 = new THREE.PointLight(
-      new THREE.Color(`rgb(245,254,255)`),
-      0.95,
-      2500,
-      2
+        new THREE.Color(`rgb(245,254,255)`),
+        0.95,
+        2500,
+        2
     );
 
     light3.position.set(730, 800, -985);
 
-    this.light.add(light1, light2, light3);
+    const light4 = new THREE.AmbientLight(0xf9f9f9);
+
+    this.light.add(light1, light2, light3, light4);
 
     this.light.position.z = this.camera.position.z;
     this.scene.add(this.light);

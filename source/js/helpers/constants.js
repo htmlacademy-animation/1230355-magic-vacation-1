@@ -2,6 +2,12 @@ export const OBJECT_ELEMENTS = {
   airplane: `airplane`,
   suitcase: `suitcase`,
   watermelon: `watermelon`,
+  wallCorner: `wallCorner`,
+  floor: `floor`,
+  staticOutput1: `staticOutput1`,
+  staticOutput2: `staticOutput2`,
+  staticOutput3: `staticOutput3`,
+  staticOutput4: `staticOutput4`
 };
 
 export const MATERIAL_TYPE = {

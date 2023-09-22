@@ -1,14 +1,15 @@
 import * as THREE from 'three';
+import {color3D, reflection3D} from '../../../helpers/3d-data';
 
 export class Snowman extends THREE.Group {
-  constructor(options) {
+  constructor() {
     super();
-    this.colorSphere = options.colorSphere;
-    this.metalnessSphere = options.metalnessSphere;
-    this.roughnessSphere = options.roughnessSphere;
-    this.colorCone = options.colorCone;
-    this.metalnessCone = options.metalnessCone;
-    this.roughnessCone = options.roughnessCone;
+    this.colorSphere = color3D.White;
+    this.metalnessSphere = reflection3D.strong.metalness;
+    this.roughnessSphere = reflection3D.strong.roughness;
+    this.colorCone = color3D.Orange;
+    this.metalnessCone = reflection3D.soft.metalness;
+    this.roughnessCone = reflection3D.soft.roughness;
     this.constructChildren();
   }
 
