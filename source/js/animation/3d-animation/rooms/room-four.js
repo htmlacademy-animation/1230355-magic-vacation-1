@@ -40,6 +40,7 @@ export class RoomFourScene extends RoomScene {
     this.addFlower();
     this.addDarkSaturn();
     this.addCarpet();
+    this.addSonya();
   }
 
   addFlower() {
@@ -98,5 +99,21 @@ export class RoomFourScene extends RoomScene {
     const carpet = new Carpet(this.pageSceneCreator);
 
     this.addObject(carpet);
+  }
+
+  addSonya() {
+    this.pageSceneCreator.createObjectMesh(
+        {
+          name: OBJECT_ELEMENTS.sonya,
+          transform: {
+            transformX: 440,
+            transformY: 120,
+            transformZ: 280,
+          },
+        },
+        (obj) => {
+          this.addObject(obj);
+        }
+    );
   }
 }

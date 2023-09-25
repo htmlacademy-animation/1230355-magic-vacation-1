@@ -3,6 +3,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 export class Scene3d {
   constructor(config = {}) {
+    this.config = config;
     this.meshObjects = new Set();
     this.transformationsLoop = [];
     this.canvasElement = document.getElementById(config.elementId);
@@ -49,51 +50,73 @@ export class Scene3d {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+    if (window.innerWidth > 768) {
+      this.renderer.shadowMap.enabled = true;
+    }
   }
 
   initLight() {
     this.light = new THREE.Group();
 
-    const light1 = new THREE.DirectionalLight(
-        new THREE.Color(`rgb(255,255,255)`),
-        1.84
-    );
+    const color = new THREE.Color(`rgb(255,255,255)`);
+    const intensity = 0.84;
 
-    const targetObject = new THREE.Object3D();
-    targetObject.position.set(
+    const light1 = new THREE.DirectionalLight(color, intensity);
+
+    const directionalLightTargetObject = new THREE.Object3D();
+
+    directionalLightTargetObject.position.set(
         0,
-        this.camera.position.z * Math.tan((15 * Math.PI) / 180),
+        -this.camera.position.z * Math.tan((15 * Math.PI) / 180),
         0
     );
 
-    this.scene.add(targetObject);
+    this.scene.add(directionalLightTargetObject);
 
-    light1.target = targetObject;
+    light1.target = directionalLightTargetObject;
 
-    const light2 = new THREE.PointLight(
+    const light2 = this.createPointLight(
+        [-785, -350, -710],
         new THREE.Color(`rgb(246,242,255)`),
         0.6,
-        2500,
+        3000,
         2
     );
 
-    light2.position.set(-785, -350, -710);
-
-    const light3 = new THREE.PointLight(
+    const light3 = this.createPointLight(
+        [730, 800, -985],
         new THREE.Color(`rgb(245,254,255)`),
         0.95,
-        2500,
+        3000,
         2
     );
 
-    light3.position.set(730, 800, -985);
-
-    const light4 = new THREE.AmbientLight(0xf9f9f9);
-
-    this.light.add(light1, light2, light3, light4);
-
     this.light.position.z = this.camera.position.z;
+
+    this.light.add(light1, light2, light3);
+
     this.scene.add(this.light);
+  }
+
+  createPointLight(position, color, intensity, distance, decay) {
+    const light = new THREE.PointLight(
+        new THREE.Color(color),
+        intensity,
+        distance,
+        decay
+    );
+
+    light.castShadow = true;
+    light.shadow.mapSize.width = 512;
+    light.shadow.mapSize.height = 512;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = distance;
+
+    light.position.set(position[0], position[1], position[2]);
+
+    this.scene.add(new THREE.PointLightHelper(light, 10));
+
+    return light;
   }
 
   initTextureLoader() {

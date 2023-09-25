@@ -14,12 +14,19 @@ export class RoomScene extends THREE.Group {
   }
 
   addObject(object) {
+    object.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+
     this.add(object);
   }
 
   addWalls() {
     this.pageSceneCreator.createObjectMesh(this.wall, (obj) => {
-      this.add(obj);
+      this.addObject(obj);
     });
   }
 
@@ -30,12 +37,12 @@ export class RoomScene extends THREE.Group {
 
     floor.rotation.set(0, -Math.PI / 2, -Math.PI / 2, `ZYX`);
 
-    this.add(floor);
+    this.addObject(floor);
   }
 
   addStaticOutput() {
     this.pageSceneCreator.createObjectMesh(this.staticOutput, (obj) => {
-      this.add(obj);
+      this.addObject(obj);
     });
   }
 }
