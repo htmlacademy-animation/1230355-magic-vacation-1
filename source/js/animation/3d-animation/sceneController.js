@@ -46,7 +46,7 @@ export const sceneController = {
     const positionY = 700;
 
     scene.camera.position.set(0, positionY, positionZ);
-    scene.light.position.set(0, positionY, positionZ);
+    scene.lightGroup.position.set(0, positionY, positionZ);
 
     scene.controls.target.set(
         0,
