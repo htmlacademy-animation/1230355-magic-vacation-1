@@ -4,7 +4,7 @@ import {RoomTwoScene} from './room-two';
 import {RoomThreeScene} from './room-three';
 import {RoomFourScene} from './room-four';
 
-export class RoomsPageScene extends THREE.Group {
+export class RoomsComposition extends THREE.Group {
   constructor(pageSceneCreator) {
     super();
 

@@ -1,10 +1,10 @@
 import {RoomScene} from './room';
 import * as THREE from 'three';
-import {MATERIAL_TYPE, OBJECT_ELEMENTS} from "../../../helpers/constants";
-import {MaterialCreator} from "../material-creator";
-import {Snowman} from "../3d-objects/snowman";
-import {Road} from "../3d-objects/road";
-import {degreesToRadians} from "../../../helpers/utils";
+import {MATERIAL_TYPE, OBJECT_ELEMENTS} from '../../../helpers/constants';
+import {MaterialCreator} from '../material-creator';
+import {Snowman} from '../3d-objects/snowman';
+import {Road} from '../3d-objects/road';
+import {degreesToRadians} from '../../../helpers/utils';
 
 export class RoomThreeScene extends RoomScene {
   constructor(pageSceneCreator) {
@@ -41,6 +41,7 @@ export class RoomThreeScene extends RoomScene {
     this.addSnowman();
     this.addRoad();
     this.addRoadBlocks();
+    this.addCompass();
   }
 
   addSnowman() {
@@ -96,5 +97,15 @@ export class RoomThreeScene extends RoomScene {
 
         this.addObject(clone);
       });
+  }
+  addCompass() {
+    this.pageSceneCreator.createObjectMesh(
+        {
+          name: OBJECT_ELEMENTS.compass,
+        },
+        (obj) => {
+          this.addObject(obj);
+        }
+    );
   }
 }

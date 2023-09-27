@@ -63,4 +63,13 @@ ObjectsCreator.objectsConfigMap = {
   [OBJECT_ELEMENTS.staticOutput4]: {
     path: `./3d/module-6/rooms-scenes/scenesStatic/scene4-static-output-1.gltf`,
   },
+  [OBJECT_ELEMENTS.dog]: {
+    path: `./3d/module-6/rooms-scenes/objects/dog.gltf`,
+  },
+  [OBJECT_ELEMENTS.compass]: {
+    path: `./3d/module-6/rooms-scenes/objects/compass.gltf`,
+  },
+  [OBJECT_ELEMENTS.sonya]: {
+    path: `./3d/module-6/rooms-scenes/objects/sonya.gltf`,
+  },
 };

@@ -16,7 +16,7 @@ export class TransformationGuiHelper extends GUI {
 
     if (typeof transformParams.transformX === `number`) {
       objectTransform
-        .add(transformParams, `transformX`, -1000, 1000, 10)
+        .add(transformParams, `transformX`, -3000, 3000, 10)
         .onChange((data) => {
           object.position.set(
               data,
@@ -28,7 +28,7 @@ export class TransformationGuiHelper extends GUI {
 
     if (typeof transformParams.transformY === `number`) {
       objectTransform
-        .add(transformParams, `transformY`, -1000, 1000, 10)
+        .add(transformParams, `transformY`, -3000, 3000, 10)
         .onChange((data) => {
           object.position.set(
               transformParams.transformX || 0,
@@ -40,7 +40,7 @@ export class TransformationGuiHelper extends GUI {
 
     if (typeof transformParams.transformZ === `number`) {
       objectTransform
-        .add(transformParams, `transformZ`, -1000, 1000, 10)
+        .add(transformParams, `transformZ`, -3000, 3000, 10)
         .onChange((data) => {
           object.position.set(
               transformParams.transformX || 0,

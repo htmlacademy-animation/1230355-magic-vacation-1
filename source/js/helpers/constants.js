@@ -7,7 +7,10 @@ export const OBJECT_ELEMENTS = {
   staticOutput1: `staticOutput1`,
   staticOutput2: `staticOutput2`,
   staticOutput3: `staticOutput3`,
-  staticOutput4: `staticOutput4`
+  staticOutput4: `staticOutput4`,
+  dog: `dog`,
+  compass: `compass`,
+  sonya: `sonya`,
 };
 
 export const MATERIAL_TYPE = {
