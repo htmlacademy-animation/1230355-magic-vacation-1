@@ -90,8 +90,8 @@ export default class Animation {
         };
       }
 
-          this.requestId = requestAnimationFrame(animateFrame);
-      }, this.options.delay);
+      this.requestId = requestAnimationFrame(animateFrame);
+    }, this.options.delay);
   }
 
   restart() {
