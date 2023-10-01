@@ -19,34 +19,31 @@ export class PageSceneCreator {
         this.applyMaterialToObject(obj, config.material);
       }
 
-      if (config.transform.from) {
+      if (config.transform) {
         if (config.enableGui) {
           this.transformationGuiHelper.addNewFolder(
               config.name,
               obj,
-              config.transform.to
+              config.transform
           );
         }
-
-        this.setTransformParams(obj, config.transform.from);
+        this.setTransformParams(obj, config.transform);
       }
-
       onComplete(obj);
     });
   }
 
   createExtrudedSvgMesh(config, onComplete) {
     this.extrudeSvgCreator.create(config.name, config.extrude, (obj) => {
-      if (config.transform.from) {
+      if (config.transform) {
         if (config.enableGui) {
           this.transformationGuiHelper.addNewFolder(
               config.name,
               obj,
-              config.transform.to
+              config.transform
           );
         }
-
-        this.setTransformParams(obj, config.transform.from);
+        this.setTransformParams(obj, config.transform);
       }
 
       onComplete(obj);
@@ -57,7 +54,11 @@ export class PageSceneCreator {
     const scale = typeof params.scale === `number` ? params.scale : 1;
     obj.position.set(params.transformX || 0, params.transformY || 0, params.transformZ || 0);
     obj.rotation.set(params.rotateX || 0, params.rotateY || 0, params.rotateZ || 0);
-    obj.scale.set(scale, scale, scale);
+    if (typeof params.scale === `number`) {
+      obj.scale.set(scale, scale, scale);
+    } else {
+      obj.scale.set(params.scaleX || 1, params.scaleY || 1, params.scaleZ || 1);
+    }
   }
 
   applyMaterialToObject(obj3d, material) {

@@ -1,9 +1,10 @@
-import * as THREE from "three";
-import {SVG_ELEMENTS, OBJECT_ELEMENTS, MATERIAL_TYPE} from "../../helpers/constants";
-import {MaterialCreator} from "./material-creator";
-import {Saturn} from "./3d-objects/saturn";
-import easing from "../../helpers/easing";
-import Animation from "../2d-animation/animation-2d";
+import * as THREE from 'three';
+import {SVG_ELEMENTS, OBJECT_ELEMENTS, MATERIAL_TYPE} from '../../helpers/constants';
+import {MaterialCreator} from './material-creator';
+import {Saturn} from './3d-objects/saturn';
+import easing from '../../helpers/easing';
+import Animation from '../2d-animation/animation-2d';
+import {createBounceAnimation, createObjectTransformAnimation} from "./animation-creator";
 
 export class MainPageComposition extends THREE.Group {
   constructor(pageSceneCreator, animationManager) {
@@ -255,34 +256,37 @@ export class MainPageComposition extends THREE.Group {
 
   addMeshObjects() {
     this.meshObjects.forEach((config) => {
-      this.pageSceneCreator.createObjectMesh(config, (obj) => {
-        if (config.transform.to) {
-          this.addObjectTransformAnimation(obj, config.transform);
-        }
-
-        if (config.bounceAnimation) {
-          this.addBounceAnimation(obj);
-        }
-
-        this.addMesh(obj);
-      });
+      this.pageSceneCreator.createObjectMesh(config, this.addObject(config));
     });
   }
 
   addExtrudedSvgObjects() {
     this.meshExtrudedObjects.forEach((config) => {
-      this.pageSceneCreator.createExtrudedSvgMesh(config, (obj) => {
-        if (config.transform.to) {
-          this.addObjectTransformAnimation(obj, config.transform);
-        }
-
-        if (config.bounceAnimation) {
-          this.addBounceAnimation(obj);
-        }
-
-        this.addMesh(obj);
-      });
+      this.pageSceneCreator.createExtrudedSvgMesh(
+          config,
+          this.addObject(config)
+      );
     });
+  }
+
+  addObject(config) {
+    return (obj) => {
+      if (config.transform.to) {
+        this.animationManager.addAnimations(
+            createObjectTransformAnimation(obj, config.transform, {
+              duration: 1500,
+              delay: 500,
+              easing: easing.easeOutCubic,
+            })
+        );
+      }
+
+      if (config.bounceAnimation) {
+        this.animationManager.addAnimations(createBounceAnimation(obj));
+      }
+
+      this.addMesh(obj);
+    };
   }
 
   addSaturn() {
@@ -292,22 +296,35 @@ export class MainPageComposition extends THREE.Group {
     });
 
     const transform = {
-      rotateY: 3.6,
-      rotateZ: 5,
-      scale: 0,
+      from: {
+        rotateY: 3.6,
+        rotateZ: 5,
+
+        scale: 0,
+      },
+      to: {
+        transformX: 350,
+        transformY: -120,
+        transformZ: 140,
+
+        rotateY: 3.6,
+        rotateZ: 3,
+
+        scale: 0.5,
+      },
     };
 
-    this.pageSceneCreator.setTransformParams(saturn, transform);
+    this.pageSceneCreator.setTransformParams(saturn, transform.from);
 
-    this.addObjectAppearAnimation((progress) => {
-      const scale = 0.5 * progress;
+    this.animationManager.addAnimations(
+        createObjectTransformAnimation(saturn, transform, {
+          duration: 1500,
+          delay: 500,
+          easing: easing.easeOutCubic,
+        })
+    );
 
-      saturn.position.set(350 * progress, -120 * progress, 140 * progress);
-      saturn.rotation.set(0, 3.6, 5 - 2 * progress);
-      saturn.scale.set(scale, scale, scale);
-    });
-
-    this.addBounceAnimation(saturn);
+    this.animationManager.addAnimations(createBounceAnimation(saturn));
 
     this.addMesh(saturn);
   }
