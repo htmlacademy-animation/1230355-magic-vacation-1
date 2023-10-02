@@ -21,11 +21,14 @@ export class RoomsComposition extends THREE.Group {
   }
 
   addRoomOne() {
-    this.add(new RoomOneScene(this.pageSceneCreator));
+    this.add(new RoomOneScene(this.pageSceneCreator, this.animationManager));
   }
 
   addRoomTwo() {
-    const roomTwo = new RoomTwoScene(this.pageSceneCreator);
+    const roomTwo = new RoomTwoScene(
+        this.pageSceneCreator,
+        this.animationManager
+    );
 
     roomTwo.rotateY(Math.PI / 2);
 
@@ -33,7 +36,10 @@ export class RoomsComposition extends THREE.Group {
   }
 
   addRoomThree() {
-    const roomTwo = new RoomThreeScene(this.pageSceneCreator);
+    const roomTwo = new RoomThreeScene(
+        this.pageSceneCreator,
+        this.animationManager
+    );
 
     roomTwo.rotateY(Math.PI);
 
@@ -41,7 +47,10 @@ export class RoomsComposition extends THREE.Group {
   }
 
   addRoomFour() {
-    const roomTwo = new RoomFourScene(this.pageSceneCreator);
+    const roomTwo = new RoomFourScene(
+        this.pageSceneCreator,
+        this.animationManager
+    );
 
     roomTwo.rotateY(-Math.PI / 2);
 

@@ -1,12 +1,13 @@
 import {RoomScene} from './room';
 import * as THREE from 'three';
-import {MATERIAL_TYPE, OBJECT_ELEMENTS, SVG_ELEMENTS} from "../../../helpers/constants";
-import {MaterialCreator} from "../material-creator";
+import {MATERIAL_TYPE, OBJECT_ELEMENTS, SVG_ELEMENTS} from '../../../helpers/constants';
+import {MaterialCreator} from '../material-creator';
 import {Lantern} from '../3d-objects/lantern';
-
+import Animation from '../../2d-animation/animation-2d';
+import easing from '../../../helpers/easing';
 export class RoomTwoScene extends RoomScene {
-  constructor(pageSceneCreator) {
-    super(pageSceneCreator);
+  constructor(pageSceneCreator, animationManager) {
+    super(pageSceneCreator, animationManager);
 
     this.wall = {
       name: OBJECT_ELEMENTS.wallCorner,
@@ -51,33 +52,65 @@ export class RoomTwoScene extends RoomScene {
         bevelSize: 1,
       },
       transform: {
-        transformX: 80,
-        transformY: 90,
-        transformZ: 480,
-
-        rotateX: -2.6,
-        rotateY: -Math.PI / 2,
-
+        position: {
+          x: 0,
+          y: 70,
+          z: 110,
+        },
+        rotation: {
+          x: -2.6,
+          y: -Math.PI / 2,
+        },
         scale: 1.1,
       },
     };
-
+    const group = new THREE.Group();
+    const groupLeaf1 = new THREE.Group();
+    const groupLeaf2 = new THREE.Group();
     this.pageSceneCreator.createExtrudedSvgMesh(config, (leaf1) => {
       const leaf2 = leaf1.clone();
 
       this.pageSceneCreator.setTransformParams(leaf2, {
-        transformX: 80,
-        transformY: 300,
-        transformZ: 400,
-
-        rotateX: 2.9,
-        rotateY: -Math.PI / 2,
-
+        position: {
+          x: 0,
+          y: 320,
+          z: 40,
+        },
+        rotation: {
+          x: 2.9,
+          y: -Math.PI / 2,
+        },
         scale: 2.5,
       });
 
-      this.addObject(leaf1);
-      this.addObject(leaf2);
+      group.position.set(80, 20, 330);
+
+      this.animationManager.addAnimations(
+          new Animation({
+            func: (_, {startTime, currentTime}) => {
+              const time = ((currentTime - startTime) / 300) % 16;
+              groupLeaf1.rotation.x = 0.3 * Math.exp(-0.2 * time) * Math.cos(1.2 * time + Math.PI / 2);
+            },
+            duration: `infinite`,
+            easing: easing.easeInOutSine,
+          }),
+          new Animation({
+            func: (_, {startTime, currentTime}) => {
+              const time = ((currentTime - startTime) / 300) % 16;
+              groupLeaf2.rotation.x = 0.4 * Math.exp(-0.2 * time) * Math.cos(time + Math.PI / 2);
+            },
+            duration: `infinite`,
+            easing: easing.easeInOutSine,
+          })
+      );
+
+      groupLeaf1.add(leaf1);
+      groupLeaf2.add(leaf2);
+
+      group.add(groupLeaf1);
+      group.add(groupLeaf2);
+
+      this.addObject(group);
     });
   }
 
@@ -90,12 +123,14 @@ export class RoomTwoScene extends RoomScene {
     );
 
     const transform = {
-      transformX: 190,
-      transformY: 140,
-      transformZ: 230,
-
-      rotateY: -Math.PI / 4,
-
+      position: {
+        x: 190,
+        y: 140,
+        z: 230,
+      },
+      rotation: {
+        y: -Math.PI / 4,
+      },
       scale: 1,
     };
 
@@ -108,12 +143,14 @@ export class RoomTwoScene extends RoomScene {
     const lantern = new Lantern(this.pageSceneCreator.materialCreator);
 
     const transform = {
-      transformX: 640,
-      transformY: 0,
-      transformZ: 110,
-
-      rotateY: -0.3,
-
+      position: {
+        x: 640,
+        y: 0,
+        z: 110,
+      },
+      rotation: {
+        y: -0.3,
+      },
       scale: 1,
     };
 

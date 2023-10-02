@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 
 export class RoomScene extends THREE.Group {
-  constructor(pageSceneCreator) {
+  constructor(pageSceneCreator, animationManager) {
     super();
 
     this.pageSceneCreator = pageSceneCreator;
+    this.animationManager = animationManager;
   }
 
   constructChildren() {
@@ -31,7 +32,7 @@ export class RoomScene extends THREE.Group {
   }
 
   addFloor() {
-    const geometry = new THREE.CircleGeometry(1350, 32, 0, Math.PI / 2);
+    const geometry = new THREE.CircleGeometry(2000, 8, 0, Math.PI / 2);
 
     const floor = new THREE.Mesh(geometry, this.floor.material);
 
