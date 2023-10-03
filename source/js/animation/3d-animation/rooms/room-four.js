@@ -152,6 +152,7 @@ export class RoomFourScene extends RoomScene {
           });
 
           this.addObject(sonya);
+          this.animationManager.startAnimations();
         }
     );
   }

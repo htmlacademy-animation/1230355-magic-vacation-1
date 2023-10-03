@@ -47,13 +47,13 @@ export class RoomsComposition extends THREE.Group {
   }
 
   addRoomFour() {
-    const roomTwo = new RoomFourScene(
+    const roomFour = new RoomFourScene(
         this.pageSceneCreator,
         this.animationManager
     );
 
-    roomTwo.rotateY(-Math.PI / 2);
+    roomFour.rotateY(-Math.PI / 2);
 
-    this.add(roomTwo);
+    this.add(roomFour);
   }
 }
