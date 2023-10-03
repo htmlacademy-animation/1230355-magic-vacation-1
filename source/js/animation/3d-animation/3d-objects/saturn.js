@@ -1,7 +1,7 @@
-import * as THREE from "three";
-import {degreesToRadians} from "../../../helpers/utils";
-import {MaterialCreator} from "../material-creator";
-import {MATERIAL_TYPE} from "../../../helpers/constants";
+import * as THREE from 'three';
+import {degreesToRadians} from '../../../helpers/utils';
+import {MaterialCreator} from '../material-creator';
+import {MATERIAL_TYPE, MESH_NAMES} from '../../../helpers/constants';
 
 export class Saturn extends THREE.Group {
   constructor(materialCreator, options) {
@@ -71,6 +71,7 @@ export class Saturn extends THREE.Group {
             : MaterialCreator.Colors.BrightPurple,
         })
     );
+    ring.name = MESH_NAMES.SaturnRing;
     ring.rotateZ(degreesToRadians(-18));
     this.add(ring);
   }

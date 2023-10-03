@@ -26,12 +26,17 @@ function easeInOutSine(x) {
   return -(Math.cos(Math.PI * x) - 1) / 2;
 }
 
+function easeInQuad(x) {
+  return x ** 4;
+}
+
 let easing = Object.freeze({
   easeLinear,
   easeOutElastic,
   easeInCubic,
   easeOutCubic,
   easeInOutSine,
+  easeInQuad,
 });
 
 export default easing;

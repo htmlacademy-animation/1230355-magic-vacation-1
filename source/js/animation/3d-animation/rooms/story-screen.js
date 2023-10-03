@@ -16,7 +16,6 @@ export class RoomsPageScene extends THREE.Group {
 
   constructChildren() {
     this.addRooms();
-
     this.addSuitCase();
   }
 
@@ -28,6 +27,48 @@ export class RoomsPageScene extends THREE.Group {
 
     roomsComposition.rotateY(-Math.PI / 4);
 
+    this.animationManager.addAnimations(
+        createObjectTransformAnimation(
+            roomsComposition,
+            {
+              rotation: {
+                y: -Math.PI / 4 - Math.PI / 2,
+              },
+            },
+            {
+              duration: 1500,
+              delay: 4000,
+              easing: easing.easeInOutSine,
+            }
+        ),
+        createObjectTransformAnimation(
+            roomsComposition,
+            {
+              rotation: {
+                y: -Math.PI / 4 - Math.PI,
+              },
+            },
+            {
+              duration: 1500,
+              delay: 8000,
+              easing: easing.easeInOutSine,
+            }
+        ),
+        createObjectTransformAnimation(
+            roomsComposition,
+            {
+              rotation: {
+                y: -Math.PI / 4 - 3 * Math.PI / 2,
+              },
+            },
+            {
+              duration: 1500,
+              delay: 12000,
+              easing: easing.easeInOutSine,
+            }
+        )
+    );
+
     this.add(roomsComposition);
   }
 
@@ -37,11 +78,14 @@ export class RoomsPageScene extends THREE.Group {
           name: OBJECT_ELEMENTS.suitcase,
           enableGui: true,
           transform: {
-            transformX: -340,
-            transformY: 150,
-            transformZ: 750,
-
-            rotateY: -0.4,
+            position: {
+              x: -340,
+              y: 150,
+              z: 750,
+            },
+            rotation: {
+              y: -0.4,
+            },
           },
         },
         (obj) => {

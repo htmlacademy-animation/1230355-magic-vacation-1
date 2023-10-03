@@ -38,3 +38,7 @@ export const SVG_ELEMENTS = {
   question: `question`,
   snowflake: `snowflake`,
 };
+
+export const MESH_NAMES = {
+  SaturnRing: `SaturnRing`
+};
