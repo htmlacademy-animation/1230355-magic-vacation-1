@@ -62,8 +62,8 @@ export class Scene3d {
 
     directionalLightTargetObject.position.set(
         0,
-        -this.camera.position.z * Math.tan((15 * Math.PI) / 180),
-        0
+        -1000 * Math.tan((15 * Math.PI) / 180),
+        -1000
     );
 
     this.scene.add(directionalLightTargetObject);
