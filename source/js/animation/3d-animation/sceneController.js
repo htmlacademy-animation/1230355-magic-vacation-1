@@ -1,4 +1,3 @@
-// import * as THREE from 'three';
 import {scene} from './initAnimationScreen';
 import {SvgLoader} from "./svg-objects/svg-insert";
 import {EXTRUDE_SETTINGS, SVG_ELEMENTS} from '../../helpers/constants';
@@ -9,7 +8,6 @@ import {ObjectsCreator} from '../../helpers/3d-object-creator';
 import {TransformationGuiHelper} from '../../helpers/transformation-gui-helper';
 import {PageSceneCreator} from './page-scene-creator';
 import {degreesToRadians} from '../../helpers/utils';
-// import {RoomsComposition} from './rooms/rooms-scene';
 import {LatheGeometryCreator} from './lathe-geometry';
 import {RoomsPageScene} from './rooms/story-screen';
 import {AnimationManager} from './animation-change';
