@@ -31,7 +31,6 @@ const animationManager = new AnimationManager();
 export class SceneController {
   constructor() {
     this.isInit = false;
-
     this.previousRoomSceneIndex = 1;
   }
 
@@ -42,6 +41,7 @@ export class SceneController {
           animationManager
       );
     }
+    this.mainPageScene.position.set(0, 0, 4000);
 
     scene.addSceneObject(this.mainPageScene);
   }
@@ -52,7 +52,7 @@ export class SceneController {
         animationManager
     );
 
-    this.roomsPageScene.position.set(0, -700, -3270);
+    this.roomsPageScene.position.set(0, -330, 0);
 
     scene.addSceneObject(this.roomsPageScene);
   }
@@ -72,7 +72,7 @@ export class SceneController {
     );
 
     this.cameraRig.addObjectToCameraNull(scene.camera);
-    this.cameraRig.addObjectToCameraNull(scene.light);
+    this.cameraRig.addObjectToCameraNull(scene.lightGroup);
     scene.scene.add(this.cameraRig);
   }
 

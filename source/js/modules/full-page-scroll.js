@@ -1,8 +1,5 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
-import {plainMeshController} from '../../js/animation/3d-animation/plainMeshController';
-// import {scene} from "../animation/3d-animation/initAnimationScreen";
-// import { sphere } from "../animation/3d-animation/sphere";
 import {sceneController} from '../script';
 
 const prizes = document.querySelector(`.screen--prizes`);
@@ -100,17 +97,6 @@ export default class FullPageScroll {
       } else if (isStoryPage) {
         sceneController.showRoomScene();
       }
-    }
-
-    if (nextActiveScreen.classList.contains(`screen--intro`)) {
-      // sphere.addScreenMesh(`intro`);
-      // sceneController.addScreenMesh();
-      sceneController.addScene();
-    } else if (nextActiveScreen.classList.contains(`screen--story`)) {
-      plainMeshController.addScreenMesh(`story`).then(() => {
-        plainMeshController.setStoryActiveMesh();
-        // sceneController.addScreenMesh();
-      });
     }
 
     if (

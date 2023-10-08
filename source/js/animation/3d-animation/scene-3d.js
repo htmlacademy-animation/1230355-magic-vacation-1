@@ -62,26 +62,26 @@ export class Scene3d {
 
     directionalLightTargetObject.position.set(
         0,
-        -1000 * Math.tan((15 * Math.PI) / 180),
-        -1000
+        -this.camera.position.z * Math.tan((15 * Math.PI) / 180),
+        0
     );
 
     this.scene.add(directionalLightTargetObject);
     mainLight.target = directionalLightTargetObject;
 
     const frontLight = this.createPointLight(
-        [-785, -350, -710],
+        [-785, -350, -510],
         new THREE.Color(`rgb(246,242,255)`),
         1.6,
-        3000,
+        5000,
         0.2
     );
 
     const topLight = this.createPointLight(
-        [730, 800, -985],
+        [730, 800, -785],
         new THREE.Color(`rgb(245,254,255)`),
         0.95,
-        3000,
+        5000,
         0.1
     );
 

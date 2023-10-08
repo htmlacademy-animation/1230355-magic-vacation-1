@@ -18,7 +18,7 @@ export class CameraRig extends THREE.Group {
     if ([1, 2, 3, 4].includes(index)) {
       return {
         index,
-        depth: -2150,
+        depth: -1750,
         rotationAxisYAngle: ((index - 1) * Math.PI) / 2,
         horizonIncline: -degreesToRadians(15),
       };
@@ -45,7 +45,7 @@ export class CameraRig extends THREE.Group {
 
     this.constructRigElements();
 
-    this.position.z = -3270;
+    this.position.z = 0;
 
     // Set Rig to the initial state
     this.invalidate();
@@ -122,7 +122,6 @@ export class CameraRig extends THREE.Group {
 
     if (this._rotationAxisYAngle) {
       this.rotationAxis.rotation.y = this._rotationAxisYAngle;
-
       this._rotationAxisYAngleChanged = false;
     }
   }
@@ -139,15 +138,9 @@ export class CameraRig extends THREE.Group {
     this.AnimateControl.start(
         new Animation({
           func: (progress) => {
-            this.depth =
-            initDepth + (newStateParameters.depth - initDepth) * progress;
-            this.horizonIncline =
-            initHorizonIncline +
-            (newStateParameters.horizonIncline - initHorizonIncline) * progress;
-            this.rotationAxisYAngle =
-            initRotationAxisYAngle +
-            (newStateParameters.rotationAxisYAngle - initRotationAxisYAngle) *
-              progress;
+            this.depth = initDepth + (newStateParameters.depth - initDepth) * progress;
+            this.horizonIncline = initHorizonIncline + (newStateParameters.horizonIncline - initHorizonIncline) * progress;
+            this.rotationAxisYAngle = initRotationAxisYAngle + (newStateParameters.rotationAxisYAngle - initRotationAxisYAngle) * progress;
             this.invalidate();
           },
           duration: this.getTransitionDuration(newStateParameters.index),
