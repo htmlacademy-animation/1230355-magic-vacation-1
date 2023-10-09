@@ -5,13 +5,11 @@ import {MainPageComposition} from './scene-intro';
 import {MaterialCreator} from './material-creator';
 import {ExtrudeSvgCreator} from './svg-objects/extrude-svg';
 import {ObjectsCreator} from '../../helpers/3d-object-creator';
-import {TransformationGuiHelper} from '../../helpers/transformation-gui-helper';
 import {PageSceneCreator} from './page-scene-creator';
-import {degreesToRadians} from '../../helpers/utils';
 import {LatheGeometryCreator} from './lathe-geometry';
 import {RoomsPageScene} from './rooms/story-screen';
 import {AnimationManager} from './animation-change';
-
+import {CameraRig} from './rig/camera';
 
 const materialCreator = new MaterialCreator();
 const latheGeometryCreator = new LatheGeometryCreator();
@@ -21,58 +19,74 @@ const extrudeSvgCreator = new ExtrudeSvgCreator(
     EXTRUDE_SETTINGS
 );
 const objectCreator = new ObjectsCreator();
-const transformationGuiHelper = new TransformationGuiHelper();
 const pageSceneCreator = new PageSceneCreator(
     materialCreator,
     extrudeSvgCreator,
     objectCreator,
-    latheGeometryCreator,
-    transformationGuiHelper
+    latheGeometryCreator
 );
 
 const animationManager = new AnimationManager();
 
-export const sceneController = {
-  ainPageScene: null,
-  roomsPageScene: null,
-  clearScene() {
-    scene.clearScene();
-    animationManager.clearAnimations();
-  },
+export class SceneController {
+  constructor() {
+    this.isInit = false;
+    this.previousRoomSceneIndex = 1;
+  }
 
   addMainPageScene() {
-    this.clearScene();
-
     if (!this.mainPageScene) {
-      this.mainPageScene = new MainPageComposition(pageSceneCreator, animationManager);
+      this.mainPageScene = new MainPageComposition(
+          pageSceneCreator,
+          animationManager
+      );
     }
+    this.mainPageScene.position.set(0, 0, 4000);
 
     scene.addSceneObject(this.mainPageScene);
-  },
+  }
 
   addRoomsPageScene() {
-    this.clearScene();
-    const positionZ = 2550;
-    const positionY = 700;
-
-    scene.camera.position.set(0, positionY, positionZ);
-    scene.lightGroup.position.set(0, positionY, positionZ);
-
-    scene.controls.target.set(
-        0,
-        positionY - positionZ * Math.tan(degreesToRadians(15)),
-        0
+    this.roomsPageScene = new RoomsPageScene(
+        pageSceneCreator,
+        animationManager
     );
 
-    if (!this.roomsPageScene) {
-      this.roomsPageScene = new RoomsPageScene(pageSceneCreator, animationManager);
-    }
+    this.roomsPageScene.position.set(0, -330, 0);
 
     scene.addSceneObject(this.roomsPageScene);
-  },
+  }
 
-  addScene() {
+  initScene(startSceneIndex) {
     this.addMainPageScene();
-    // this.addRoomsPageScene();
-  },
-};
+    this.addRoomsPageScene();
+
+    this.addCameraRig(startSceneIndex);
+
+    this.isInit = true;
+  }
+
+  addCameraRig(startSceneIndex) {
+    this.cameraRig = new CameraRig(
+        CameraRig.getCameraRigStageState(startSceneIndex)
+    );
+
+    this.cameraRig.addObjectToCameraNull(scene.camera);
+    this.cameraRig.addObjectToCameraNull(scene.lightGroup);
+    scene.scene.add(this.cameraRig);
+  }
+
+  showMainScene() {
+    this.cameraRig.changeStateTo(CameraRig.getCameraRigStageState(0));
+  }
+
+  showRoomScene(index) {
+    if (typeof index === `number`) {
+      this.previousRoomSceneIndex = index;
+    }
+
+    this.cameraRig.changeStateTo(
+        CameraRig.getCameraRigStageState(index || this.previousRoomSceneIndex)
+    );
+  }
+}

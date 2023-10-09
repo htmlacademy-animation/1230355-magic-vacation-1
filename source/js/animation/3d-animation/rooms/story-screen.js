@@ -27,48 +27,6 @@ export class RoomsPageScene extends THREE.Group {
 
     roomsComposition.rotateY(-Math.PI / 4);
 
-    this.animationManager.addAnimations(
-        createObjectTransformAnimation(
-            roomsComposition,
-            {
-              rotation: {
-                y: -Math.PI / 4 - Math.PI / 2,
-              },
-            },
-            {
-              duration: 1500,
-              delay: 4000,
-              easing: easing.easeInOutSine,
-            }
-        ),
-        createObjectTransformAnimation(
-            roomsComposition,
-            {
-              rotation: {
-                y: -Math.PI / 4 - Math.PI,
-              },
-            },
-            {
-              duration: 1500,
-              delay: 8000,
-              easing: easing.easeInOutSine,
-            }
-        ),
-        createObjectTransformAnimation(
-            roomsComposition,
-            {
-              rotation: {
-                y: -Math.PI / 4 - 3 * Math.PI / 2,
-              },
-            },
-            {
-              duration: 1500,
-              delay: 12000,
-              easing: easing.easeInOutSine,
-            }
-        )
-    );
-
     this.add(roomsComposition);
   }
 

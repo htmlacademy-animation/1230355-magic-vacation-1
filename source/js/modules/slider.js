@@ -1,13 +1,12 @@
 import Swiper from 'swiper';
 import bodyTheme from '../helpers/theme';
-import {plainMeshController} from '../../js/animation/3d-animation/plainMeshController';
+import {sceneController} from '../script';
 
 export default () => {
   let storySlider;
 
   const setSlider = function () {
     bodyTheme.setAndApplyBodyTheme(`dark`);
-    plainMeshController.setStoryActiveMesh();
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
       storySlider = new Swiper(`.js-slider`, {
         pagination: {
@@ -20,13 +19,13 @@ export default () => {
         on: {
           slideChange: () => {
             if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
-              plainMeshController.setStoryActiveMesh(0);
+              sceneController.showRoomScene(1);
             } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
-              plainMeshController.setStoryActiveMesh(1);
+              sceneController.showRoomScene(2);
             } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
-              plainMeshController.setStoryActiveMesh(2);
+              sceneController.showRoomScene(3);
             } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
-              plainMeshController.setStoryActiveMesh(3);
+              sceneController.showRoomScene(4);
             }
           },
           resize: () => {
@@ -55,16 +54,16 @@ export default () => {
           slideChange: () => {
             if (storySlider.activeIndex === 0) {
               bodyTheme.setAndApplyBodyTheme(`purple`);
-              plainMeshController.setStoryActiveMesh(0);
+              sceneController.showRoomScene(1);
             } else if (storySlider.activeIndex === 2) {
               bodyTheme.setAndApplyBodyTheme(`blue`);
-              plainMeshController.setStoryActiveMesh(1);
+              sceneController.showRoomScene(2);
             } else if (storySlider.activeIndex === 4) {
               bodyTheme.setAndApplyBodyTheme(`light-blue`);
-              plainMeshController.setStoryActiveMesh(2);
+              sceneController.showRoomScene(3);
             } else if (storySlider.activeIndex === 6) {
               bodyTheme.setAndApplyBodyTheme(`dark`);
-              plainMeshController.setStoryActiveMesh(3);
+              sceneController.showRoomScene(4);
             }
           },
           resize: () => {

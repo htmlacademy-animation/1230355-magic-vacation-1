@@ -10,6 +10,7 @@ import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
 import animation from './modules/animation';
 import '../js/animation/3d-animation/initAnimationScreen.js';
+import {SceneController} from './animation/3d-animation/sceneController';
 
 // init modules
 mobileHeight();
@@ -23,5 +24,13 @@ social();
 animation();
 
 
+export const sceneController = new SceneController();
+
 const fullPageScroll = new FullPageScroll();
 fullPageScroll.init();
+
+window.addEventListener(`load`, () => {
+  setTimeout(()=>{
+    document.body.classList.add(`loaded`);
+  }, 2000);
+});
