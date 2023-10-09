@@ -8,10 +8,10 @@ export class RoomScene extends THREE.Group {
     this.animationManager = animationManager;
   }
 
-  constructChildren() {
-    this.addWalls();
+  async constructChildren() {
     this.addFloor();
-    this.addStaticOutput();
+    await this.addWalls();
+    await this.addStaticOutput();
   }
 
   addObject(object) {
@@ -25,10 +25,10 @@ export class RoomScene extends THREE.Group {
     this.add(object);
   }
 
-  addWalls() {
-    this.pageSceneCreator.createObjectMesh(this.wall, (obj) => {
-      this.addObject(obj);
-    });
+  async addWalls() {
+    const wall = await this.pageSceneCreator.createObjectMesh(this.wall);
+
+    this.addObject(wall);
   }
 
   addFloor() {
@@ -41,9 +41,9 @@ export class RoomScene extends THREE.Group {
     this.addObject(floor);
   }
 
-  addStaticOutput() {
-    this.pageSceneCreator.createObjectMesh(this.staticOutput, (obj) => {
-      this.addObject(obj);
-    });
+  async addStaticOutput() {
+    const obj = await this.pageSceneCreator.createObjectMesh(this.staticOutput);
+
+    this.addObject(obj);
   }
 }

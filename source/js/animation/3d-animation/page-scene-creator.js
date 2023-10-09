@@ -14,41 +14,31 @@ export class PageSceneCreator {
     this.transformationGuiHelper = transformationGuiHelper;
   }
 
-  createObjectMesh(config, onComplete) {
-    this.objectCreator.create(config.name, (obj) => {
-      if (config.material) {
-        this.applyMaterialToObject(obj, config.material);
-      }
+  async createObjectMesh(config) {
+    const obj = await this.objectCreator.create(config.name);
 
-      if (config.transform) {
-        if (config.enableGui) {
-          // this.transformationGuiHelper.addNewFolder(
-          //     config.name,
-          //     obj,
-          //     config.transform
-          // );
-        }
-        this.setTransformParams(obj, config.transform);
-      }
-      onComplete(obj);
-    });
+    if (config.material) {
+      this.applyMaterialToObject(obj, config.material);
+    }
+
+    if (config.transform) {
+      this.setTransformParams(obj, config.transform);
+    }
+
+    return obj;
   }
 
-  createExtrudedSvgMesh(config, onComplete) {
-    this.extrudeSvgCreator.create(config.name, config.extrude, (obj) => {
-      if (config.transform) {
-        if (config.enableGui) {
-          // this.transformationGuiHelper.addNewFolder(
-          //     config.name,
-          //     obj,
-          //     config.transform
-          // );
-        }
-        this.setTransformParams(obj, config.transform);
-      }
+  async createExtrudedSvgMesh(config) {
+    const obj = await this.extrudeSvgCreator.create(
+        config.name,
+        config.extrude
+    );
 
-      onComplete(obj);
-    });
+    if (config.transform) {
+      this.setTransformParams(obj, config.transform);
+    }
+
+    return obj;
   }
 
   setTransformParams(obj, {position = {}, rotation = {}, scale = {}}) {
