@@ -5,53 +5,88 @@ import {AnimateControl} from './animate-control';
 import easing from '../../../helpers/easing';
 
 export class CameraRig extends THREE.Group {
-  static getCameraRigStageState(index) {
-    if (index === 0) {
+  static getCameraRigStageState(nextSceneIndex, prevRoomIndex = 1) {
+    if (nextSceneIndex === 0) {
       return {
-        index,
-        depth: CameraRig.getMaxDepth(),
-        rotationAxisYAngle: 0,
-        horizonIncline: 0,
+        newStateParams: {
+          index: nextSceneIndex,
+          depth: -3400,
+          rotationAxisYAngle: 0,
+          horizonIncline: 0,
+          pitchRotation: 0,
+          pitchDepth: 1405,
+        },
+        animationParams: {
+          duration: 1500,
+          easing: easing.easeInOutSine,
+        },
       };
     }
 
-    if ([1, 2, 3, 4].includes(index)) {
+    if (typeof nextSceneIndex !== `number`) {
       return {
-        index,
-        depth: CameraRig.getMinDepth(),
-        rotationAxisYAngle: ((index - 1) * Math.PI) / 2,
-        horizonIncline: -degreesToRadians(15),
+        newStateParams: {
+          index: prevRoomIndex,
+          depth: 500,
+          rotationAxisYAngle: ((prevRoomIndex - 1) * Math.PI) / 2,
+          horizonIncline: -degreesToRadians(15),
+          pitchRotation: 0,
+          pitchDepth: 2200,
+        },
+        animationParams: {
+          duration: 1500,
+          easing: easing.easeInOutSine,
+        },
       };
     }
 
-    return {};
+    if ([1, 2, 3, 4].includes(nextSceneIndex)) {
+      return {
+        newStateParams: {
+          index: nextSceneIndex,
+          depth: 500,
+          rotationAxisYAngle: ((nextSceneIndex - 1) * Math.PI) / 2,
+          horizonIncline: -degreesToRadians(15),
+          pitchDepth: 2200,
+        },
+        animationParams: {
+          duration: 700,
+          easing: easing.easeInOutSine,
+        },
+      };
+    }
+
+    return {newStateParams: {}, animationParams: {}};
   }
 
   static getMinDepth() {
-    return -1750;
+    return 0;
   }
 
   static getMaxDepth() {
-    return -4750;
+    return -3400;
   }
 
   constructor(stateParameters, sceneController) {
     super();
 
-    this.stateParameters = stateParameters;
-    this.sceneController = sceneController;
+    this.stateParameters = stateParameters.newStateParams;
 
-    this.keyholeCover = sceneController.mainPageScene.children.find(
+    this.keyholeCover = sceneController.mainPageScene.children[0].children.find(
         ({name}) => name === `keyholeCover`
     );
 
     this._depth = this.stateParameters.depth || 0;
     this._rotationAxisYAngle = this.stateParameters.rotationAxisYAngle || 0;
     this._horizonIncline = this.stateParameters.horizonIncline || 0;
+    this._pitchRotation = this.stateParameters.pitchRotation || 0;
+    this._pitchDepth = this.stateParameters.pitchDepth || 0;
 
     this._depthChanged = true;
     this._rotationAxisYAngleChanged = true;
     this._horizonInclineChanged = true;
+    this._pitchRotationChanged = true;
+    this._pitchDepthChanged = true;
 
     this.AnimateControl = new AnimateControl();
 
@@ -65,15 +100,20 @@ export class CameraRig extends THREE.Group {
   constructRigElements() {
     const depthTrack = new THREE.Group();
     const rotationAxis = new THREE.Group();
+    const pitchAxis = new THREE.Group();
     const cameraNull = new THREE.Group();
 
     this.add(rotationAxis);
     rotationAxis.add(depthTrack);
-    depthTrack.add(cameraNull);
+    depthTrack.add(pitchAxis);
+    depthTrack.add(pitchAxis);
+    pitchAxis.add(cameraNull);
 
     this.depthTrack = depthTrack;
     this.rotationAxis = rotationAxis;
+    this.pitchAxis = pitchAxis;
     this.cameraNull = cameraNull;
+    this.pitchAxis.position.z = this.pitchDepth;
   }
 
   setState(newStateParameters) {
@@ -89,8 +129,10 @@ export class CameraRig extends THREE.Group {
     if (this.keyholeCover) {
       let opacity;
 
-      const fullOpacityBreakpoint = -3700;
-      const noOpacityBreakpoint = -3000;
+      // const fullOpacityBreakpoint = -3700;
+      // const noOpacityBreakpoint = -3000;
+      const fullOpacityBreakpoint = -2200;
+      const noOpacityBreakpoint = -1800;
 
       if (value < fullOpacityBreakpoint) {
         opacity = 1;
@@ -136,9 +178,36 @@ export class CameraRig extends THREE.Group {
     this._rotationAxisYAngleChanged = true;
   }
 
+  get pitchRotation() {
+    return this._pitchRotation;
+  }
+
+  set pitchRotation(value) {
+    if (value === this._pitchRotation) {
+      return;
+    }
+
+    this._pitchRotation = value;
+    this._pitchRotationChanged = true;
+  }
+
+  get pitchDepth() {
+    return this._pitchDepth;
+  }
+
+  set pitchDepth(value) {
+    if (value === this._pitchDepth) {
+      return;
+    }
+
+    this._pitchDepth = value;
+    this._pitchDepthChanged = true;
+  }
+
   invalidate() {
     if (this._depthChanged) {
       this.depthTrack.position.z = -this._depth;
+      this.pitchAxis.position.y = this._pitchDepth * Math.tan(this._horizonIncline);
       this._depthChanged = false;
     }
 
@@ -147,9 +216,22 @@ export class CameraRig extends THREE.Group {
       this._horizonInclineChanged = false;
     }
 
-    if (this._rotationAxisYAngle) {
+    if (this._rotationAxisYAngleChanged) {
       this.rotationAxis.rotation.y = this._rotationAxisYAngle;
       this._rotationAxisYAngleChanged = false;
+    }
+    if (this._pitchRotationChanged) {
+      this.cameraNull.position.y =
+        Math.tan(this._pitchRotation) * this._pitchDepth;
+      this.cameraNull.rotation.x = -this._pitchRotation;
+
+      this._pitchRotationChanged = false;
+    }
+
+    if (this._pitchDepthChanged) {
+      this.pitchAxis.position.z = this._pitchDepth;
+
+      this._pitchDepthChanged = false;
     }
   }
 
@@ -161,33 +243,53 @@ export class CameraRig extends THREE.Group {
     this.cameraNull.add(object);
   }
 
-  changeStateTo(newStateParameters) {
+  changeStateTo({newStateParams, animationParams}, onComplete) {
     const initDepth = this._depth;
     const initHorizonIncline = this._horizonIncline;
     const initRotationAxisYAngle = this._rotationAxisYAngle;
+    const initPitchRotation = this._pitchRotation;
+    const initPitchDepth = this._pitchDepth;
 
     this.AnimateControl.start(
         new Animation({
           func: (progress) => {
-            this.depth = initDepth + (newStateParameters.depth - initDepth) * progress;
-            this.horizonIncline = initHorizonIncline + (newStateParameters.horizonIncline - initHorizonIncline) * progress;
-            this.rotationAxisYAngle = initRotationAxisYAngle + (newStateParameters.rotationAxisYAngle - initRotationAxisYAngle) * progress;
+            if (typeof newStateParams.depth === `number`) {
+              this.depth =
+                initDepth + (newStateParams.depth - initDepth) * progress;
+            }
+
+            if (typeof newStateParams.horizonIncline === `number`) {
+              this.horizonIncline =
+                initHorizonIncline +
+                (newStateParams.horizonIncline - initHorizonIncline) * progress;
+            }
+
+            if (typeof newStateParams.rotationAxisYAngle === `number`) {
+              this.rotationAxisYAngle =
+                initRotationAxisYAngle +
+                (newStateParams.rotationAxisYAngle - initRotationAxisYAngle) *
+                  progress;
+            }
+
+            if (typeof newStateParams.pitchRotation === `number`) {
+              this.pitchRotation = initPitchRotation + (newStateParams.pitchRotation - initPitchRotation) * progress;
+            }
+
+            if (typeof newStateParams.pitchDepth === `number`) {
+              this.pitchDepth = initPitchDepth + (newStateParams.pitchDepth - initPitchDepth) * progress;
+            }
             this.invalidate();
           },
-          duration: this.getTransitionDuration(newStateParameters.index),
-          easing: easing.easeInOutSine,
+          duration: animationParams.duration,
+          easing: animationParams.easing,
           callback: () => {
-            this.setState(newStateParameters);
+            this.setState(newStateParams);
+
+            if (typeof onComplete === `function`) {
+              onComplete();
+            }
           },
         })
     );
-  }
-
-  getTransitionDuration(nextStateParametersIndex) {
-    if (nextStateParametersIndex === 0 || this.stateParameters.index === 0) {
-      return 1500;
-    }
-
-    return 700;
   }
 }
