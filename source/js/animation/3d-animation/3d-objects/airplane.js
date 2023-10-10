@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS} from '../../../helpers/constants';
-import {MaterialCreator} from "../material-creator";
+import {MaterialCreator} from '../material-creator';
 
 export class Airplane extends THREE.Group {
   constructor(pageSceneCreator) {
@@ -37,8 +37,10 @@ export class Airplane extends THREE.Group {
     this._planeRotationZChanged = true;
     this._planeIncline = 0;
     this._planeInclineChanged = true;
+  }
 
-    this.addAirplaneObject();
+  async constructRig() {
+    await this.addAirplaneObject();
   }
 
   get flightRadius() {
@@ -114,17 +116,17 @@ export class Airplane extends THREE.Group {
     this._planeInclineChanged = true;
   }
 
-  addAirplaneObject() {
-    this.pageSceneCreator.createObjectMesh(this.airplaneConfig, (obj) => {
-      this.airplaneObject = obj;
+  async addAirplaneObject() {
+    this.airplaneObject = await this.pageSceneCreator.createObjectMesh(
+        this.airplaneConfig
+    );
 
-      this.airplaneInclineGroup = new THREE.Group();
+    this.airplaneInclineGroup = new THREE.Group();
 
-      this.airplaneInclineGroup.add(this.airplaneObject);
+    this.airplaneInclineGroup.add(this.airplaneObject);
 
-      this.invalidate();
-      this.add(this.airplaneInclineGroup);
-    });
+    this.invalidate();
+    this.add(this.airplaneInclineGroup);
   }
 
   invalidate() {

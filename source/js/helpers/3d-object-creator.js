@@ -8,33 +8,37 @@ export class ObjectsCreator {
 
     this.objects = {};
   }
-  create(name, onSuccess) {
-    if (this.objects[name] && typeof onSuccess === `function`) {
-      onSuccess.call(null, this.objects[name]);
-      return;
+  async create(name) {
+    if (this.objects[name]) {
+      return this.objects[name].clone();
     }
-    const config = ObjectsCreator.objectsConfigMap[name];
-    if (!config) {
-      return;
-    }
-    const onComplete = (obj3d) => {
-      this.objects[name] = obj3d;
 
-      if (typeof onSuccess === `function`) {
-        onSuccess.call(null, obj3d);
-      }
-    };
-    const onGltfComplete = (gltf) => {
-      if (!gltf.scene) {
-        return;
-      }
-      onComplete(gltf.scene);
-    };
-    if (config.path.endsWith(`.obj`)) {
-      this.objLoader.load(config.path, onComplete);
-    } else if (config.path.endsWith(`.gltf`)) {
-      this.loaderGltf.load(config.path, onGltfComplete);
+    const config = ObjectsCreator.objectsConfigMap[name];
+
+    if (!config) {
+      throw Error(`Нет конфига для объекта ${name}`);
     }
+
+    return new Promise((resolve) => {
+      const onComplete = (obj3d) => {
+        this.objects[name] = obj3d;
+
+        resolve(obj3d);
+      };
+
+      const onGltfComplete = (gltf) => {
+        if (!gltf.scene) {
+          return;
+        }
+        onComplete(gltf.scene);
+      };
+
+      if (config.path.endsWith(`.obj`)) {
+        this.objLoader.load(config.path, onComplete);
+      } else if (config.path.endsWith(`.gltf`)) {
+        this.loaderGltf.load(config.path, onGltfComplete);
+      }
+    });
   }
 }
 

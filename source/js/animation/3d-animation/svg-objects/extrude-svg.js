@@ -1,11 +1,15 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 export class ExtrudeSvgCreator {
   constructor(svgShapeLoader, settings) {
     this.svgShapeLoader = svgShapeLoader;
     this.settings = settings;
+    this.extrudedObjects = {};
   }
 
-  async create(name, settings = {}, onLoad) {
+  async create(name, settings = {}) {
+    if (this.extrudedObjects[name]) {
+      return this.extrudedObjects[name].clone();
+    }
     const currentSettings = {...this.settings, ...settings};
 
     const group = new THREE.Group();
@@ -25,6 +29,8 @@ export class ExtrudeSvgCreator {
       }
     }
 
-    onLoad(group);
+    this.extrudedObjects[name] = group;
+
+    return group;
   }
 }

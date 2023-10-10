@@ -5,7 +5,7 @@ import {MaterialCreator} from '../material-creator';
 import {Snowman} from '../3d-objects/snowman';
 import {Road} from '../3d-objects/road';
 import Animation from '../../2d-animation/animation-2d';
-import {degreesToRadians} from "../../../helpers/utils";
+import {degreesToRadians} from '../../../helpers/utils';
 import easing from '../../../helpers/easing';
 
 export class RoomThreeScene extends RoomScene {
@@ -33,17 +33,15 @@ export class RoomThreeScene extends RoomScene {
     this.staticOutput = {
       name: OBJECT_ELEMENTS.staticOutput3,
     };
-
-    this.constructChildren();
   }
 
-  constructChildren() {
-    super.constructChildren();
+  async constructChildren() {
+    await super.constructChildren();
 
     this.addSnowman();
     this.addRoad();
     this.addRoadBlocks();
-    this.addCompass();
+    await this.addCompass();
   }
 
   addSnowman() {
@@ -106,29 +104,28 @@ export class RoomThreeScene extends RoomScene {
         this.addObject(clone);
       });
   }
-  addCompass() {
-    this.pageSceneCreator.createObjectMesh(
-        {
-          name: OBJECT_ELEMENTS.compass,
-        },
-        (compas) => {
-          compas.traverse((obj) => {
-            if (obj.name === `Compas`) {
-              this.animationManager.addAnimations(
-                  new Animation({
-                    func: (_, {startTime, currentTime}) => {
-                      obj.rotation.z =
-                      degreesToRadians(10) *
-                      Math.sin((currentTime - startTime) / 1000);
-                    },
-                    duration: `infinite`,
-                    easing: easing.easeInQuad,
-                  })
-              );
-            }
-          });
-          this.addObject(compas);
-        }
-    );
+  async addCompass() {
+    const compass = await this.pageSceneCreator.createObjectMesh({
+      name: OBJECT_ELEMENTS.compass,
+    });
+
+    compass.traverse((obj) => {
+      if (obj.name === `Compas`) {
+        this.animationManager.addRoomsPageAnimations(
+            2,
+            new Animation({
+              func: (_, {startTime, currentTime}) => {
+                obj.rotation.z =
+                degreesToRadians(10) *
+                Math.sin((currentTime - startTime) / 1000);
+              },
+              duration: `infinite`,
+              easing: easing.easeInQuad,
+            })
+        );
+      }
+    });
+
+    this.addObject(compass);
   }
 }

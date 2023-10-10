@@ -44,6 +44,7 @@ export class Scene3d {
       powerPreference: `high-performance`,
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     if (window.innerWidth > 768) {
@@ -53,6 +54,8 @@ export class Scene3d {
 
   initLight() {
     this.lightGroup = new THREE.Group();
+    this.directionalLight = new THREE.Group();
+    this.pointerLight = new THREE.Group();
 
     const color = new THREE.Color(`rgb(255,255,255)`);
     const intensity = 1.84;
@@ -101,7 +104,7 @@ export class Scene3d {
     light.castShadow = true;
     light.shadow.mapSize.width = 1512;
     light.shadow.mapSize.height = 1512;
-    light.shadow.camera.near = 0.5;
+    light.shadow.camera.near = 100;
     light.shadow.camera.far = distance;
     light.position.set(position[0], position[1], position[2]);
     this.scene.add(new THREE.PointLightHelper(light, 10));
