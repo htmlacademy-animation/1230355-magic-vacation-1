@@ -104,10 +104,11 @@ export class Scene3d {
     light.castShadow = true;
     light.shadow.mapSize.width = 1512;
     light.shadow.mapSize.height = 1512;
+    light.shadow.bias = -0.005;
     light.shadow.camera.near = 100;
     light.shadow.camera.far = distance;
     light.position.set(position[0], position[1], position[2]);
-    this.scene.add(new THREE.PointLightHelper(light, 10));
+    // this.scene.add(new THREE.PointLightHelper(light, 10));
     return light;
   }
 

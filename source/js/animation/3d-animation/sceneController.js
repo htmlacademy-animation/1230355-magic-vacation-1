@@ -12,7 +12,8 @@ import {RoomsPageScene} from './rooms/story-screen';
 import {AnimationManager} from './animation-change';
 import {CameraRig} from './rig/camera';
 import easing from '../../helpers/easing';
-import {createObjectTransformAnimation} from "./animation-creator";
+import {createObjectTransformAnimation} from './animation-creator';
+import {degreesToRadians} from '../../helpers/utils';
 
 const materialCreator = new MaterialCreator();
 const latheGeometryCreator = new LatheGeometryCreator();
@@ -36,6 +37,8 @@ export class SceneController {
     this.previousRoomSceneIndex = 1;
     this.isSuitcaseAppear = false;
     this.isMainPageObjectsAppear = false;
+    this.mouseEventHandlerTick = null;
+    this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
   }
 
   async initScene(startSceneIndex) {
@@ -60,7 +63,6 @@ export class SceneController {
     this.mainPageScene.position.set(0, 0, 4000);
 
     await this.mainPageScene.constructChildren();
-
     scene.addSceneObject(this.mainPageScene);
   }
 
@@ -71,7 +73,6 @@ export class SceneController {
     );
     await this.roomsPageScene.constructChildren();
     this.roomsPageScene.position.set(0, -330, 0);
-
     scene.addSceneObject(this.roomsPageScene);
   }
 
@@ -196,7 +197,18 @@ export class SceneController {
   }
 
   showMainScene() {
-    this.cameraRig.changeStateTo(CameraRig.getCameraRigStageState(0));
+    window.removeEventListener(`mousemove`, this.mouseMoveHandler);
+
+    if (this.mouseEventHandlerTick) {
+      window.cancelAnimationFrame(this.mouseEventHandlerTick);
+    }
+
+    this.cameraRig.changeStateTo(
+        CameraRig.getCameraRigStageState(0, this.previousRoomSceneIndex),
+        () => {
+          window.addEventListener(`mousemove`, this.mouseMoveHandler);
+        }
+    );
     setTimeout(() => {
       if (!this.isMainPageObjectsAppear) {
         animationManager.startMainPageAnimations();
@@ -205,16 +217,25 @@ export class SceneController {
     }, 500);
   }
 
-  showRoomScene(index) {
-    if (typeof index === `number`) {
-      this.previousRoomSceneIndex = index;
+  showRoomScene(nextRoomIndex) {
+    window.removeEventListener(`mousemove`, this.mouseMoveHandler);
+
+    if (this.mouseEventHandlerTick) {
+      window.cancelAnimationFrame(this.mouseEventHandlerTick);
+    }
+
+    if (typeof nextRoomIndex === `number`) {
+      this.previousRoomSceneIndex = nextRoomIndex;
     }
 
     this.cameraRig.changeStateTo(
-        CameraRig.getCameraRigStageState(index || this.previousRoomSceneIndex)
+        CameraRig.getCameraRigStageState(nextRoomIndex, this.previousRoomSceneIndex),
+        () => {
+          window.addEventListener(`mousemove`, this.mouseMoveHandler);
+        }
     );
     animationManager.startRoomAnimations(
-        (index || this.previousRoomSceneIndex) - 1
+        (nextRoomIndex || this.previousRoomSceneIndex) - 1
     );
 
     setTimeout(() => {
@@ -223,5 +244,46 @@ export class SceneController {
         this.isSuitcaseAppear = true;
       }
     }, 800);
+  }
+
+  mouseMoveHandler(ev) {
+    if (this.mouseEventHandlerTick) {
+      window.cancelAnimationFrame(this.mouseEventHandlerTick);
+    }
+
+    const windowHeight = window.innerHeight;
+
+    const targetMouseYPosition = (2 * (windowHeight / 2 - ev.y)) / windowHeight;
+
+    const targetPitchRotation = degreesToRadians(4 * targetMouseYPosition);
+
+    let currentPitchRotation = this.cameraRig.pitchRotation;
+
+    const movePitchRotationCloserToTarget = (increase) => {
+      if (
+        (increase && currentPitchRotation > targetPitchRotation) ||
+        (!increase && currentPitchRotation < targetPitchRotation)
+      ) {
+        window.cancelAnimationFrame(this.mouseEventHandlerTick);
+        return;
+      }
+
+      if (increase) {
+        currentPitchRotation += 0.0002;
+      } else {
+        currentPitchRotation -= 0.0002;
+      }
+
+      this.cameraRig.pitchRotation = currentPitchRotation;
+      this.cameraRig.invalidate();
+
+      this.mouseEventHandlerTick = requestAnimationFrame(() => {
+        movePitchRotationCloserToTarget(increase);
+      });
+    };
+
+    movePitchRotationCloserToTarget(
+        targetPitchRotation > this.cameraRig.pitchRotation
+    );
   }
 }

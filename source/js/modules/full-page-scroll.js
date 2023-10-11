@@ -84,6 +84,10 @@ export default class FullPageScroll {
     const prevActiveScreen = document.querySelector(`.screen.active`);
     const nextActiveScreen = this.screenElements[this.activeScreen];
 
+    if (prevActiveScreen === nextActiveScreen) {
+      return;
+    }
+
     const isIntroPage = nextActiveScreen.classList.contains(`screen--intro`);
     const isStoryPage = nextActiveScreen.classList.contains(`screen--story`);
 
