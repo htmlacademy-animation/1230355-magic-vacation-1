@@ -5,6 +5,7 @@ export class Scene3d {
   constructor(config = {}) {
     this.config = config;
     this.meshObjects = new Set();
+    this.resizeInProgress = false;
     this.transformationsLoop = [];
     this.canvasElement = document.getElementById(config.elementId);
     this.initRenderer();
@@ -12,13 +13,19 @@ export class Scene3d {
     this.initCamera(config.cameraConfig);
     this.initLight();
     this.initTextureLoader();
-    window.addEventListener(`resize`, this.onWindowResize.bind(this));
+    this.resize = this.resize.bind(this);
     this.animate = this.animate.bind(this);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.render();
     if (config.enableAnimation) {
       this.animate();
     }
+
+    this.resize();
+
+    window.addEventListener(`resize`, () => {
+      this.resizeInProgress = true;
+    });
   }
 
   initScene() {
@@ -46,7 +53,7 @@ export class Scene3d {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     if (window.innerWidth > 768) {
       this.renderer.shadowMap.enabled = true;
     }
@@ -108,18 +115,11 @@ export class Scene3d {
     light.shadow.camera.near = 100;
     light.shadow.camera.far = distance;
     light.position.set(position[0], position[1], position[2]);
-    // this.scene.add(new THREE.PointLightHelper(light, 10));
     return light;
   }
 
   initTextureLoader() {
     this.textureLoader = new THREE.TextureLoader();
-  }
-
-  onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   render() {
@@ -130,6 +130,9 @@ export class Scene3d {
     requestAnimationFrame(this.animate);
     this.transformationsLoop.forEach((callback) => callback(timestamp));
     this.controls.update();
+    if (this.resizeInProgress) {
+      this.resize();
+    }
     this.render();
   }
 
@@ -155,5 +158,24 @@ export class Scene3d {
     this.clearScene();
     this.meshObjects.add(...meshObjects);
     this.scene.add(...meshObjects);
+  }
+
+  resize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    if (height < 1 || width < 1) {
+      return;
+    }
+
+    if (width > height) {
+      this.camera.fov = 35;
+    } else {
+      this.camera.fov = (32 * height) / Math.min(width * 1.3, height);
+    }
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(width, height);
   }
 }

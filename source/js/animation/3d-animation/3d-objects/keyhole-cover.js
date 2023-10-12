@@ -5,7 +5,7 @@ import {MaterialCreator} from '../material-creator';
 export class KeyholeCover extends THREE.Mesh {
   constructor(pageSceneCreator) {
     super(
-        new THREE.PlaneGeometry(400, 400, 2, 2),
+        new THREE.PlaneGeometry(1000, 1000, 2, 2),
         pageSceneCreator.materialCreator.create(MATERIAL_TYPE.BasicMaterial, {
           color: MaterialCreator.Colors.Purple,
           transparent: true,

@@ -40,5 +40,6 @@ export const SVG_ELEMENTS = {
 };
 
 export const MESH_NAMES = {
+  Saturn: `Saturn`,
   SaturnRing: `SaturnRing`
 };

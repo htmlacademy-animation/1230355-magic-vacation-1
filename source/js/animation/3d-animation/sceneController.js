@@ -10,7 +10,8 @@ import {PageSceneCreator} from './page-scene-creator';
 import {LatheGeometryCreator} from './lathe-geometry';
 import {RoomsPageScene} from './rooms/story-screen';
 import {AnimationManager} from './animation-change';
-import {CameraRig} from './rig/camera';
+import {CameraRigDesktop} from './rig/camera-desktop';
+import {CameraRigMobile} from './rig/camera-mobile';
 import easing from '../../helpers/easing';
 import {createObjectTransformAnimation} from './animation-creator';
 import {degreesToRadians} from '../../helpers/utils';
@@ -34,14 +35,23 @@ const animationManager = new AnimationManager();
 
 export class SceneController {
   constructor() {
-    this.previousRoomSceneIndex = 1;
+    this.previousRoomIndex = 1;
     this.isSuitcaseAppear = false;
     this.isMainPageObjectsAppear = false;
-    this.mouseEventHandlerTick = null;
+    this.eventHandlerTick = null;
     this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    this.touchMoveHandler = this.touchMoveHandler.bind(this);
+    this.onResize = this.onResize.bind(this);
+
+    window.addEventListener(`resize`, this.onResize);
+  }
+
+  onResize() {
+    this.addCameraRig();
   }
 
   async initScene(startSceneIndex) {
+    this.sceneIndex = startSceneIndex;
     await this.addMainPageScene();
     await this.addRoomsPageScene();
     await this.initSuitCase();
@@ -55,7 +65,7 @@ export class SceneController {
       this.isSuitcaseAppear = true;
     }
 
-    this.addCameraRig(startSceneIndex);
+    this.addCameraRig();
   }
 
   async addMainPageScene() {
@@ -72,7 +82,7 @@ export class SceneController {
         animationManager
     );
     await this.roomsPageScene.constructChildren();
-    this.roomsPageScene.position.set(0, -330, 0);
+    this.roomsPageScene.position.set(0, -200, 0);
     scene.addSceneObject(this.roomsPageScene);
   }
 
@@ -179,34 +189,82 @@ export class SceneController {
     );
   }
 
-  addCameraRig(startSceneIndex) {
-    this.cameraRig = new CameraRig(
-        CameraRig.getCameraRigStageState(startSceneIndex),
-        this
-    );
-
-    this.cameraRig.addObjectToCameraNull(scene.camera);
-    this.cameraRig.addObjectToCameraNull(scene.lightGroup);
-    this.cameraRig.addObjectToRotationAxis(this.suitcase);
+  addDepsToCameraRig(cameraRigInstance) {
+    cameraRigInstance.addObjectToCameraNull(scene.camera);
+    cameraRigInstance.addObjectToCameraNull(scene.lightGroup);
+    cameraRigInstance.addObjectToRotationAxis(this.suitcase);
 
     const pointerLight = new THREE.Group();
-    pointerLight.position.z = -CameraRig.getMinDepth();
+    pointerLight.position.z = 2250;
     pointerLight.add(scene.pointerLight);
-    this.cameraRig.addObjectToRotationAxis(pointerLight);
-    scene.scene.add(this.cameraRig);
+    cameraRigInstance.addObjectToRotationAxis(pointerLight);
+  }
+  subscribeScreenMove() {
+    if (`ontouchmove` in window) {
+      window.addEventListener(`touchmove`, this.touchMoveHandler);
+    } else {
+      window.addEventListener(`mousemove`, this.mouseMoveHandler);
+    }
+  }
+  unsubscribeScreenMove() {
+    if (`ontouchmove` in window) {
+      window.removeEventListener(`touchmove`, this.touchMoveHandler);
+    } else {
+      window.removeEventListener(`mousemove`, this.mouseMoveHandler);
+    }
+
+    if (this.eventHandlerTick) {
+      window.cancelAnimationFrame(this.eventHandlerTick);
+    }
+  }
+
+  addCameraRig() {
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    if (height < 1 || width < 1) {
+      return;
+    }
+
+    if (width > height) {
+      if (this.cameraRig instanceof CameraRigDesktop) {
+        return;
+      }
+
+      scene.scene.remove(this.cameraRig);
+
+      this.cameraRigDesktop = new CameraRigDesktop(this.sceneIndex, this);
+      this.addDepsToCameraRig(this.cameraRigDesktop);
+
+      this.cameraRig = this.cameraRigDesktop;
+
+      scene.scene.add(this.cameraRig);
+    } else {
+      if (this.cameraRig instanceof CameraRigMobile) {
+        return;
+      }
+
+      scene.scene.remove(this.cameraRig);
+
+      this.cameraRigMobile = new CameraRigMobile(this.sceneIndex, this);
+      this.addDepsToCameraRig(this.cameraRigMobile);
+
+      this.cameraRig = this.cameraRigMobile;
+      scene.scene.add(this.cameraRig);
+    }
+
   }
 
   showMainScene() {
-    window.removeEventListener(`mousemove`, this.mouseMoveHandler);
+    this.sceneIndex = 0;
 
-    if (this.mouseEventHandlerTick) {
-      window.cancelAnimationFrame(this.mouseEventHandlerTick);
-    }
+    this.unsubscribeScreenMove();
 
     this.cameraRig.changeStateTo(
-        CameraRig.getCameraRigStageState(0, this.previousRoomSceneIndex),
+        this.cameraRig.getCameraRigStageState(0, this.previousRoomIndex),
         () => {
-          window.addEventListener(`mousemove`, this.mouseMoveHandler);
+          this.subscribeScreenMove();
         }
     );
     setTimeout(() => {
@@ -218,25 +276,26 @@ export class SceneController {
   }
 
   showRoomScene(nextRoomIndex) {
-    window.removeEventListener(`mousemove`, this.mouseMoveHandler);
-
-    if (this.mouseEventHandlerTick) {
-      window.cancelAnimationFrame(this.mouseEventHandlerTick);
+    if (this.previousRoomIndex === nextRoomIndex) {
+      return;
     }
+    this.sceneIndex = nextRoomIndex || this.previousRoomIndex;
 
+    this.unsubscribeScreenMove();
     if (typeof nextRoomIndex === `number`) {
-      this.previousRoomSceneIndex = nextRoomIndex;
+      this.previousRoomIndex = nextRoomIndex;
     }
 
     this.cameraRig.changeStateTo(
-        CameraRig.getCameraRigStageState(nextRoomIndex, this.previousRoomSceneIndex),
+        this.cameraRig.getCameraRigStageState(
+            nextRoomIndex,
+            this.previousRoomIndex
+        ),
         () => {
-          window.addEventListener(`mousemove`, this.mouseMoveHandler);
+          this.subscribeScreenMove();
         }
     );
-    animationManager.startRoomAnimations(
-        (nextRoomIndex || this.previousRoomSceneIndex) - 1
-    );
+    animationManager.startRoomAnimations(this.sceneIndex - 1);
 
     setTimeout(() => {
       if (!this.isSuitcaseAppear) {
@@ -247,15 +306,30 @@ export class SceneController {
   }
 
   mouseMoveHandler(ev) {
-    if (this.mouseEventHandlerTick) {
-      window.cancelAnimationFrame(this.mouseEventHandlerTick);
+    const targetPositionY = ev.y;
+
+    this.handleMove(targetPositionY);
+  }
+
+  touchMoveHandler(ev) {
+    const targetPositionY = ev.targetTouches[0].clientY;
+
+    this.handleMove(targetPositionY);
+  }
+
+  handleMove(targetPositionY) {
+    if (this.eventHandlerTick) {
+      window.cancelAnimationFrame(this.eventHandlerTick);
     }
 
     const windowHeight = window.innerHeight;
 
-    const targetMouseYPosition = (2 * (windowHeight / 2 - ev.y)) / windowHeight;
+    const targetPositionYNormalized =
+      (2 * (windowHeight / 2 - targetPositionY)) / windowHeight;
 
-    const targetPitchRotation = degreesToRadians(4 * targetMouseYPosition);
+    const targetPitchRotation = degreesToRadians(
+        this.cameraRig.getMaxPitchRotation() * targetPositionYNormalized
+    );
 
     let currentPitchRotation = this.cameraRig.pitchRotation;
 
@@ -264,20 +338,20 @@ export class SceneController {
         (increase && currentPitchRotation > targetPitchRotation) ||
         (!increase && currentPitchRotation < targetPitchRotation)
       ) {
-        window.cancelAnimationFrame(this.mouseEventHandlerTick);
+        window.cancelAnimationFrame(this.eventHandlerTick);
         return;
       }
 
       if (increase) {
-        currentPitchRotation += 0.0002;
+        currentPitchRotation += 0.0001;
       } else {
-        currentPitchRotation -= 0.0002;
+        currentPitchRotation -= 0.0001;
       }
 
       this.cameraRig.pitchRotation = currentPitchRotation;
       this.cameraRig.invalidate();
 
-      this.mouseEventHandlerTick = requestAnimationFrame(() => {
+      this.eventHandlerTick = requestAnimationFrame(() => {
         movePitchRotationCloserToTarget(increase);
       });
     };
