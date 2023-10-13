@@ -1,9 +1,13 @@
 import * as THREE from "three";
 import {RoadCustomMaterial} from "./3d-objects/road-custom-material";
 import {CarpetCustomMaterial} from "./3d-objects/carpet-custom-material";
-import {MATERIAL_TYPE} from "../../helpers/constants";
+import {MATERIAL_TYPE, DESKTOP_WIDTH_MIN} from "../../helpers/constants";
 
 export class MaterialCreator {
+  constructor(textureLoader) {
+    this.textureLoader = textureLoader;
+  }
+
   create(materialType, config) {
     switch (materialType) {
       case MATERIAL_TYPE.SoftMaterial: {
@@ -45,13 +49,36 @@ export class MaterialCreator {
     }
   }
   createSoft(config) {
-    return new THREE.MeshStandardMaterial(config);
+    if (window.innerWidth > DESKTOP_WIDTH_MIN) {
+      return new THREE.MeshStandardMaterial(config);
+    } else {
+      return new THREE.MeshMatcapMaterial({
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/Soft-Mat.png`),
+        ...config,
+      });
+    }
   }
   createBasic(config) {
-    return new THREE.MeshStandardMaterial(config);
+    if (window.innerWidth > DESKTOP_WIDTH_MIN) {
+      return new THREE.MeshStandardMaterial(config);
+    } else {
+      return new THREE.MeshMatcapMaterial({
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/Basic-Mat.png`),
+        ...config,
+      });
+    }
   }
   createStrong(config) {
-    return new THREE.MeshPhongMaterial(config);
+    if (window.innerWidth > DESKTOP_WIDTH_MIN) {
+      return new THREE.MeshPhongMaterial(config);
+    } else {
+      return new THREE.MeshMatcapMaterial({
+        matcap: this.textureLoader.load(
+            `./img/module-7/matcaps/Strong-Mat-SnowColor.png`
+        ),
+        ...config,
+      });
+    }
   }
   createRoadMaterial(config) {
     return new RoadCustomMaterial(config);

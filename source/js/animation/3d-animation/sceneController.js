@@ -16,7 +16,8 @@ import easing from '../../helpers/easing';
 import {createObjectTransformAnimation} from './animation-creator';
 import {degreesToRadians} from '../../helpers/utils';
 
-const materialCreator = new MaterialCreator();
+const textureLoader = new THREE.TextureLoader();
+const materialCreator = new MaterialCreator(textureLoader);
 const latheGeometryCreator = new LatheGeometryCreator();
 const svgShapeLoader = new SvgLoader(SVG_ELEMENTS);
 const extrudeSvgCreator = new ExtrudeSvgCreator(

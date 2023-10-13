@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import {DESKTOP_WIDTH_MIN} from '../../helpers/constants';
 
 export class Scene3d {
   constructor(config = {}) {
@@ -12,7 +13,6 @@ export class Scene3d {
     this.initScene();
     this.initCamera(config.cameraConfig);
     this.initLight();
-    this.initTextureLoader();
     this.resize = this.resize.bind(this);
     this.animate = this.animate.bind(this);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -54,7 +54,7 @@ export class Scene3d {
     this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       this.renderer.shadowMap.enabled = true;
     }
   }
@@ -116,10 +116,6 @@ export class Scene3d {
     light.shadow.camera.far = distance;
     light.position.set(position[0], position[1], position[2]);
     return light;
-  }
-
-  initTextureLoader() {
-    this.textureLoader = new THREE.TextureLoader();
   }
 
   render() {
