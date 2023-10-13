@@ -6,6 +6,7 @@ import {MATERIAL_TYPE, MESH_NAMES} from '../../../helpers/constants';
 export class Saturn extends THREE.Group {
   constructor(materialCreator, options) {
     super();
+    this.name = MESH_NAMES.Saturn;
     this.materialCreator = materialCreator;
     this.options = options;
     this.constructChildren();

@@ -29,6 +29,8 @@ export class ExtrudeSvgCreator {
       }
     }
 
+    group.name = name;
+
     this.extrudedObjects[name] = group;
 
     return group;
