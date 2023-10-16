@@ -11,6 +11,7 @@ import FullPageScroll from './modules/full-page-scroll';
 import animation from './modules/animation';
 import '../js/animation/3d-animation/initAnimationScreen.js';
 import {SceneController} from './animation/3d-animation/sceneController';
+import {Preloader} from './animation/3d-animation/preloader.js';
 
 // init modules
 mobileHeight();
@@ -23,8 +24,8 @@ form();
 social();
 animation();
 
-
-export const sceneController = new SceneController();
+export const preloader = new Preloader();
+export const sceneController = new SceneController(preloader);
 
 window.addEventListener(`load`, async () => {
   const isIntroPage = !window.location.hash || window.location.hash === `#top`;

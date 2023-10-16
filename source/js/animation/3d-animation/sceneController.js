@@ -35,7 +35,8 @@ const pageSceneCreator = new PageSceneCreator(
 const animationManager = new AnimationManager();
 
 export class SceneController {
-  constructor() {
+  constructor(preloader) {
+    this.preloader = preloader;
     this.previousRoomIndex = 1;
     this.isSuitcaseAppear = false;
     this.isMainPageObjectsAppear = false;
@@ -53,9 +54,13 @@ export class SceneController {
 
   async initScene(startSceneIndex) {
     this.sceneIndex = startSceneIndex;
+    this.preloader.increasePercentage(5);
     await this.addMainPageScene();
+    this.preloader.increasePercentage(25);
     await this.addRoomsPageScene();
+    this.preloader.increasePercentage(5);
     await this.initSuitCase();
+    this.preloader.increasePercentage(15);
 
     if (startSceneIndex === 0) {
       animationManager.startMainPageAnimations();
@@ -65,15 +70,17 @@ export class SceneController {
       animationManager.startSuitcaseAnimations();
       this.isSuitcaseAppear = true;
     }
+    this.preloader.increasePercentage(25);
 
     this.addCameraRig();
+    this.preloader.increasePercentage(25);
   }
 
   async addMainPageScene() {
     this.mainPageScene = new MainPageComposition(pageSceneCreator, animationManager);
     this.mainPageScene.position.set(0, 0, 4000);
 
-    await this.mainPageScene.constructChildren();
+    await this.mainPageScene.constructChildren(this.preloader);
     scene.addSceneObject(this.mainPageScene);
   }
 
@@ -82,7 +89,7 @@ export class SceneController {
         pageSceneCreator,
         animationManager
     );
-    await this.roomsPageScene.constructChildren();
+    await this.roomsPageScene.constructChildren(this.preloader);
     this.roomsPageScene.position.set(0, -200, 0);
     scene.addSceneObject(this.roomsPageScene);
   }
@@ -101,7 +108,6 @@ export class SceneController {
         },
       },
     });
-
     this.suitcase = new THREE.Group();
 
     this.suitcase.position.y = this.roomsPageScene.position.y;
@@ -261,7 +267,6 @@ export class SceneController {
     this.sceneIndex = 0;
 
     this.unsubscribeScreenMove();
-
     this.cameraRig.changeStateTo(
         this.cameraRig.getCameraRigStageState(0, this.previousRoomIndex),
         () => {
@@ -281,7 +286,6 @@ export class SceneController {
       return;
     }
     this.sceneIndex = nextRoomIndex || this.previousRoomIndex;
-
     this.unsubscribeScreenMove();
     if (typeof nextRoomIndex === `number`) {
       this.previousRoomIndex = nextRoomIndex;
