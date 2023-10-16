@@ -80,7 +80,6 @@ export class SceneController {
     this.mainPageScene = new MainPageComposition(pageSceneCreator, animationManager);
     this.mainPageScene.position.set(0, 0, 4000);
 
-    // await this.mainPageScene.constructChildren();
     await this.mainPageScene.constructChildren(this.preloader);
     scene.addSceneObject(this.mainPageScene);
   }
