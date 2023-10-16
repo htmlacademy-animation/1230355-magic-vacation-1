@@ -43,3 +43,5 @@ export const MESH_NAMES = {
   Saturn: `Saturn`,
   SaturnRing: `SaturnRing`
 };
+
+export const DESKTOP_WIDTH_MIN = 768;
