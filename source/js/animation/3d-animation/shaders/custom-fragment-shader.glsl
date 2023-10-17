@@ -35,9 +35,9 @@ vec3 applyHue(vec3 aColor) {
     }
 
     float angle = radians(currentHueDegrees);
-    vec3 k = vec3(0.47735);
+    vec3 k = vec3(1.07735);
     float cosAngle = cos(angle);
-    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.0 - cosAngle);
+    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.1 - cosAngle);
 }
 vec4 getBorderColor() {
     return texture2D(map, vUv) * vec4(1.0, 1.0, 1.0, 0.15);
