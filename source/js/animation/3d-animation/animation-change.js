@@ -26,9 +26,9 @@ export class AnimationManager {
   }
 
   startMainPageAnimations() {
-    this.animations.mainPage.forEach((animation) => {
-      animation.start();
-    });
+    this.stopRoomAnimations();
+
+    this.startAnimations(`mainPage`);
   }
 
   startSuitcaseAnimations() {
@@ -38,9 +38,19 @@ export class AnimationManager {
   }
 
   startRoomAnimations(roomIndex) {
+    this.stopRoomAnimations();
+
     this.animations.roomsPage[roomIndex].forEach((animation) => {
       animation.start();
     });
+  }
+
+  stopRoomAnimations() {
+    this.animations.roomsPage.forEach((room) =>
+      room.forEach((animation) => {
+        animation.stop();
+      })
+    );
   }
 
   clearAnimations(key) {
