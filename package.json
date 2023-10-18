@@ -60,6 +60,7 @@
     "dat.gui": "^0.7.9",
     "normalize.css": "8.0.1",
     "swiper": "5.3.8",
-    "three": "0.155.0"
+    "three": "0.155.0",
+    "three-effectcomposer": "0.0.1"
   }
 }

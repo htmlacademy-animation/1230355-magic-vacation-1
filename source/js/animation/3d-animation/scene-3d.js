@@ -23,6 +23,8 @@ export class Scene3d {
 
     this.resize();
 
+    this.customRenderer = null;
+
     window.addEventListener(`resize`, () => {
       this.resizeInProgress = true;
     });
@@ -44,16 +46,19 @@ export class Scene3d {
 
   initRenderer() {
     const devicePixelRatio = window.devicePixelRatio;
+    this.devicePixelRation = Math.min(devicePixelRatio, 2);
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvasElement,
       alpha: true,
-      antialias: devicePixelRatio <= 1,
+      antialias: this.devicePixelRation <= 1,
       powerPreference: `high-performance`,
+      logarithmicDepthBuffer: true,
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(0x5f458c, 1);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    this.renderer.setPixelRatio(this.devicePixelRation);
+    // this.renderer.setPixelRatio(window.devicePixelRatio);
+    // this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       this.renderer.shadowMap.enabled = true;
     }
@@ -119,7 +124,19 @@ export class Scene3d {
   }
 
   render() {
+    if (this.customRenderer) {
+      this.customRenderer.render();
+      return;
+    }
     this.renderer.render(this.scene, this.camera);
+  }
+
+  setRenderer(renderer) {
+    this.customRenderer = renderer;
+  }
+
+  resetRender() {
+    this.customRenderer = null;
   }
 
   animate(timestamp) {
@@ -145,11 +162,13 @@ export class Scene3d {
   clearTransformationsLoop() {
     this.transformationsLoop = [];
   }
+
   addSceneObject(meshObject) {
     this.meshObjects.add(meshObject);
     this.scene.add(meshObject);
     this.render();
   }
+
   setSceneObjects(...meshObjects) {
     this.clearScene();
     this.meshObjects.add(...meshObjects);

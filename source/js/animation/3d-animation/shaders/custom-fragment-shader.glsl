@@ -3,6 +3,7 @@ precision mediump float;
 
 uniform sampler2D map;
 uniform float timestamp;
+uniform float aspectRatio;
 
 struct Bubble {
     vec2 bubblePosition;
@@ -34,16 +35,16 @@ vec3 applyHue(vec3 aColor) {
     }
 
     float angle = radians(currentHueDegrees);
-    vec3 k = vec3(0.47735);
+    vec3 k = vec3(1.07735);
     float cosAngle = cos(angle);
-    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.0 - cosAngle);
+    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.1 - cosAngle);
 }
 vec4 getBorderColor() {
     return texture2D(map, vUv) * vec4(1.0, 1.0, 1.0, 0.15);
 }
 void drawBubble(inout vec4 outputColor, in Bubble bubble) {
-    vec2 currentPosition = vec2(vUv.x * float(IMAGE_ASPECT_RATIO), vUv.y);
-    vec2 currentBubblePosition = vec2(bubble.bubblePosition.x * float(IMAGE_ASPECT_RATIO), bubble.bubblePosition.y);
+   vec2 currentPosition = vec2(vUv.x * aspectRatio, vUv.y);
+    vec2 currentBubblePosition = vec2(bubble.bubblePosition.x * aspectRatio, bubble.bubblePosition.y);
     vec2 fromCurrentPixelToBubblePosition = currentPosition - currentBubblePosition;
     float distanceFromCurrentPixelToBubblePosition = length(currentPosition - currentBubblePosition);
     vec2 shift = vec2(0, 0);
