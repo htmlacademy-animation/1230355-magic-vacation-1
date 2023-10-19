@@ -1,6 +1,7 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import {sceneController} from '../script';
+import {sonyaStartAnimation, sonyaEndAnimation} from '../animation/sonia-animation';
 
 const prizes = document.querySelector(`.screen--prizes`);
 const transitionBlock = document.querySelector(`.transition-block`);
@@ -116,6 +117,15 @@ export default class FullPageScroll {
     setTimeout(() => {
       nextActiveScreen.classList.add(`active`);
     }, 100);
+
+    const isNextGamePage = nextActiveScreen.classList.contains(`screen--game`);
+    const isPrevGamePage =
+      prevActiveScreen && prevActiveScreen.classList.contains(`screen--game`);
+    if (isNextGamePage) {
+      sonyaStartAnimation();
+    } else if (isPrevGamePage) {
+      sonyaEndAnimation();
+    }
   }
 
   changeActiveMenuItem() {

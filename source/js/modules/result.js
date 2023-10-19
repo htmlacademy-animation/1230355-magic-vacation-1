@@ -1,5 +1,6 @@
 import SeaCalfScene from '../animation/2d-animation/seacalf-canvas-animation.js';
 import CrocodileScene from '../animation/2d-animation/crocodile-canvas-animation.js';
+import {sonyaEndAnimation} from '../animation/sonia-animation.js';
 
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
@@ -7,6 +8,7 @@ export default () => {
   if (results.length) {
     for (let i = 0; i < showResultEls.length; i++) {
       showResultEls[i].addEventListener(`click`, function () {
+        sonyaEndAnimation();
         let target = showResultEls[i].getAttribute(`data-target`);
         [].slice.call(results).forEach(function (el) {
           el.classList.remove(`screen--show`);
