@@ -82,6 +82,7 @@ export class SceneController {
 
     this.addCameraRig();
     this.preloader.increasePercentage(25);
+    scene.startAnimation();
   }
 
   async addMainPageScene() {
