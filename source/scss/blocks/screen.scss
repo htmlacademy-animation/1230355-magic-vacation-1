@@ -18,10 +18,6 @@
     height: 100vh;
   }
 }
-// .animation-screen{
-//   z-index: 999;
-//   background-color: $c-dark;
-// }
 
 #animation-screen-3d {
   position: absolute;
@@ -321,34 +317,28 @@
 .screen--game {
   position: relative;
   background-color: $c-dark;
+}
+.screen__sonya {
+  position: absolute;
+  z-index: 1;
+  right: -8.5rem;
+  bottom: 0;
+  width: 32.7rem;
+  height: 36.9rem;
+  object-fit: contain;
+  transform: scale(0);
+  transform: translate(400px, 300px) rotateZ(-22deg) scale(0.3);
 
-  &::before {
-    content: "";
-    position: absolute;
-    right: -8.5rem;
-    bottom: 0;
-    width: 32.7rem;
-    height: 36.9rem;
-    background-image: url("../img/sonya.png");
-    background-repeat: no-repeat;
-    background-size: contain;
+  @media (min-width: $stop-scaling) {
+    right: -85px;
+    width: 327px;
+    height: 369px;
+  }
 
-    @include retina {
-      background-image: url("../img/sonya@2x.png");
-    }
-
-    @media (min-width: $stop-scaling) {
-      right: -85px;
-      width: 327px;
-      height: 369px;
-    }
-
-    @media (max-width: $tablet) and (orientation: portrait) {
-      opacity: 0;
-    }
+  @media (max-width: $tablet) and (orientation: portrait) {
+    opacity: 0;
   }
 }
-
 .screen--result {
   position: absolute;
   bottom: 0;

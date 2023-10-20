@@ -1,6 +1,8 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import {sceneController} from '../script';
+import {scene} from '../animation/3d-animation/initAnimationScreen';
+import {sonyaStartAnimation, sonyaEndAnimation} from '../animation/sonia-animation';
 
 const prizes = document.querySelector(`.screen--prizes`);
 const transitionBlock = document.querySelector(`.transition-block`);
@@ -57,30 +59,6 @@ export default class FullPageScroll {
   }
 
   changeVisibilityDisplay() {
-    if (this.screenElements[this.activeScreen] === prizes) {
-      transitionBlock.classList.add(`animate-forwards`);
-      setTimeout(() => {
-        this.screenElements.forEach((screen) => {
-          screen.classList.add(`screen--hidden`);
-          screen.classList.remove(`active`);
-        });
-        this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
-        this.screenElements[this.activeScreen].classList.add(`active`);
-        document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
-      }, 400);
-    } else {
-      transitionBlock.classList.remove(`animate-forwards`);
-      this.screenElements.forEach((screen) => {
-        screen.classList.add(`screen--hidden`);
-        screen.classList.remove(`active`);
-      });
-      this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
-      setTimeout(() => {
-        this.screenElements[this.activeScreen].classList.add(`active`);
-        document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
-      }, 100);
-    }
-
     const prevActiveScreen = document.querySelector(`.screen.active`);
     const nextActiveScreen = this.screenElements[this.activeScreen];
 
@@ -88,34 +66,52 @@ export default class FullPageScroll {
       return;
     }
 
-    const isIntroPage = nextActiveScreen.classList.contains(`screen--intro`);
-    const isStoryPage = nextActiveScreen.classList.contains(`screen--story`);
-
-    if (isIntroPage) {
+    if (nextActiveScreen.classList.contains(`screen--intro`)) {
+      scene.startAnimation();
       sceneController.showMainScene();
-    } else if (isStoryPage) {
+    } else if (nextActiveScreen.classList.contains(`screen--story`)) {
+      scene.startAnimation();
       sceneController.showRoomScene();
-    }
-
-    if (
-      prevActiveScreen &&
-      prevActiveScreen.classList.contains(`screen--story`)
-    ) {
-      bodyTheme.clearBodyTheme();
-    }
-
-    if (nextActiveScreen.classList.contains(`screen--story`)) {
       bodyTheme.applyTheme();
+    } else if (nextActiveScreen.classList.contains(`screen--game`)) {
+      sonyaStartAnimation();
+      scene.stopAnimation();
+    } else {
+      scene.stopAnimation();
     }
 
-    this.screenElements.forEach((screen) => {
-      screen.classList.add(`screen--hidden`);
-      screen.classList.remove(`active`);
-    });
-    nextActiveScreen.classList.remove(`screen--hidden`);
+    if (prevActiveScreen && prevActiveScreen.classList.contains(`screen--story`)) {
+      bodyTheme.clearBodyTheme();
+    } else if (prevActiveScreen && prevActiveScreen.classList.contains(`screen--game`)) {
+      sonyaEndAnimation();
+    }
+
+    let showDelay = prevActiveScreen ? 500 : 0;
     setTimeout(() => {
-      nextActiveScreen.classList.add(`active`);
-    }, 100);
+      if (this.screenElements[this.activeScreen] === prizes) {
+        transitionBlock.classList.add(`animate-forwards`);
+        setTimeout(() => {
+          this.screenElements.forEach((screen) => {
+            screen.classList.add(`screen--hidden`);
+            screen.classList.remove(`active`);
+          });
+          this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
+          this.screenElements[this.activeScreen].classList.add(`active`);
+          document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
+        }, showDelay);
+      } else {
+        transitionBlock.classList.remove(`animate-forwards`);
+        this.screenElements.forEach((screen) => {
+          screen.classList.add(`screen--hidden`);
+          screen.classList.remove(`active`);
+        });
+        this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
+        setTimeout(() => {
+          this.screenElements[this.activeScreen].classList.add(`active`);
+          document.body.setAttribute(`data-screen`, this.screenElements[this.activeScreen].id);
+        }, 100);
+      }
+    }, showDelay);
   }
 
   changeActiveMenuItem() {

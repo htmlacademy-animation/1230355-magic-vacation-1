@@ -17,9 +17,6 @@ export class Scene3d {
     this.animate = this.animate.bind(this);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.render();
-    if (config.enableAnimation) {
-      this.animate();
-    }
 
     this.resize();
 
@@ -140,13 +137,24 @@ export class Scene3d {
   }
 
   animate(timestamp) {
-    requestAnimationFrame(this.animate);
+    this.cancelAnimationFrameId = requestAnimationFrame(this.animate);
     this.transformationsLoop.forEach((callback) => callback(timestamp));
     this.controls.update();
     if (this.resizeInProgress) {
       this.resize();
     }
     this.render();
+  }
+
+  startAnimation() {
+    this.stopAnimation();
+    this.animate();
+  }
+
+  stopAnimation() {
+    if (this.cancelAnimationFrameId) {
+      window.cancelAnimationFrame(this.cancelAnimationFrameId);
+    }
   }
 
   clearScene() {

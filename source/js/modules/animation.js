@@ -30,26 +30,26 @@ document.body.addEventListener(`screenChanged`, (e) => {
 
   switch (e.detail.screenName) {
     case `top`:
-      setTimeout(() => introTitleAnimation.runAnimation(), 500);
+      setTimeout(() => introTitleAnimation.runAnimation(), 600);
       setTimeout(() => introDateAnimation.runAnimation(), 1250);
       break;
     case `story`:
-      setTimeout(() => sliderTitleAnimation.runAnimation(), 500);
+      setTimeout(() => sliderTitleAnimation.runAnimation(), 600);
       break;
     case `prizes`:
       setTimeout(() => {
         prizesTitleAnimation.runAnimation();
         svgAnimateStart();
         journeysAnimation.animate();
-      }, 500);
+      }, 1100);
       setTimeout(() => casesAnimation.animate(), 3000);
       setTimeout(() => codesAnimation.animate(), 5500);
       break;
     case `rules`:
-      setTimeout(() => rulesTitleAnimation.runAnimation(), 500);
+      setTimeout(() => rulesTitleAnimation.runAnimation(), 600);
       break;
     case `game`:
-      setTimeout(() => gameTitleAnimation.runAnimation(), 500);
+      setTimeout(() => gameTitleAnimation.runAnimation(), 600);
       timerStart();
       break;
   }
