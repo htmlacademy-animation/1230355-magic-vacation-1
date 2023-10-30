@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import {scene} from './initAnimationScreen';
-import {SvgLoader} from "./svg-objects/svg-insert";
+import {SvgLoader} from './svg-objects/svg-insert';
 import {EXTRUDE_SETTINGS, OBJECT_ELEMENTS, SVG_ELEMENTS} from '../../helpers/constants';
 import {MainPageComposition} from './scene-intro';
-import {MaterialCreator} from './material-creator';
+import {MaterialCreator} from './material/material-creator';
 import {ExtrudeSvgCreator} from './svg-objects/extrude-svg';
 import {ObjectsCreator} from '../../helpers/3d-object-creator';
 import {PageSceneCreator} from './page-scene-creator';
@@ -126,13 +126,13 @@ export class SceneController {
 
   setBubbleComposer() {
     this.bubbleComposer = this.initBubbleComposer();
-
     scene.setRenderer(this.bubbleComposer);
   }
 
   removeBubbleComposer() {
     scene.resetRender();
   }
+
   async initSuitCase() {
     const suitcase = await pageSceneCreator.createObjectMesh({
       name: OBJECT_ELEMENTS.suitcase,
@@ -148,9 +148,7 @@ export class SceneController {
       },
     });
     this.suitcase = new THREE.Group();
-
     this.suitcase.position.y = this.roomsPageScene.position.y;
-
     this.suitcase.add(suitcase);
 
     suitcase.traverse((o) => {
@@ -245,6 +243,7 @@ export class SceneController {
     pointerLight.add(scene.pointerLight);
     cameraRigInstance.addObjectToRotationAxis(pointerLight);
   }
+
   subscribeScreenMove() {
     if (`ontouchmove` in window) {
       window.addEventListener(`touchmove`, this.touchMoveHandler);
@@ -252,6 +251,7 @@ export class SceneController {
       window.addEventListener(`mousemove`, this.mouseMoveHandler);
     }
   }
+
   unsubscribeScreenMove() {
     if (`ontouchmove` in window) {
       window.removeEventListener(`touchmove`, this.touchMoveHandler);
@@ -279,12 +279,9 @@ export class SceneController {
       }
 
       scene.scene.remove(this.cameraRig);
-
       this.cameraRigDesktop = new CameraRigDesktop(this.sceneIndex, this);
       this.addDepsToCameraRig(this.cameraRigDesktop);
-
       this.cameraRig = this.cameraRigDesktop;
-
       scene.scene.add(this.cameraRig);
     } else {
       if (this.cameraRig instanceof CameraRigMobile) {
@@ -292,10 +289,8 @@ export class SceneController {
       }
 
       scene.scene.remove(this.cameraRig);
-
       this.cameraRigMobile = new CameraRigMobile(this.sceneIndex, this);
       this.addDepsToCameraRig(this.cameraRigMobile);
-
       this.cameraRig = this.cameraRigMobile;
       scene.scene.add(this.cameraRig);
     }
@@ -392,13 +387,13 @@ export class SceneController {
       }
 
       if (increase) {
-        currentPitchRotation += 0.0001;
+        currentPitchRotation += 0.0003;
       } else {
-        currentPitchRotation -= 0.0001;
+        currentPitchRotation -= 0.0003;
       }
 
       this.cameraRig.pitchRotation = currentPitchRotation;
-      this.cameraRig.invalidate();
+      this.cameraRig.redraw();
 
       this.eventHandlerTick = requestAnimationFrame(() => {
         movePitchRotationCloserToTarget(increase);
@@ -508,4 +503,5 @@ export class SceneController {
         })
     );
   }
+
 }

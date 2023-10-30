@@ -4,25 +4,25 @@ import Animation from '../../2d-animation/animation-2d';
 import easing from '../../../helpers/easing';
 import {AnimateControl} from './animate-control';
 
+const KEYHOLE_FULL_OPACITY_BP = -2000;
+const KEYHOLE_NO_OPACITY_BP = -500;
+
+// todo: переименовать (Rig??)
 export class CameraRigMobile extends THREE.Group {
   constructor(startSceneIndex, sceneController) {
     super();
-
     this.name = `CameraRig`;
+    this.keyholeCover = sceneController.mainPageScene.keyholeCover;
+    this.animationController = new AnimateControl();
 
-    this.stateParameters =
-      this.getCameraRigStageState(startSceneIndex).newStateParams;
-
-    this.keyholeCover = sceneController.mainPageScene.children[0].children.find(
-        ({name}) => name === `keyholeCover`
-    );
-
-    this._depth = this.stateParameters.depth || 0;
-    this._rotationAxisYAngle = this.stateParameters.rotationAxisYAngle || 0;
-    this._horizonIncline = this.stateParameters.horizonIncline || 0;
-    this._pitchRotation = this.stateParameters.pitchRotation || 0;
-    this._pitchDepth = this.stateParameters.pitchDepth || 0;
-    this._cameraRotationY = this.stateParameters.cameraRotationY || 0;
+    const stateParameters = this.getCameraRigStageState(startSceneIndex).newStateParams;
+    this.sceneIndex = stateParameters.index || 0;
+    this._depth = stateParameters.depth || 0;
+    this._rotationAxisYAngle = stateParameters.rotationAxisYAngle || 0;
+    this._horizonIncline = stateParameters.horizonIncline || 0;
+    this._pitchRotation = stateParameters.pitchRotation || 0;
+    this._pitchDepth = stateParameters.pitchDepth || 0;
+    this._cameraRotationY = stateParameters.cameraRotationY || 0;   // todo: всегда 0?
 
     this._depthChanged = true;
     this._rotationAxisYAngleChanged = true;
@@ -31,38 +31,28 @@ export class CameraRigMobile extends THREE.Group {
     this._pitchDepthChanged = true;
     this._cameraRotationYChanged = true;
 
-    this.animationController = new AnimateControl();
 
     this.constructRigElements();
-
     this.position.z = 0;
-
-    this.invalidate();
+    this.redraw();
   }
 
   constructRigElements() {
-    const depthTrack = new THREE.Group();
-    const rotationAxis = new THREE.Group();
-    const pitchAxis = new THREE.Group();
-    const cameraNull = new THREE.Group();
+    this.rotationAxis = new THREE.Group();
+    this.depthTrack = new THREE.Group();
+    this.pitchAxis = new THREE.Group();
+    this.cameraNull = new THREE.Group();
 
-    this.add(rotationAxis);
-    rotationAxis.add(depthTrack);
-    depthTrack.add(pitchAxis);
-    pitchAxis.add(cameraNull);
-
-    this.depthTrack = depthTrack;
-    this.rotationAxis = rotationAxis;
-    this.pitchAxis = pitchAxis;
-    this.cameraNull = cameraNull;
-
-    this.cameraNull.rotation.y = degreesToRadians(3);
-
+    this.add(this.rotationAxis);
+    this.rotationAxis.add(this.depthTrack);
+    this.depthTrack.add(this.pitchAxis);
+    this.pitchAxis.add(this.cameraNull);
     this.pitchAxis.position.z = this.pitchDepth;
+    this.cameraNull.rotation.y = degreesToRadians(3);
   }
 
-  setState(newStateParameters) {
-    this.stateParameters = newStateParameters;
+  get depth() {
+    return this._depth;
   }
 
   set depth(value) {
@@ -72,31 +62,10 @@ export class CameraRigMobile extends THREE.Group {
 
     this._depth = value;
     this._depthChanged = true;
-
-    if (this.keyholeCover) {
-      let opacity;
-
-      const fullOpacityBreakpoint = -2000;
-      const noOpacityBreakpoint = -500;
-
-      if (value < fullOpacityBreakpoint) {
-        opacity = 1;
-      } else if (value > noOpacityBreakpoint) {
-        opacity = 0;
-      } else {
-        opacity =
-          (value - noOpacityBreakpoint) /
-          (fullOpacityBreakpoint - noOpacityBreakpoint);
-      }
-
-      this.keyholeCover.opacity = opacity;
-
-      this.keyholeCover.invalidate();
-    }
   }
 
-  get depth() {
-    return this._depth;
+  get horizonIncline() {
+    return this._horizonIncline;
   }
 
   set horizonIncline(value) {
@@ -106,10 +75,6 @@ export class CameraRigMobile extends THREE.Group {
 
     this._horizonIncline = value;
     this._horizonInclineChanged = true;
-  }
-
-  get horizonIncline() {
-    return this._horizonIncline;
   }
 
   get rotationAxisYAngle() {
@@ -164,44 +129,58 @@ export class CameraRigMobile extends THREE.Group {
     this._cameraRotationYChanged = true;
   }
 
-  invalidate() {
+  redraw() {
     if (this._depthChanged) {
       this.depthTrack.position.z = -this._depth;
+      this.changeKeyHoleOpacityByDepth(this._depth);
       this._depthChanged = false;
     }
 
     if (this._horizonInclineChanged) {
       this.depthTrack.rotation.x = this._horizonIncline;
-      this.pitchAxis.position.y =
-        this._pitchDepth * Math.tan(this._horizonIncline);
-
+      this.pitchAxis.position.y = this._pitchDepth * Math.tan(this._horizonIncline);
       this._horizonInclineChanged = false;
     }
 
     if (this._rotationAxisYAngleChanged) {
       this.rotationAxis.rotation.y = this._rotationAxisYAngle;
-
       this._rotationAxisYAngleChanged = false;
     }
 
     if (this._pitchRotationChanged) {
-      this.cameraNull.position.y =
-        Math.tan(this._pitchRotation) * this._pitchDepth;
+      this.cameraNull.position.y = Math.tan(this._pitchRotation) * this._pitchDepth;
       this.cameraNull.rotation.x = -this._pitchRotation;
-
       this._pitchRotationChanged = false;
     }
 
     if (this._pitchDepthChanged) {
       this.pitchAxis.position.z = this._pitchDepth;
-
       this._pitchDepthChanged = false;
     }
 
     if (this._cameraRotationYChanged) {
       this.cameraNull.rotation.y = this._cameraRotationY;
-
       this._cameraRotationYChanged = false;
+    }
+  }
+
+  /**
+   * Анимация прозрачности дверной скважены при переходе
+   * @param {*} depth Глубина приближения
+   */
+  changeKeyHoleOpacityByDepth(depth) {
+    if (this.keyholeCover) {
+      let opacity;
+
+      if (depth < KEYHOLE_FULL_OPACITY_BP) {
+        opacity = 1;
+      } else if (depth > KEYHOLE_NO_OPACITY_BP) {
+        opacity = 0;
+      } else {
+        opacity = (depth - KEYHOLE_NO_OPACITY_BP) / (KEYHOLE_FULL_OPACITY_BP - KEYHOLE_NO_OPACITY_BP);
+      }
+      this.keyholeCover.opacity = opacity;
+      this.keyholeCover.redraw();
     }
   }
 
@@ -214,6 +193,10 @@ export class CameraRigMobile extends THREE.Group {
   }
 
   changeStateTo({newStateParams, animationParams}, onComplete) {
+    if (this.sceneIndex === newStateParams.index) {
+      return;
+    }
+    this.sceneIndex = newStateParams.index;
     const initDepth = this._depth;
     const initHorizonIncline = this._horizonIncline;
     const initRotationAxisYAngle = this._rotationAxisYAngle;
@@ -225,8 +208,7 @@ export class CameraRigMobile extends THREE.Group {
         new Animation({
           func: (progress) => {
             if (typeof newStateParams.depth === `number`) {
-              this.depth =
-              initDepth + (newStateParams.depth - initDepth) * progress;
+              this.depth = initDepth + (newStateParams.depth - initDepth) * progress;
             }
 
             if (typeof newStateParams.horizonIncline === `number`) {
@@ -242,24 +224,17 @@ export class CameraRigMobile extends THREE.Group {
             }
 
             if (typeof newStateParams.pitchDepth === `number`) {
-              this.pitchDepth =
-              initPitchDepth +
-              (newStateParams.pitchDepth - initPitchDepth) * progress;
+              this.pitchDepth = initPitchDepth + (newStateParams.pitchDepth - initPitchDepth) * progress;
             }
 
             if (typeof newStateParams.cameraRotationY === `number`) {
-              this.cameraRotationY =
-              initCameraRotationY +
-              (newStateParams.cameraRotationY - initCameraRotationY) * progress;
+              this.cameraRotationY = initCameraRotationY + (newStateParams.cameraRotationY - initCameraRotationY) * progress;
             }
-
-            this.invalidate();
+            this.redraw();
           },
           duration: animationParams.duration,
           easing: animationParams.easing,
           callback: () => {
-            this.setState(newStateParams);
-
             if (typeof onComplete === `function`) {
               onComplete();
             }

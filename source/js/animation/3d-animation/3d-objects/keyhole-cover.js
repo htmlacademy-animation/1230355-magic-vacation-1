@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {MATERIAL_TYPE} from '../../../helpers/constants';
-import {MaterialCreator} from '../material-creator';
+import {MaterialCreator} from '../material/material-creator';
 
 export class KeyholeCover extends THREE.Mesh {
   constructor(pageSceneCreator) {
@@ -13,7 +13,6 @@ export class KeyholeCover extends THREE.Mesh {
     );
 
     this.name = `keyholeCover`;
-
     this._opacity = 1;
     this._isOpacityChanged = false;
   }
@@ -31,10 +30,9 @@ export class KeyholeCover extends THREE.Mesh {
     return this._opacity;
   }
 
-  invalidate() {
+  redraw() {
     if (this._isOpacityChanged) {
       this.material.opacity = this._opacity;
-
       this._isOpacityChanged = false;
     }
   }

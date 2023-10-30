@@ -1,11 +1,11 @@
 import {RoomScene} from './room';
 import * as THREE from 'three';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS, MESH_NAMES, SVG_ELEMENTS} from '../../../helpers/constants';
-import {MaterialCreator} from '../material-creator';
+import {MaterialCreator} from '../material/material-creator';
 import {Saturn} from '../3d-objects/saturn';
 import {Carpet} from '../3d-objects/carpet';
 import Animation from '../../2d-animation/animation-2d';
-import {degreesToRadians} from "../../../helpers/utils";
+import {degreesToRadians} from '../../../helpers/utils';
 import easing from '../../../helpers/easing';
 
 export class RoomOneScene extends RoomScene {
@@ -31,18 +31,17 @@ export class RoomOneScene extends RoomScene {
           }
       ),
     };
-    this.staticOutput = {
-      name: OBJECT_ELEMENTS.staticOutput1,
-    };
+    this.staticOutput = {name: OBJECT_ELEMENTS.staticOutput1};
   }
+
   async constructChildren() {
     await super.constructChildren();
-
     await this.addFlower();
     this.addSaturn();
     this.addCarpet();
     await this.addDog();
   }
+
   async addFlower() {
     const config = {
       name: SVG_ELEMENTS.flower,
@@ -71,12 +70,12 @@ export class RoomOneScene extends RoomScene {
       },
     };
     const obj = await this.pageSceneCreator.createExtrudedSvgMesh(config);
-
     this.addObject(obj);
   }
 
   addSaturn() {
     const group = new THREE.Group();
+    group.position.set(250, 1500, 280);
 
     const saturn = new Saturn(this.pageSceneCreator.materialCreator, {
       darkMode: false,
@@ -96,13 +95,9 @@ export class RoomOneScene extends RoomScene {
     };
 
     this.pageSceneCreator.setTransformParams(saturn, transform);
-
-    group.position.set(250, 1500, 280);
-
     group.add(saturn);
 
     const bounceAngle = 1;
-
     this.animationManager.addRoomsPageAnimations(
         0,
         new Animation({
@@ -142,7 +137,6 @@ export class RoomOneScene extends RoomScene {
         );
       }
     });
-
     this.addObject(group);
   }
 
@@ -150,6 +144,7 @@ export class RoomOneScene extends RoomScene {
     const carpet = new Carpet(this.pageSceneCreator);
     this.addObject(carpet);
   }
+
   async addDog() {
     const dog = await this.pageSceneCreator.createObjectMesh({
       name: OBJECT_ELEMENTS.dog,

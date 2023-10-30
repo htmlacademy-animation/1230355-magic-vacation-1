@@ -1,10 +1,11 @@
 import {RoomScene} from './room';
 import * as THREE from 'three';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS, SVG_ELEMENTS} from '../../../helpers/constants';
-import {MaterialCreator} from '../material-creator';
+import {MaterialCreator} from '../material/material-creator';
 import {Lantern} from '../3d-objects/lantern';
 import Animation from '../../2d-animation/animation-2d';
 import easing from '../../../helpers/easing';
+
 export class RoomTwoScene extends RoomScene {
   constructor(pageSceneCreator, animationManager) {
     super(pageSceneCreator, animationManager);
@@ -19,6 +20,7 @@ export class RoomTwoScene extends RoomScene {
           }
       ),
     };
+
     this.floor = {
       material: this.pageSceneCreator.materialCreator.create(
           MATERIAL_TYPE.SoftMaterial,
@@ -28,14 +30,11 @@ export class RoomTwoScene extends RoomScene {
       ),
     };
 
-    this.staticOutput = {
-      name: OBJECT_ELEMENTS.staticOutput2,
-    };
+    this.staticOutput = {name: OBJECT_ELEMENTS.staticOutput2};
   }
 
   async constructChildren() {
     await super.constructChildren();
-
     await this.addLeaves();
     this.addPyramid();
     this.addLantern();
@@ -63,6 +62,7 @@ export class RoomTwoScene extends RoomScene {
       },
     };
     const group = new THREE.Group();
+    group.position.set(80, 20, 330);
     const groupLeaf1 = new THREE.Group();
     const groupLeaf2 = new THREE.Group();
     const leaf1 = await this.pageSceneCreator.createExtrudedSvgMesh(config);
@@ -80,8 +80,6 @@ export class RoomTwoScene extends RoomScene {
       },
       scale: 2.5,
     });
-
-    group.position.set(80, 20, 330);
 
     this.animationManager.addRoomsPageAnimations(
         1,
@@ -135,7 +133,6 @@ export class RoomTwoScene extends RoomScene {
     };
 
     this.pageSceneCreator.setTransformParams(pyramid, transform);
-
     this.addObject(pyramid);
   }
 
@@ -155,7 +152,6 @@ export class RoomTwoScene extends RoomScene {
     };
 
     this.pageSceneCreator.setTransformParams(lantern, transform);
-
     this.addObject(lantern);
   }
 }

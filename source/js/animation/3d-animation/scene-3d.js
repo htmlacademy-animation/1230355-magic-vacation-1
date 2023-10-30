@@ -17,11 +17,8 @@ export class Scene3d {
     this.animate = this.animate.bind(this);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.render();
-
     this.resize();
-
     this.customRenderer = null;
-
     window.addEventListener(`resize`, () => {
       this.resizeInProgress = true;
     });
@@ -54,8 +51,6 @@ export class Scene3d {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(0x5f458c, 1);
     this.renderer.setPixelRatio(this.devicePixelRation);
-    // this.renderer.setPixelRatio(window.devicePixelRatio);
-    // this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       this.renderer.shadowMap.enabled = true;
     }
@@ -198,7 +193,6 @@ export class Scene3d {
     }
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-
     this.renderer.setSize(width, height);
   }
 }

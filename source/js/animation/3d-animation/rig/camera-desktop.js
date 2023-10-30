@@ -4,25 +4,25 @@ import Animation from '../../2d-animation/animation-2d';
 import {AnimateControl} from './animate-control';
 import easing from '../../../helpers/easing';
 
+const KEYHOLE_FULL_OPACITY_BP = -1900;
+const KEYHOLE_NO_OPACITY_BP = -1200;
+
+// todo: переименовать (Rig??)
+// todo: общий код вынести в родительский чат
 export class CameraRigDesktop extends THREE.Group {
   constructor(startSceneIndex, sceneController) {
-
     super();
-
     this.name = `CameraRig`;
+    this.keyholeCover = sceneController.mainPageScene.keyholeCover;
+    this.AnimateControl = new AnimateControl();
 
-    this.stateParameters =
-      this.getCameraRigStageState(startSceneIndex).newStateParams;
-
-    this.keyholeCover = sceneController.mainPageScene.children[0].children.find(
-        ({name}) => name === `keyholeCover`
-    );
-
-    this._depth = this.stateParameters.depth || 0;
-    this._rotationAxisYAngle = this.stateParameters.rotationAxisYAngle || 0;
-    this._horizonIncline = this.stateParameters.horizonIncline || 0;
-    this._pitchRotation = this.stateParameters.pitchRotation || 0;
-    this._pitchDepth = this.stateParameters.pitchDepth || 0;
+    const stateParameters = this.getCameraRigStageState(startSceneIndex).newStateParams;
+    this.sceneIndex = stateParameters.index || 0;
+    this._depth = stateParameters.depth || 0;
+    this._rotationAxisYAngle = stateParameters.rotationAxisYAngle || 0;
+    this._horizonIncline = stateParameters.horizonIncline || 0;
+    this._pitchRotation = stateParameters.pitchRotation || 0;
+    this._pitchDepth = stateParameters.pitchDepth || 0;
 
     this._depthChanged = true;
     this._rotationAxisYAngleChanged = true;
@@ -30,35 +30,26 @@ export class CameraRigDesktop extends THREE.Group {
     this._pitchRotationChanged = true;
     this._pitchDepthChanged = true;
 
-    this.AnimateControl = new AnimateControl();
-
     this.constructRigElements();
-
     this.position.z = 0;
-
-    this.invalidate();
+    this.redraw();
   }
 
   constructRigElements() {
-    const depthTrack = new THREE.Group();
-    const rotationAxis = new THREE.Group();
-    const pitchAxis = new THREE.Group();
-    const cameraNull = new THREE.Group();
+    this.rotationAxis = new THREE.Group();
+    this.depthTrack = new THREE.Group();
+    this.pitchAxis = new THREE.Group();
+    this.cameraNull = new THREE.Group();
 
-    this.add(rotationAxis);
-    rotationAxis.add(depthTrack);
-    depthTrack.add(pitchAxis);
-    pitchAxis.add(cameraNull);
-
-    this.depthTrack = depthTrack;
-    this.rotationAxis = rotationAxis;
-    this.pitchAxis = pitchAxis;
-    this.cameraNull = cameraNull;
+    this.add(this.rotationAxis);
+    this.rotationAxis.add(this.depthTrack);
+    this.depthTrack.add(this.pitchAxis);
+    this.pitchAxis.add(this.cameraNull);
     this.pitchAxis.position.z = this.pitchDepth;
   }
 
-  setState(newStateParameters) {
-    this.stateParameters = newStateParameters;
+  get depth() {
+    return this._depth;
   }
 
   set depth(value) {
@@ -67,28 +58,10 @@ export class CameraRigDesktop extends THREE.Group {
     }
     this._depth = value;
     this._depthChanged = true;
-    if (this.keyholeCover) {
-      let opacity;
-
-      const fullOpacityBreakpoint = -2200;
-      const noOpacityBreakpoint = -1800;
-
-      if (value < fullOpacityBreakpoint) {
-        opacity = 1;
-      } else if (value > noOpacityBreakpoint) {
-        opacity = 0;
-      } else {
-        opacity = (value - noOpacityBreakpoint) / (fullOpacityBreakpoint - noOpacityBreakpoint);
-      }
-
-      this.keyholeCover.opacity = opacity;
-
-      this.keyholeCover.invalidate();
-    }
   }
 
-  get depth() {
-    return this._depth;
+  get horizonIncline() {
+    return this._horizonIncline;
   }
 
   set horizonIncline(value) {
@@ -98,10 +71,6 @@ export class CameraRigDesktop extends THREE.Group {
 
     this._horizonIncline = value;
     this._horizonInclineChanged = true;
-  }
-
-  get horizonIncline() {
-    return this._horizonIncline;
   }
 
   get rotationAxisYAngle() {
@@ -143,10 +112,11 @@ export class CameraRigDesktop extends THREE.Group {
     this._pitchDepthChanged = true;
   }
 
-  invalidate() {
+  redraw() {
     if (this._depthChanged) {
       this.depthTrack.position.z = -this._depth;
       this.pitchAxis.position.y = this._pitchDepth * Math.tan(this._horizonIncline);
+      this.changeKeyHoleOpacityByDepth(this._depth);
       this._depthChanged = false;
     }
 
@@ -162,14 +132,32 @@ export class CameraRigDesktop extends THREE.Group {
     if (this._pitchRotationChanged) {
       this.cameraNull.position.y = Math.tan(this._pitchRotation) * this._pitchDepth;
       this.cameraNull.rotation.x = -this._pitchRotation;
-
       this._pitchRotationChanged = false;
     }
 
     if (this._pitchDepthChanged) {
       this.pitchAxis.position.z = this._pitchDepth;
-
       this._pitchDepthChanged = false;
+    }
+  }
+
+  /**
+   * Анимация прозрачности дверной скважены при переходе
+   * @param {*} depth Глубина приближения
+   */
+  changeKeyHoleOpacityByDepth(depth) {
+    if (this.keyholeCover) {
+      let opacity;
+
+      if (depth < KEYHOLE_FULL_OPACITY_BP) {
+        opacity = 1;
+      } else if (depth > KEYHOLE_NO_OPACITY_BP) {
+        opacity = 0;
+      } else {
+        opacity = (depth - KEYHOLE_NO_OPACITY_BP) / (KEYHOLE_FULL_OPACITY_BP - KEYHOLE_NO_OPACITY_BP);
+      }
+      this.keyholeCover.opacity = opacity;
+      this.keyholeCover.redraw();
     }
   }
 
@@ -182,6 +170,10 @@ export class CameraRigDesktop extends THREE.Group {
   }
 
   changeStateTo({newStateParams, animationParams}, onComplete) {
+    if (this.sceneIndex === newStateParams.index) {
+      return;
+    }
+    this.sceneIndex = newStateParams.index;
     const initDepth = this._depth;
     const initHorizonIncline = this._horizonIncline;
     const initRotationAxisYAngle = this._rotationAxisYAngle;
@@ -192,39 +184,31 @@ export class CameraRigDesktop extends THREE.Group {
         new Animation({
           func: (progress) => {
             if (typeof newStateParams.depth === `number`) {
-              this.depth =
-                initDepth + (newStateParams.depth - initDepth) * progress;
+              this.depth = initDepth + (newStateParams.depth - initDepth) * progress;
             }
 
             if (typeof newStateParams.horizonIncline === `number`) {
-              this.horizonIncline =
-                initHorizonIncline +
-                (newStateParams.horizonIncline - initHorizonIncline) * progress;
+              this.horizonIncline = initHorizonIncline + (newStateParams.horizonIncline - initHorizonIncline) * progress;
             }
 
             if (typeof newStateParams.rotationAxisYAngle === `number`) {
-              this.rotationAxisYAngle =
-                initRotationAxisYAngle +
-                (newStateParams.rotationAxisYAngle - initRotationAxisYAngle) *
-                  progress;
+              this.rotationAxisYAngle = initRotationAxisYAngle + (newStateParams.rotationAxisYAngle - initRotationAxisYAngle) *
+                progress;
             }
 
             if (typeof newStateParams.pitchRotation === `number`) {
               this.pitchRotation = initPitchRotation + (this.getMaxPitchRotation() * newStateParams.pitchRotation -
-              initPitchRotation) *
-              progress;
+                initPitchRotation) * progress;
             }
 
             if (typeof newStateParams.pitchDepth === `number`) {
               this.pitchDepth = initPitchDepth + (newStateParams.pitchDepth - initPitchDepth) * progress;
             }
-            this.invalidate();
+            this.redraw();
           },
           duration: animationParams.duration,
           easing: animationParams.easing,
           callback: () => {
-            this.setState(newStateParams);
-
             if (typeof onComplete === `function`) {
               onComplete();
             }
@@ -232,6 +216,7 @@ export class CameraRigDesktop extends THREE.Group {
         })
     );
   }
+
   getCameraRigStageState(nextSceneIndex, prevRoomIndex = 1) {
     if (nextSceneIndex === 0) {
       return {
@@ -257,7 +242,6 @@ export class CameraRigDesktop extends THREE.Group {
           depth: this.getMinDepth(),
           rotationAxisYAngle: ((prevRoomIndex - 1) * Math.PI) / 2,
           horizonIncline: -degreesToRadians(10),
-          pitchRotation: 0,
           pitchDepth: 1700,
         },
         animationParams: {
@@ -295,6 +279,6 @@ export class CameraRigDesktop extends THREE.Group {
   }
 
   getMaxPitchRotation() {
-    return 4;
+    return 0.6;
   }
 }

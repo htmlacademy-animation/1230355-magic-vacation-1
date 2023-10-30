@@ -4,10 +4,10 @@ const WORD_TIME_OFFSET = TIME_STEP * (WAVE_LENGTH / 2) + 50;
 
 class TextAnimationWave {
   constructor(
-    elementSelector,
-    wordDelimiter = ` `,
-    duration = 500,
-    property = `transform`
+      elementSelector,
+      wordDelimiter = ` `,
+      duration = 500,
+      property = `transform`
   ) {
     this._element = document.querySelector(elementSelector);
     this.wordDelimiter = wordDelimiter;

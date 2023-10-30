@@ -1,7 +1,6 @@
 export class Preloader {
   constructor() {
     this._element = document.getElementById(`preloader__percent`);
-
     this.setPercentage(0);
   }
 

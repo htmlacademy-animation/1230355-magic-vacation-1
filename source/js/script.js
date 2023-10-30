@@ -10,7 +10,7 @@ import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
 import animation from './modules/animation';
 import '../js/animation/3d-animation/initAnimationScreen.js';
-import {SceneController} from './animation/3d-animation/sceneController';
+import {SceneController} from './animation/3d-animation/scene-controller.js';
 import {Preloader} from './animation/3d-animation/preloader.js';
 
 // init modules
