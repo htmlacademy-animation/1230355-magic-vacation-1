@@ -1,6 +1,6 @@
 import {GUI} from "dat.gui";
 import * as THREE from "three";
-import {MaterialCreator} from "../animation/3d-animation/material-creator";
+import {MaterialCreator} from "../animation/3d-animation/material/material-creator";
 import {MATERIAL_TYPE} from "./constants";
 
 export class ProjectGui extends GUI {

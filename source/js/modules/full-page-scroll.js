@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import {sceneController} from '../script';
-import {scene} from '../animation/3d-animation/initAnimationScreen';
+import {scene} from '../animation/3d-animation/init-animation-screen';
 import {sonyaStartAnimation, sonyaEndAnimation} from '../animation/sonia-animation';
 
 const prizes = document.querySelector(`.screen--prizes`);
@@ -17,6 +17,7 @@ export default class FullPageScroll {
     this.menuElements = document.querySelectorAll(`.page-header__menu .js-menu-link`);
 
     this.activeScreen = 0;
+    this.prevScreen = undefined;
     this.onScrollHandler = this.onScroll.bind(this);
     this.onUrlHashChangedHandler = this.onUrlHashChanged.bind(this);
   }
@@ -24,7 +25,6 @@ export default class FullPageScroll {
   init() {
     document.addEventListener(`wheel`, throttle(this.onScrollHandler, this.THROTTLE_TIMEOUT, {trailing: true}));
     window.addEventListener(`popstate`, this.onUrlHashChangedHandler);
-
     this.onUrlHashChanged();
   }
 
@@ -48,6 +48,7 @@ export default class FullPageScroll {
 
   onUrlHashChanged() {
     const newIndex = Array.from(this.screenElements).findIndex((screen) => location.hash.slice(1) === screen.id);
+    this.prevScreen = this.activeScreen;
     this.activeScreen = (newIndex < 0) ? 0 : newIndex;
     this.changePageDisplay();
   }
@@ -59,7 +60,7 @@ export default class FullPageScroll {
   }
 
   changeVisibilityDisplay() {
-    const prevActiveScreen = document.querySelector(`.screen.active`);
+    const prevActiveScreen = this.prevScreen ? this.screenElements[this.prevScreen] : undefined;
     const nextActiveScreen = this.screenElements[this.activeScreen];
 
     if (prevActiveScreen === nextActiveScreen) {
@@ -135,6 +136,7 @@ export default class FullPageScroll {
   }
 
   reCalculateActiveScreenPosition(delta) {
+    this.prevScreen = this.activeScreen;
     if (delta > 0) {
       this.activeScreen = Math.min(this.screenElements.length - 1, ++this.activeScreen);
     } else {

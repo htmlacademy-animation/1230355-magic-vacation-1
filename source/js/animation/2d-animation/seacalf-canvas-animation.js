@@ -106,17 +106,29 @@ const local = {
 
 export default class SeaCalfScene extends canvasScene {
   constructor(options) {
-    const canvas = options.canvas;
-
     super({
-      canvas: canvas,
+      canvas: options.canvas,
       sceneObjects: sceneObjectsArr,
     });
 
-    this.afterInit = () => {
+    this.ObjectsInitEventListener = () => {
       this.objectsScene.plane.before = this.drawTrace.bind(this);
     };
     this.initObjects();
+    this.animations.push(
+        new Animation({
+          func: () => {
+            this.drawScene();
+          },
+          duration: `infinite`,
+          fps: 60,
+        })
+    );
+    this.initIceAndSeaCalfAnimations();
+    this.initSnowFlakesAnimations();
+    this.initTraceAnimations();
+    this.initPlaneAnimations();
+    this.initTreesAnimations();
   }
 
   drawTrace() {
@@ -157,6 +169,7 @@ export default class SeaCalfScene extends canvasScene {
     this.ctx.fill();
     this.ctx.restore();
   }
+
   initIceAndSeaCalfAnimations() {
     this.animations.push(
         new Animation({
@@ -229,7 +242,8 @@ export default class SeaCalfScene extends canvasScene {
         })
     );
   }
-  initPaneAnimations() {
+
+  initPlaneAnimations() {
     this.animations.push(
         new Animation({
           func: (progress) => {
@@ -247,6 +261,7 @@ export default class SeaCalfScene extends canvasScene {
         })
     );
   }
+
   initTreesAnimations() {
     this.animations.push(
         new Animation({
@@ -291,29 +306,12 @@ export default class SeaCalfScene extends canvasScene {
         })
     );
   }
+
   startAnimation() {
-    this.animations.push(
-        new Animation({
-          func: () => {
-            this.drawScene();
-          },
-          duration: `infinite`,
-          fps: 60,
-        })
-    );
-    this.initIceAndSeaCalfAnimations();
-    this.initSnowFlakesAnimations();
-    this.initTraceAnimations();
-    this.initPaneAnimations();
-    this.initTreesAnimations();
-    this.animations.forEach((animation) => {
-      animation.start();
-    });
+    this.animations.forEach(animation => animation.start());
   }
 
   stopAnimation() {
-    this.animations.forEach((animation) => {
-      animation.stop();
-    });
+    this.animations.forEach(animation => animation.stop());
   }
 }

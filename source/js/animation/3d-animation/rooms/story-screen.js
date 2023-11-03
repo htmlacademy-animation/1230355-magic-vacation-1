@@ -4,7 +4,6 @@ import {RoomsComposition} from './rooms-scene';
 export class RoomsPageScene extends THREE.Group {
   constructor(pageSceneCreator, animationManager) {
     super();
-
     this.pageSceneCreator = pageSceneCreator;
     this.animationManager = animationManager;
   }
@@ -14,13 +13,9 @@ export class RoomsPageScene extends THREE.Group {
   }
 
   async addRooms() {
-    const roomsComposition = new RoomsComposition(
-        this.pageSceneCreator,
-        this.animationManager
-    );
+    const roomsComposition = new RoomsComposition(this.pageSceneCreator, this.animationManager);
     await roomsComposition.constructRooms();
     roomsComposition.rotateY(-Math.PI / 4);
-
     this.add(roomsComposition);
   }
 }

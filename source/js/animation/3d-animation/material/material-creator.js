@@ -1,7 +1,7 @@
-import * as THREE from "three";
-import {RoadCustomMaterial} from "./3d-objects/road-custom-material";
-import {CarpetCustomMaterial} from "./3d-objects/carpet-custom-material";
-import {MATERIAL_TYPE, DESKTOP_WIDTH_MIN} from "../../helpers/constants";
+import * as THREE from 'three';
+import {RoadCustomMaterial} from './road-custom-material';
+import {CarpetMaterial} from './carpet-custom-material';
+import {MATERIAL_TYPE, DESKTOP_WIDTH_MIN} from '../../../helpers/constants';
 
 export class MaterialCreator {
   constructor(textureLoader) {
@@ -48,49 +48,53 @@ export class MaterialCreator {
       }
     }
   }
+
   createSoft(config) {
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       return new THREE.MeshStandardMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(`./img/module-7/matcaps/Soft-Mat.png`),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/soft-mat.png`),
         color: config.color,
         name: config.name,
         side: config.side || THREE.FrontSide
       });
     }
   }
+
   createBasic(config) {
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       return new THREE.MeshStandardMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(`./img/module-7/matcaps/Basic-Mat.png`),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/basic-mat.png`),
         color: config.color,
         name: config.name,
+        transparent: true,
         side: config.side || THREE.FrontSide
       });
     }
   }
+
   createStrong(config) {
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       return new THREE.MeshPhongMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(
-            `./img/module-7/matcaps/Strong-Mat-SnowColor.png`
-        ),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/strong-mat-snowcolor.png`),
         color: config.color,
         name: config.name,
         side: config.side || THREE.FrontSide
       });
     }
   }
+
   createRoadMaterial(config) {
     return new RoadCustomMaterial(config);
   }
+
   createCarpetMaterial(config) {
-    return new CarpetCustomMaterial(config);
+    return new CarpetMaterial(config);
   }
 }
 
@@ -121,6 +125,7 @@ MaterialCreator.Colors = {
   White: `rgb(255, 255, 255)`,
   SnowColor: `rgb(182, 206, 240)`,
 };
+
 MaterialCreator.Config = {
   SoftMaterial: {
     roughness: 0.9,

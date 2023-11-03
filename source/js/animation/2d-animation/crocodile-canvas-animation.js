@@ -117,29 +117,44 @@ const maskKey = {
 
 export default class CrocodileScene extends canvasScene {
   constructor(options) {
-    const canvas = options.canvas;
-
     super({
-      canvas,
+      canvas: options.canvas,
       sceneObjects: sceneObjectsArr,
     });
 
-    this.afterInit = () => {
+    this.ObjectsInitEventListener = () => {
       this.objectsScene.flamingo.before = this.drawMask.bind(this);
     };
-
     this.initObjects();
+    this.animations.push(
+        new Animation({
+          func: () => {
+            this.drawScene();
+          },
+          duration: `infinite`,
+          fps: 60,
+        })
+    );
+
+    this.initKeyAnimations();
+    this.initCrocodileAnimations();
+    this.initFlamingoAnimations();
+    this.initWatermelonAnimations();
+    this.initLeafAnimations();
+    this.initSnowflakeAnimations();
+    this.initSaturnAnimations();
+    this.initDropAnimations();
   }
+
   drawMask() {
     const mask = maskKey.mask;
-    let width = this.objectsScene.key.widthImg;
-    let height = this.objectsScene.key.heightImg;
+    const width = this.objectsScene.key.widthImg;
+    const height = this.objectsScene.key.heightImg;
+    const s = this.size / 100;
 
     if (mask.opacity === 0) {
       return;
     }
-
-    const s = this.size / 100;
 
     this.ctx.save();
     this.ctx.globalAlpha = mask.opacity;
@@ -203,7 +218,6 @@ export default class CrocodileScene extends canvasScene {
                         25 * progressReversed;
             this.objectsScene.crocodile.transforms.translateY = -15 * progressReversed;
           },
-          // callback: () => this.startDropAnimation(),
           delay: 1000,
           duration: 500,
         })
@@ -497,46 +511,25 @@ export default class CrocodileScene extends canvasScene {
       delay: 1200,
       duration: 100
     }));
+  }
 
-    this.animationsDrop.forEach((animation) => {
-      animation.start();
-    });
-
-    setTimeout(() => {
-      this.initDropAnimations();
-    }, 2500);
+  startDropAnimation() {
+    this.dropTimeoutId = setTimeout(() => {
+      this.animationsDrop.forEach(animation => animation.start());
+      this.startDropAnimation();
+    }, 2000);
   }
 
   startAnimation() {
-    this.animations.push(
-        new Animation({
-          func: () => {
-            this.drawScene();
-          },
-          duration: `infinite`,
-          fps: 60,
-        })
-    );
-
-    this.initKeyAnimations();
-    this.initCrocodileAnimations();
-    this.initFlamingoAnimations();
-    this.initWatermelonAnimations();
-    this.initLeafAnimations();
-    this.initSnowflakeAnimations();
-    this.initSaturnAnimations();
-
-    setTimeout(() => {
-      this.initDropAnimations();
-    }, 1500);
-
-    this.animations.forEach((animation) => {
-      animation.start();
-    });
+    this.animations.forEach(animation => animation.start());
+    this.startDropAnimation();
   }
 
   stopAnimation() {
-    this.animations.forEach((animation) => {
+    if (this.dropTimeoutId) {
+      clearTimeout(this.dropTimeoutId);
+    }
+    this.animations.forEach(animation => {
       animation.stop();
     });
   }

@@ -1,17 +1,17 @@
 import * as THREE from 'three';
-import {scene} from './initAnimationScreen';
-import {SvgLoader} from "./svg-objects/svg-insert";
+import {scene} from './init-animation-screen';
+import {SvgLoader} from './svg-objects/svg-insert';
 import {EXTRUDE_SETTINGS, OBJECT_ELEMENTS, SVG_ELEMENTS} from '../../helpers/constants';
 import {MainPageComposition} from './scene-intro';
-import {MaterialCreator} from './material-creator';
+import {MaterialCreator} from './material/material-creator';
 import {ExtrudeSvgCreator} from './svg-objects/extrude-svg';
 import {ObjectsCreator} from '../../helpers/3d-object-creator';
 import {PageSceneCreator} from './page-scene-creator';
 import {LatheGeometryCreator} from './lathe-geometry';
 import {RoomsPageScene} from './rooms/story-screen';
 import {AnimationManager} from './animation-change';
-import {CameraRigDesktop} from './rig/camera-desktop';
-import {CameraRigMobile} from './rig/camera-mobile';
+import {CameraDesktop} from './camera/camera-desktop';
+import {CameraMobile} from './camera/camera-mobile';
 import easing from '../../helpers/easing';
 import {createObjectTransformAnimation} from './animation-creator';
 import {degreesToRadians} from '../../helpers/utils';
@@ -87,7 +87,7 @@ export class SceneController {
 
   async addMainPageScene() {
     this.mainPageScene = new MainPageComposition(pageSceneCreator, animationManager);
-    this.mainPageScene.position.set(0, 0, 4000);
+    this.mainPageScene.position.set(0, 30, 4000);
 
     await this.mainPageScene.constructChildren(this.preloader);
     scene.addSceneObject(this.mainPageScene);
@@ -102,10 +102,11 @@ export class SceneController {
     this.roomsPageScene.position.set(0, -200, 0);
     scene.addSceneObject(this.roomsPageScene);
   }
+
   initBubbleComposer() {
     const composer = new EffectComposer(scene.renderer);
 
-    composer.setPixelRatio(scene.devicePixelRation);
+    composer.setPixelRatio(scene.pixelRatio);
 
     const renderPass = new RenderPass(
         scene.scene,
@@ -113,26 +114,23 @@ export class SceneController {
     );
 
     const effectMaterial = this.getEffectMaterial();
-
     this.addBubbleAnimation(effectMaterial);
-
     this.bubbleEffectPass = new ShaderPass(effectMaterial, `map`);
 
     composer.addPass(renderPass);
     composer.addPass(this.bubbleEffectPass);
-
     return composer;
   }
 
   setBubbleComposer() {
     this.bubbleComposer = this.initBubbleComposer();
-
     scene.setRenderer(this.bubbleComposer);
   }
 
   removeBubbleComposer() {
     scene.resetRender();
   }
+
   async initSuitCase() {
     const suitcase = await pageSceneCreator.createObjectMesh({
       name: OBJECT_ELEMENTS.suitcase,
@@ -148,9 +146,7 @@ export class SceneController {
       },
     });
     this.suitcase = new THREE.Group();
-
     this.suitcase.position.y = this.roomsPageScene.position.y;
-
     this.suitcase.add(suitcase);
 
     suitcase.traverse((o) => {
@@ -239,12 +235,8 @@ export class SceneController {
     cameraRigInstance.addObjectToCameraNull(scene.camera);
     cameraRigInstance.addObjectToCameraNull(scene.lightGroup);
     cameraRigInstance.addObjectToRotationAxis(this.suitcase);
-
-    const pointerLight = new THREE.Group();
-    pointerLight.position.z = 2250;
-    pointerLight.add(scene.pointerLight);
-    cameraRigInstance.addObjectToRotationAxis(pointerLight);
   }
+
   subscribeScreenMove() {
     if (`ontouchmove` in window) {
       window.addEventListener(`touchmove`, this.touchMoveHandler);
@@ -252,6 +244,7 @@ export class SceneController {
       window.addEventListener(`mousemove`, this.mouseMoveHandler);
     }
   }
+
   unsubscribeScreenMove() {
     if (`ontouchmove` in window) {
       window.removeEventListener(`touchmove`, this.touchMoveHandler);
@@ -274,28 +267,23 @@ export class SceneController {
     }
 
     if (width > height) {
-      if (this.cameraRig instanceof CameraRigDesktop) {
+      if (this.cameraRig instanceof CameraDesktop) {
         return;
       }
 
       scene.scene.remove(this.cameraRig);
-
-      this.cameraRigDesktop = new CameraRigDesktop(this.sceneIndex, this);
+      this.cameraRigDesktop = new CameraDesktop(this.sceneIndex, this);
       this.addDepsToCameraRig(this.cameraRigDesktop);
-
       this.cameraRig = this.cameraRigDesktop;
-
       scene.scene.add(this.cameraRig);
     } else {
-      if (this.cameraRig instanceof CameraRigMobile) {
+      if (this.cameraRig instanceof CameraMobile) {
         return;
       }
 
       scene.scene.remove(this.cameraRig);
-
-      this.cameraRigMobile = new CameraRigMobile(this.sceneIndex, this);
+      this.cameraRigMobile = new CameraMobile(this.sceneIndex, this);
       this.addDepsToCameraRig(this.cameraRigMobile);
-
       this.cameraRig = this.cameraRigMobile;
       scene.scene.add(this.cameraRig);
     }
@@ -392,13 +380,13 @@ export class SceneController {
       }
 
       if (increase) {
-        currentPitchRotation += 0.0001;
+        currentPitchRotation += 0.0003;
       } else {
-        currentPitchRotation -= 0.0001;
+        currentPitchRotation -= 0.0003;
       }
 
       this.cameraRig.pitchRotation = currentPitchRotation;
-      this.cameraRig.invalidate();
+      this.cameraRig.redraw();
 
       this.eventHandlerTick = requestAnimationFrame(() => {
         movePitchRotationCloserToTarget(increase);
@@ -409,10 +397,11 @@ export class SceneController {
         targetPitchRotation > this.cameraRig.pitchRotation
     );
   }
-  getEffectMaterial(texture) {
+  
+  getEffectMaterial() {
     return new THREE.RawShaderMaterial({
       uniforms: {
-        map: new THREE.Uniform(texture),
+        map: new THREE.Uniform(),
         aspectRatio: new THREE.Uniform(window.innerWidth / window.innerHeight),
         timestamp: new THREE.Uniform(0),
         bubble1: new THREE.Uniform({
@@ -436,10 +425,7 @@ export class SceneController {
           startPositionX: 0.4,
           delay: 0,
           getPositionX(time) {
-            return (
-              this.startPositionX +
-              0.03 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2.5)
-            );
+            return this.startPositionX + 0.03 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2.5);
           },
           getPositionY: (y) => y + 0.005,
         }),
@@ -450,10 +436,7 @@ export class SceneController {
           startTime: 0,
           delay: 1000,
           getPositionX(time) {
-            return (
-              this.startPositionX +
-              0.01 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2)
-            );
+            return this.startPositionX + 0.01 * Math.exp(-0.05 * time) * Math.sin(Math.PI * time * 2);
           },
           getPositionY: (y) => y + 0.006,
         }),
@@ -477,7 +460,6 @@ export class SceneController {
         new Animation({
           func: (_, {startTime, currentTime}) => {
             material.uniforms.timestamp.value = currentTime;
-
             material.uniforms.hasBubbles.value = true;
 
             [bubble1, bubble2, bubble3].forEach((bubble) => {
@@ -498,9 +480,7 @@ export class SceneController {
               const deltaTime = (currentTime - bubble.startTime) / 1000;
 
               bubble.bubblePosition.x = bubble.getPositionX(deltaTime);
-              bubble.bubblePosition.y = bubble.getPositionY(
-                  bubble.bubblePosition.y
-              );
+              bubble.bubblePosition.y = bubble.getPositionY(bubble.bubblePosition.y);
             });
           },
           duration: `infinite`,
@@ -508,4 +488,5 @@ export class SceneController {
         })
     );
   }
+
 }

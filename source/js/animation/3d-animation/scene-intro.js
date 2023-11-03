@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import {SVG_ELEMENTS, OBJECT_ELEMENTS, MATERIAL_TYPE, MESH_NAMES} from '../../helpers/constants';
-import {MaterialCreator} from './material-creator';
+import {MaterialCreator} from './material/material-creator';
 import {Saturn} from './3d-objects/saturn';
 import easing from '../../helpers/easing';
 import {createBounceAnimation, createObjectTransformAnimation} from './animation-creator';
 import Animation from '../2d-animation/animation-2d';
-import {Airplane} from "./3d-objects/airplane";
+import {Airplane} from './3d-objects/airplane';
 import {KeyholeCover} from './3d-objects/keyhole-cover';
 
 export class MainPageComposition extends THREE.Group {
@@ -19,9 +19,9 @@ export class MainPageComposition extends THREE.Group {
       {
         name: SVG_ELEMENTS.keyhole,
         extrude: {
-          depth: 4,
+          depth: 10,
           bevelThickness: 2,
-          bevelSize: 2,
+          bevelSize: 0,
           material: this.pageSceneCreator.materialCreator.create(
               MATERIAL_TYPE.SoftMaterial,
               {
@@ -200,24 +200,19 @@ export class MainPageComposition extends THREE.Group {
     ];
 
     this.mainPageGroup = new THREE.Group();
-
     this.onResize = this.onResize.bind(this);
-
     window.addEventListener(`resize`, this.onResize);
   }
 
   onResize() {
     const isPortraitMode = window.innerWidth < window.innerHeight;
-
     if (this.isPortraitMode === isPortraitMode) {
       return;
     }
 
     this.isPortraitMode = isPortraitMode;
-
     this.mainPageGroup.children.forEach((obj) => {
       const transformPosition = this.getMeshTransformPositionByName(obj.name);
-
       if (transformPosition) {
         obj.position.copy(transformPosition);
       }
@@ -228,20 +223,12 @@ export class MainPageComposition extends THREE.Group {
     switch (name) {
       case SVG_ELEMENTS.flamingo:
         return this.isPortraitMode
-          ? {
-            x: -180,
-            y: 370,
-            z: 140,
-          }
-          : {
-            x: -460,
-            y: 370,
-            z: 140,
-          };
+          ? {x: -280, y: 370, z: 140,}
+          : {x: -460, y: 270, z: 140,};
 
       case SVG_ELEMENTS.snowflake:
         return this.isPortraitMode
-          ? {x: -160, y: 20, z: 90}
+          ? {x: -210, y: 20, z: 90}
           : {x: -320, y: -20, z: 90};
 
       case SVG_ELEMENTS.leaf:
@@ -256,12 +243,12 @@ export class MainPageComposition extends THREE.Group {
 
       case OBJECT_ELEMENTS.watermelon:
         return this.isPortraitMode
-          ? {x: -200, y: -240, z: 200}
+          ? {x: -300, y: -240, z: 200}
           : {x: -600, y: -240, z: 200};
 
       case MESH_NAMES.Saturn:
         return this.isPortraitMode
-          ? {x: 150, y: -150, z: 140}
+          ? {x: 250, y: -150, z: 140}
           : {x: 350, y: -120, z: 140};
     }
 
@@ -272,49 +259,36 @@ export class MainPageComposition extends THREE.Group {
     await this.addMeshObjects();
     await this.addExtrudedSvgObjects();
     this.addKeyholeCover();
-
     this.addSaturn();
-
     await this.addAirplane();
   }
+
   async addAirplane() {
     const airplane = new Airplane(this.pageSceneCreator);
-    await airplane.constructRig();
-    airplane.position.x = 110;
+    await airplane.init();
 
     const initialFightRadius = airplane.flightRadius;
     const initialFightHeight = airplane.flightHeight;
-    const initialRigRotationY = airplane.rigRotationY;
-    const initialPlaneRotationZ = airplane.planeRotationZ;
-    const initialPlaneIncline = airplane.planeIncline;
+    const initialRigRotationY = airplane.flightRotationY;
+    const initialPlaneRotationZ = airplane.flightRotationZ;
+    const initialPlaneIncline = airplane.flightIncline;
 
     this.animationManager.addMainPageAnimations(
         new Animation({
           func: (progress) => {
-            airplane.flightRadius =
-            initialFightRadius +
-            (airplane.maxFlightRadius - initialFightRadius) * progress;
+            airplane.flightRadius = initialFightRadius + 10 * progress;
+            airplane.flightHeight = initialFightHeight + 180 * progress;
+            airplane.flightRotationY = initialRigRotationY + (progress * 5 * Math.PI) / 4;
 
-            airplane.flightHeight =
-            initialFightHeight +
-            (airplane.maxFlightHeight - initialFightHeight) * progress;
-
-            airplane.rigRotationY =
-            initialRigRotationY + (progress * 5 * Math.PI) / 4;
-
-            airplane.planeRotationZ =
+            airplane.flightRotationZ =
             progress < 0.5
               ? initialPlaneRotationZ - progress * Math.PI
-              : initialPlaneRotationZ -
-                0.5 * Math.PI +
-                (progress - 0.5) * Math.PI;
+              : initialPlaneRotationZ - 0.5 * Math.PI + (progress - 0.5) * Math.PI;
 
-            airplane.planeIncline =
-            initialPlaneIncline + (progress * Math.PI) / 5;
-
-            airplane.invalidate(progress);
+            airplane.flightIncline = initialPlaneIncline + (progress * Math.PI) / 5;
+            airplane.redraw(progress);
           },
-          duration: 2000,
+          duration: 1500,
           delay: 1400,
           easing: easing.easeOutExpo,
         }),
@@ -323,6 +297,7 @@ export class MainPageComposition extends THREE.Group {
 
     this.addMesh(airplane);
   }
+
   async addMeshObjects() {
     await Promise.all(
         this.meshObjects.map(async (config) => {
@@ -332,11 +307,11 @@ export class MainPageComposition extends THREE.Group {
         })
     );
   }
+
   async addExtrudedSvgObjects() {
     await Promise.all(
         this.meshExtrudedObjects.map(async (config) => {
           const obj = await this.pageSceneCreator.createExtrudedSvgMesh(config);
-
           this.addObject(config)(obj);
         })
     );
@@ -366,6 +341,7 @@ export class MainPageComposition extends THREE.Group {
       this.addMesh(obj);
     };
   }
+
   addSaturn() {
     const saturn = new Saturn(this.pageSceneCreator.materialCreator, {
       darkMode: false,
@@ -379,7 +355,7 @@ export class MainPageComposition extends THREE.Group {
         createObjectTransformAnimation(
             saturn,
             {
-              position: {x: 350, y: -120, z: 140},
+              position: this.getMeshTransformPositionByName(MESH_NAMES.Saturn),
               rotation: {y: 3.6, z: 0},
               scale: 0.5,
             },
@@ -395,9 +371,9 @@ export class MainPageComposition extends THREE.Group {
   }
 
   addKeyholeCover() {
-    const keyholeCover = new KeyholeCover(this.pageSceneCreator);
-    keyholeCover.position.set(0, 0, -200);
-    this.addMesh(keyholeCover);
+    this.keyholeCover = new KeyholeCover(this.pageSceneCreator);
+    this.keyholeCover.position.set(0, 0, -200);
+    this.addMesh(this.keyholeCover);
   }
 
   addMesh(mesh) {

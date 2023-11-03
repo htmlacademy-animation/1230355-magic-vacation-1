@@ -3,7 +3,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  padding: 14.6rem 0 13rem;
+  padding: 14.6rem 0 12rem;
   width: 100%;
 
   @media (min-width: $stop-scaling) {
@@ -61,6 +61,12 @@
   text-transform: uppercase;
   font-size: 2.4rem;
   line-height: 1.2;
+  transition: opacity 0.3s ease-out 1.2s;
+  opacity: 0;
+
+  .screen--rules.active & {
+    opacity: 1;
+  }
 
   @media (min-width: $stop-scaling) {
     margin-left: 58px;

@@ -1,45 +1,39 @@
 import * as THREE from 'three';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS} from '../../../helpers/constants';
-import {MaterialCreator} from '../material-creator';
+import {MaterialCreator} from '../material/material-creator';
+
+const FLIGHT_RADIUS_DEFAULT = 100;
 
 export class Airplane extends THREE.Group {
   constructor(pageSceneCreator) {
     super();
-
     this.pageSceneCreator = pageSceneCreator;
 
     this.airplaneConfig = {
       name: OBJECT_ELEMENTS.airplane,
       transform: {
-        rotation: {
-          y: Math.PI / 2,
-        },
+        rotation: {y: Math.PI / 2},
         scale: 1,
       },
       material: this.pageSceneCreator.materialCreator.create(
-          MATERIAL_TYPE.BasicMaterial,
-          {
-            color: MaterialCreator.Colors.White,
-          }
+          MATERIAL_TYPE.BasicMaterial, {color: MaterialCreator.Colors.White}
       ),
     };
 
-    this._flightRadius = 50;
+    this._flightRadius = FLIGHT_RADIUS_DEFAULT;
     this._flightRadiusChanged = true;
-
-    this._flightHeight = -100;
+    this._flightHeight = -80;
     this._flightHeightChanged = true;
-
-    this._rigRotationY = -Math.PI;
-    this._rigRotationYChanged = true;
-
-    this._planeRotationZ = 0;
-    this._planeRotationZChanged = true;
-    this._planeIncline = 0;
-    this._planeInclineChanged = true;
+    this._flightRotationY = -Math.PI;
+    this._flightRotationYChanged = true;
+    this._flightRotationZ = 0;
+    this._flightRotationZChanged = true;
+    this._flightIncline = 0;
+    this._flightInclineChanged = true;
+    this.position.x = 110;
   }
 
-  async constructRig() {
+  async init() {
     await this.addAirplaneObject();
   }
 
@@ -69,71 +63,60 @@ export class Airplane extends THREE.Group {
     this._flightHeightChanged = true;
   }
 
-  get rigRotationY() {
-    return this._rigRotationY;
+  get flightRotationY() {
+    return this._flightRotationY;
   }
 
-  set rigRotationY(rotation) {
-    if (rotation === this._rigRotationY) {
+  set flightRotationY(rotation) {
+    if (rotation === this._flightRotationY) {
       return;
     }
 
-    this._rigRotationY = rotation;
-    this._rigRotationYChanged = true;
+    this._flightRotationY = rotation;
+    this._flightRotationYChanged = true;
   }
 
-  get maxFlightRadius() {
-    // return 200;
-    return 150;
+  get flightRotationZ() {
+    return this._flightRotationZ;
   }
 
-  get maxFlightHeight() {
-    return 100;
-  }
-
-  get planeRotationZ() {
-    return this._planeRotationZ;
-  }
-
-  set planeRotationZ(rotation) {
-    if (rotation === this._planeRotationZ) {
+  set flightRotationZ(rotation) {
+    if (rotation === this._flightRotationZ) {
       return;
     }
 
-    this._planeRotationZ = rotation;
-    this._planeRotationZChanged = true;
+    this._flightRotationZ = rotation;
+    this._flightRotationZChanged = true;
   }
 
-  get planeIncline() {
-    return this._planeIncline;
+  get flightIncline() {
+    return this._flightIncline;
   }
 
-  set planeIncline(rotation) {
-    if (rotation === this._planeIncline) {
+  set flightIncline(rotation) {
+    if (rotation === this._flightIncline) {
       return;
     }
 
-    this._planeIncline = rotation;
-    this._planeInclineChanged = true;
+    this._flightIncline = rotation;
+    this._flightInclineChanged = true;
   }
 
   async addAirplaneObject() {
-    this.airplaneObject = await this.pageSceneCreator.createObjectMesh(
-        this.airplaneConfig
-    );
-
-    this.airplaneInclineGroup = new THREE.Group();
-
-    this.airplaneInclineGroup.add(this.airplaneObject);
-
-    this.invalidate();
-    this.add(this.airplaneInclineGroup);
+    this.airplaneObject = await this.pageSceneCreator.createObjectMesh(this.airplaneConfig);
+    this.redraw();
+    this.add(this.airplaneObject);
   }
 
-  invalidate() {
+  redraw() {
     if (this._flightRadiusChanged) {
       this.airplaneObject.position.z = this._flightRadius;
       this._flightRadiusChanged = false;
+    }
+
+    if (this._flightRotationZChanged) {
+      this.airplaneObject.rotation.z = this._flightRotationZ;
+      this._flightRotationZChanged = false;
     }
 
     if (this._flightHeightChanged) {
@@ -141,19 +124,14 @@ export class Airplane extends THREE.Group {
       this._flightHeightChanged = false;
     }
 
-    if (this._rigRotationYChanged) {
-      this.rotation.y = this._rigRotationY;
-      this._rigRotationYChanged = false;
+    if (this._flightRotationYChanged) {
+      this.rotation.y = this._flightRotationY;
+      this._flightRotationYChanged = false;
     }
 
-    if (this._planeRotationZChanged) {
-      this.airplaneObject.rotation.z = this._planeRotationZ;
-      this._planeRotationZChanged = false;
-    }
-
-    if (this._planeInclineChanged) {
-      this.airplaneInclineGroup.rotation.z = this._planeIncline;
-      this._planeInclineChanged = false;
+    if (this._flightInclineChanged) {
+      this.rotation.z = this._flightIncline;
+      this._flightInclineChanged = false;
     }
   }
 }

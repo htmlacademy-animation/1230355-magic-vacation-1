@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import {RoomScene} from './room';
 import {MATERIAL_TYPE, OBJECT_ELEMENTS, SVG_ELEMENTS} from '../../../helpers/constants';
-import {MaterialCreator} from '../material-creator';
+import {MaterialCreator} from '../material/material-creator';
 import {Saturn} from '../3d-objects/saturn';
 import {Carpet} from '../3d-objects/carpet';
 import Animation from '../../2d-animation/animation-2d';
-import {degreesToRadians} from "../../../helpers/utils";
+import {degreesToRadians} from '../../../helpers/utils';
 import easing from '../../../helpers/easing';
 
 export class RoomFourScene extends RoomScene {
@@ -22,6 +22,7 @@ export class RoomFourScene extends RoomScene {
           }
       ),
     };
+
     this.floor = {
       material: this.pageSceneCreator.materialCreator.create(
           MATERIAL_TYPE.SoftMaterial,
@@ -30,14 +31,12 @@ export class RoomFourScene extends RoomScene {
           }
       ),
     };
-    this.staticOutput = {
-      name: OBJECT_ELEMENTS.staticOutput4,
-    };
-    // this.constructChildren();
+
+    this.staticOutput = {name: OBJECT_ELEMENTS.staticOutput4};
   }
+
   async constructChildren() {
     await super.constructChildren();
-
     await this.addFlower();
     this.addDarkSaturn();
     this.addCarpet();
@@ -72,7 +71,6 @@ export class RoomFourScene extends RoomScene {
       },
     };
     const obj = await this.pageSceneCreator.createExtrudedSvgMesh(config);
-
     this.addObject(obj);
   }
   addDarkSaturn() {
@@ -95,10 +93,12 @@ export class RoomFourScene extends RoomScene {
     this.pageSceneCreator.setTransformParams(saturn, transform);
     this.addObject(saturn);
   }
+
   addCarpet() {
     const carpet = new Carpet(this.pageSceneCreator);
     this.addObject(carpet);
   }
+
   async addSonya() {
     const sonya = await this.pageSceneCreator.createObjectMesh({
       name: OBJECT_ELEMENTS.sonya,

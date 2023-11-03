@@ -5,12 +5,8 @@ export class RoadCustomMaterial extends THREE.MeshStandardMaterial {
   onBeforeCompile(shader) {
     shader.uniforms = {
       ...shader.uniforms,
-      roadColor: new THREE.Uniform(
-          new THREE.Color(color3D.Grey)
-      ),
-      stripesColor: new THREE.Uniform(
-          new THREE.Color(color3D.White)
-      ),
+      roadColor: new THREE.Uniform(new THREE.Color(color3D.Grey)),
+      stripesColor: new THREE.Uniform(new THREE.Color(color3D.White)),
     };
 
     shader.vertexShader = shader.vertexShader.replace(

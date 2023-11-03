@@ -1,4 +1,5 @@
 import {getScale} from '../../helpers/transformation-gui-helper';
+
 export class PageSceneCreator {
   constructor(
       materialCreator,
@@ -29,15 +30,11 @@ export class PageSceneCreator {
   }
 
   async createExtrudedSvgMesh(config) {
-    const obj = await this.extrudeSvgCreator.create(
-        config.name,
-        config.extrude
-    );
+    const obj = await this.extrudeSvgCreator.create(config.name, config.extrude);
 
     if (config.transform) {
       this.setTransformParams(obj, config.transform);
     }
-
     return obj;
   }
 

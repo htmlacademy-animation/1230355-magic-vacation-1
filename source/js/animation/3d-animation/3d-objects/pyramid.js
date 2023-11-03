@@ -14,14 +14,13 @@ export class Pyramid extends THREE.Group {
   }
 
   addPyramid() {
+    const geometry = new THREE.ConeGeometry(Math.hypot(250, 250) / 2, 280, 4);
     const material = new THREE.MeshStandardMaterial({
       color: new THREE.Color(this.pyramidColor),
       metalness: this.metalness,
       roughness: this.roughness
     });
-    const geometry = new THREE.ConeGeometry(Math.hypot(250, 250) / 2, 280, 4);
-    const mesh = new THREE.Mesh(geometry, material);
-
-    this.add(mesh);
+    const pyramid = new THREE.Mesh(geometry, material);
+    this.add(pyramid);
   }
 }
