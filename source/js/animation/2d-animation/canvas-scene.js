@@ -13,12 +13,7 @@ export default class canvasScene {
 
     this.animations = [];
     this.animationsDrop = [];
-    this.afterInit = () => { };
-
-    this.initObjects();
-    this.initEventListeners();
-
-    window.addEventListener(`resize`, () => this.drawFullScreen());
+    this.ObjectsInitEventListener = () => { };
   }
 
   initObjects() {
@@ -39,49 +34,23 @@ export default class canvasScene {
       this.arrImgs.push(itemImage);
     });
 
-    if (this.afterInit && typeof this.afterInit === `function`) {
-      this.afterInit();
+    if (this.ObjectsInitEventListener && typeof this.ObjectsInitEventListener === `function`) {
+      this.ObjectsInitEventListener();
     }
-  }
-
-  increaseLoadingCounter() {
-    this.loadingCounter++;
-
-    if (this.loadingCounter === this.arrImgs.length) {
-      this.drawScene();
-    }
-  }
-
-  initEventListeners() {
-    this.arrImgs.forEach((item) => {
-      item.onload = () => {
-        this.increaseLoadingCounter();
-      };
-    });
   }
 
   drawImage(object) {
-    let x = object.x;
-    let y = object.y;
-    let size = object.size;
-    let opacity = object.opacity;
-    let image = object.img;
     let transforms = object.transforms;
 
-    let width = this.size * (size / 100);
-    let height = (this.size * (size / 100) * image.height) / image.width;
-
-    x = this.size * (x / 100) - width / 2;
-    y = this.size * (y / 100) - height / 2;
-
-    if (opacity === 0) {
+    if (object.opacity === 0 || 
+      transforms && (transforms.scaleX === 0 || transforms.scaleY === 0)) {
       return;
     }
 
-    if (transforms && (transforms.scaleX === 0 || transforms.scaleY === 0)) {
-      return;
-    }
-
+    let width = this.size * (object.size / 100);
+    let height = (this.size * (object.size / 100) * object.img.height) / object.img.width;
+    let x = this.size * (object.x / 100) - width / 2;
+    let y = this.size * (object.y / 100) - height / 2;
     this.ctx.save();
 
     if (transforms) {
@@ -113,20 +82,19 @@ export default class canvasScene {
           y = -y;
         }
       }
+
       if (transforms.rotate) {
         this.ctx.translate(-x - width / 2, -y - height / 2);
       }
     }
 
-    if (opacity) {
-      this.ctx.globalAlpha = opacity;
+    if (object.opacity) {
+      this.ctx.globalAlpha = object.opacity;
     }
 
-    this.ctx.drawImage(image, x, y, width, height);
-
+    this.ctx.drawImage(object.img, x, y, width, height);
     object.widthImg = width;
     object.heightImg = height;
-
     this.ctx.restore();
   }
 
@@ -138,15 +106,6 @@ export default class canvasScene {
         objectScene.before();
       }
       this.drawImage(objectScene);
-      if (objectScene.after && typeof objectScene.after === `function`) {
-        objectScene.after();
-      }
     }
-    this.drawFullScreen();
-  }
-
-  drawFullScreen() {
-    let ww = window.innerWidth;
-    let wh = window.innerHeight;
   }
 }

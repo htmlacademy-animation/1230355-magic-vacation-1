@@ -39,18 +39,17 @@ export class Scene3d {
   }
 
   initRenderer() {
-    const devicePixelRatio = window.devicePixelRatio;
-    this.devicePixelRation = Math.min(devicePixelRatio, 2);
+    this.pixelRatio = Math.min(window.devicePixelRatio, 2);
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvasElement,
       alpha: true,
-      antialias: this.devicePixelRation <= 1,
+      antialias: this.pixelRatio <= 1,
       powerPreference: `high-performance`,
       logarithmicDepthBuffer: true,
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setClearColor(0x5f458c, 1);
-    this.renderer.setPixelRatio(this.devicePixelRation);
+    this.renderer.setPixelRatio(this.pixelRatio);
     if (window.innerWidth > DESKTOP_WIDTH_MIN) {
       this.renderer.shadowMap.enabled = true;
     }
@@ -58,43 +57,37 @@ export class Scene3d {
 
   initLight() {
     this.lightGroup = new THREE.Group();
-    this.directionalLight = new THREE.Group();
-    this.pointerLight = new THREE.Group();
-
     const color = new THREE.Color(`rgb(255,255,255)`);
-    const intensity = 1.84;
+    const intensity = 2.34;
 
     const mainLight = new THREE.DirectionalLight(color, intensity);
     const directionalLightTargetObject = new THREE.Object3D();
-
     directionalLightTargetObject.position.set(
         0,
         -this.camera.position.z * Math.tan((15 * Math.PI) / 180),
         0
     );
-
     this.scene.add(directionalLightTargetObject);
     mainLight.target = directionalLightTargetObject;
 
     const frontLight = this.createPointLight(
-        [-785, -350, -510],
+        [-785, -350, 510],
         new THREE.Color(`rgb(246,242,255)`),
-        1.6,
-        5000,
-        0.2
+        2.6,
+        4000,
+        0.33
     );
 
     const topLight = this.createPointLight(
         [730, 800, -785],
         new THREE.Color(`rgb(245,254,255)`),
-        0.95,
+        1.95,
         5000,
-        0.1
+        0.21
     );
 
     this.lightGroup.position.z = this.camera.position.z;
     this.lightGroup.add(mainLight, frontLight, topLight);
-    this.scene.add(this.lightGroup);
   }
 
   createPointLight(position, color, intensity, distance, decay) {
@@ -159,9 +152,11 @@ export class Scene3d {
       this.meshObjects.delete(mesh);
     });
   }
+
   addTransformationsToLoop(transformations) {
     this.transformationsLoop.push(...transformations);
   }
+
   clearTransformationsLoop() {
     this.transformationsLoop = [];
   }

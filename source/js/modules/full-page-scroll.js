@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import bodyTheme from '../helpers/theme';
 import {sceneController} from '../script';
-import {scene} from '../animation/3d-animation/initAnimationScreen';
+import {scene} from '../animation/3d-animation/init-animation-screen';
 import {sonyaStartAnimation, sonyaEndAnimation} from '../animation/sonia-animation';
 
 const prizes = document.querySelector(`.screen--prizes`);

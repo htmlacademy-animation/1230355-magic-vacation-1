@@ -211,10 +211,11 @@
   }
 }
 /* module2-task3 */
-.slider__pagination{
+.slider__pagination, .slider__controls {
   opacity: 0;
   animation-duration: 0.5s;
   transition: opacity 1s;
+  transition-delay: 1s;
 }
 
 .slider__control{
@@ -226,14 +227,16 @@
 
 .slider__control--prev{
   animation-name: roll-in-right;
+  animation-delay: 1s;
 }
 
 .slider__control--next{
   animation-name: roll-in-left;
+  animation-delay: 1s;
 }
 
 .active{
-  .slider__pagination{
+  .slider__pagination, .slider__controls {
     opacity: 1;
   }
 }

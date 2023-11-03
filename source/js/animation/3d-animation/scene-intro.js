@@ -19,9 +19,9 @@ export class MainPageComposition extends THREE.Group {
       {
         name: SVG_ELEMENTS.keyhole,
         extrude: {
-          depth: 4,
+          depth: 10,
           bevelThickness: 2,
-          bevelSize: 2,
+          bevelSize: 0,
           material: this.pageSceneCreator.materialCreator.create(
               MATERIAL_TYPE.SoftMaterial,
               {
@@ -223,20 +223,12 @@ export class MainPageComposition extends THREE.Group {
     switch (name) {
       case SVG_ELEMENTS.flamingo:
         return this.isPortraitMode
-          ? {
-            x: -180,
-            y: 370,
-            z: 140,
-          }
-          : {
-            x: -460,
-            y: 370,
-            z: 140,
-          };
+          ? {x: -280, y: 370, z: 140,}
+          : {x: -460, y: 270, z: 140,};
 
       case SVG_ELEMENTS.snowflake:
         return this.isPortraitMode
-          ? {x: -160, y: 20, z: 90}
+          ? {x: -210, y: 20, z: 90}
           : {x: -320, y: -20, z: 90};
 
       case SVG_ELEMENTS.leaf:
@@ -251,12 +243,12 @@ export class MainPageComposition extends THREE.Group {
 
       case OBJECT_ELEMENTS.watermelon:
         return this.isPortraitMode
-          ? {x: -200, y: -240, z: 200}
+          ? {x: -300, y: -240, z: 200}
           : {x: -600, y: -240, z: 200};
 
       case MESH_NAMES.Saturn:
         return this.isPortraitMode
-          ? {x: 150, y: -150, z: 140}
+          ? {x: 250, y: -150, z: 140}
           : {x: 350, y: -120, z: 140};
     }
 
@@ -320,7 +312,6 @@ export class MainPageComposition extends THREE.Group {
     await Promise.all(
         this.meshExtrudedObjects.map(async (config) => {
           const obj = await this.pageSceneCreator.createExtrudedSvgMesh(config);
-
           this.addObject(config)(obj);
         })
     );
@@ -364,7 +355,7 @@ export class MainPageComposition extends THREE.Group {
         createObjectTransformAnimation(
             saturn,
             {
-              position: {x: 350, y: -120, z: 140},
+              position: this.getMeshTransformPositionByName(MESH_NAMES.Saturn),
               rotation: {y: 3.6, z: 0},
               scale: 0.5,
             },

@@ -5,7 +5,7 @@ import {sceneController} from '../script';
 export default () => {
   let storySlider;
 
-  const setSlider = function () {
+  const setSlider = () => {
     bodyTheme.setAndApplyBodyTheme(`dark`);
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
       storySlider = new Swiper(`.js-slider`, {
@@ -76,12 +76,12 @@ export default () => {
     }
   };
 
-  window.addEventListener(`resize`, function () {
-    if (storySlider) {
-      storySlider.destroy();
-    }
-    setSlider();
-  });
+  window.addEventListener(`resize`, () => {
+      if (storySlider) {
+        storySlider.destroy();
+      }
+      setSlider();
+    });
 
   setSlider();
 

@@ -106,7 +106,7 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
-.body-loaded .social-block__toggler::before{
+body.loaded .social-block__toggler::before{
   animation: elastic .4s ease .5s;
   animation-fill-mode:forwards;
 }

@@ -2,7 +2,7 @@ const TIME_STEP = 100;
 const WAVE_LENGTH = 4; // must be an even number
 const WORD_TIME_OFFSET = TIME_STEP * (WAVE_LENGTH / 2) + 50;
 
-class TextAnimationWave {
+export default class TextAnimationWave {
   constructor(
       elementSelector,
       wordDelimiter = ` `,
@@ -75,5 +75,3 @@ class TextAnimationWave {
     }
   }
 }
-
-export default TextAnimationWave;

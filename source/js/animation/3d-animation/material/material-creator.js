@@ -54,7 +54,7 @@ export class MaterialCreator {
       return new THREE.MeshStandardMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(`./img/module-7/matcaps/Soft-Mat.png`),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/soft-mat.png`),
         color: config.color,
         name: config.name,
         side: config.side || THREE.FrontSide
@@ -67,9 +67,10 @@ export class MaterialCreator {
       return new THREE.MeshStandardMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(`./img/module-7/matcaps/Basic-Mat.png`),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/basic-mat.png`),
         color: config.color,
         name: config.name,
+        transparent: true,
         side: config.side || THREE.FrontSide
       });
     }
@@ -80,7 +81,7 @@ export class MaterialCreator {
       return new THREE.MeshPhongMaterial(config);
     } else {
       return new THREE.MeshMatcapMaterial({
-        matcap: this.textureLoader.load(`./img/module-7/matcaps/Strong-Mat-SnowColor.png`),
+        matcap: this.textureLoader.load(`./img/module-7/matcaps/strong-mat-snowcolor.png`),
         color: config.color,
         name: config.name,
         side: config.side || THREE.FrontSide

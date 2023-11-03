@@ -2,6 +2,7 @@ precision mediump float;
 #define PI 3.1415
 
 uniform sampler2D map;
+varying vec2 vUv;
 uniform float timestamp;
 uniform float aspectRatio;
 
@@ -15,10 +16,8 @@ uniform Bubble bubble3;
 uniform bool hasBubbles;
 uniform float bubbleRadius;
 
-varying vec2 vUv;
 
 vec3 applyHue(vec3 aColor) {
-
     float duration = 3.0;
 
     float currentTimePosition = mod(timestamp / 3000.0, duration);
@@ -37,11 +36,13 @@ vec3 applyHue(vec3 aColor) {
     float angle = radians(currentHueDegrees);
     vec3 k = vec3(1.07735);
     float cosAngle = cos(angle);
-    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.1 - cosAngle);
+    return aColor * cosAngle + k * aColor * sin(angle) + k * dot(k, aColor) * (1.0 - cosAngle);
 }
+
 vec4 getBorderColor() {
     return texture2D(map, vUv) * vec4(1.0, 1.0, 1.0, 0.15);
 }
+
 void drawBubble(inout vec4 outputColor, in Bubble bubble) {
    vec2 currentPosition = vec2(vUv.x * aspectRatio, vUv.y);
     vec2 currentBubblePosition = vec2(bubble.bubblePosition.x * aspectRatio, bubble.bubblePosition.y);
@@ -69,6 +70,7 @@ void drawBubble(inout vec4 outputColor, in Bubble bubble) {
     shift = (bubble.bubblePosition - vUv) * (1.0 - sqrt(distanceFromCurrentPixelToBubblePosition / bubble.bubbleRadius));
     outputColor = texture2D(map, vUv + shift);
 }
+
 void main() {
     vec4 outputColor = texture2D(map, vUv);
     if (hasBubbles == true) {
@@ -78,6 +80,5 @@ void main() {
     }
 
     outputColor.rgb = applyHue(outputColor.rgb);
-
     gl_FragColor = outputColor;
 }

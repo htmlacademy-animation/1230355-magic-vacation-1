@@ -20,7 +20,7 @@ export class Lantern extends THREE.Group {
   }
 
   addBottomCylinder() {
-    const geometry = new THREE.CylinderGeometry(16, 16, 120, 30);
+    const geometry = new THREE.CylinderGeometry(16, 16, 220, 30);
     const material = this.createMaterial();
     const cylinder = new THREE.Mesh(geometry, material);
     this.add(cylinder);
@@ -30,7 +30,7 @@ export class Lantern extends THREE.Group {
     const geometry = new THREE.SphereGeometry(16, 30, 30);
     const material = this.createMaterial();
     const sphere = new THREE.Mesh(geometry, material);
-    sphere.position.set(0, 60, 0);
+    sphere.position.set(0, 105, 0);
     this.add(sphere);
   }
 
@@ -38,7 +38,7 @@ export class Lantern extends THREE.Group {
     const geometry = new THREE.CylinderGeometry(7, 7, 230, 30);
     const material = this.createMaterial();
     const cylinder = new THREE.Mesh(geometry, material);
-    cylinder.position.set(0, 191, 0);
+    cylinder.position.set(0, 216, 0);
     this.add(cylinder);
   }
 
@@ -46,7 +46,7 @@ export class Lantern extends THREE.Group {
     const geometry = new THREE.BoxGeometry(37, 4, 37);
     const material = this.createMaterial();
     const lamp = new THREE.Mesh(geometry, material);
-    lamp.position.set(0, 303, 0);
+    lamp.position.set(0, 333, 0);
     this.add(lamp);
   }
 
@@ -54,7 +54,7 @@ export class Lantern extends THREE.Group {
     const geometry = new THREE.CylinderGeometry(Math.hypot(42, 42) / 2, Math.hypot(34, 34) / 2, 60, 4);
     const material = this.createMaterial(0x052052);
     const lamp = new THREE.Mesh(geometry, material);
-    lamp.position.set(0, 335, 0);
+    lamp.position.set(0, 365, 0);
     lamp.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(45.0), 0, `XYZ`));
     this.add(lamp);
   }
@@ -63,7 +63,7 @@ export class Lantern extends THREE.Group {
     const geometry = new THREE.CylinderGeometry(Math.hypot(45, 45) / 2, Math.hypot(57, 57) / 2, 6, 4);
     const material = this.createMaterial();
     const lamp = new THREE.Mesh(geometry, material);
-    lamp.position.set(0, 368, 0);
+    lamp.position.set(0, 398, 0);
     lamp.rotation.copy(new THREE.Euler(0, THREE.MathUtils.degToRad(45.0), 0, `XYZ`));
     this.add(lamp);
   }
